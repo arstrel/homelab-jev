@@ -2,11 +2,21 @@
 
 ## 1. Application and connection foundation
 
-- [ ] 1.1 Add a Node 24/TypeScript application skeleton and one-shot observation command; verify installation, type checking, and a no-network startup succeed.
-- [ ] 1.2 Add secret-file exclusions, environment validation, and sanitized diagnostics; verify missing credentials give actionable errors and fixture secrets never appear in logs.
-- [ ] 1.3 Verify PostgreSQL connectivity and create isolated Jev migrations; verify migration/reversal on an isolated database and confirm unrelated schemas remain unchanged.
-- [ ] 1.4 Add checkpoints, pending jobs, classification records, task links, suppressions, and write intents; verify transaction rollback and duplicate-source constraints with database tests.
-- [ ] 1.5 Document independent Google OAuth and Todoist worker authorization and verify supported scopes, API versions, and request-id semantics with bounded connection checks that print no credentials.
+Complete this foundation before starting feature work in groups 2–6. Planned commands and hooks are not yet implemented.
+
+- [ ] 1.1 Pin the Node 24 patch and approved direct packages, retain the three installed provider SDKs, and commit the npm lockfile; verify npm ci succeeds from a clean installation using the documented runtime.
+- [ ] 1.2 Add the approved application/domain/adapter layout, strict ESM/NodeNext TypeScript configuration, tsx development entry point, and compiled CLI; verify application/tests/scripts type-check and compiled help/version run without credentials or network access.
+- [ ] 1.3 Add environment validation and sanitized diagnostics using the provided JEV_API_KEY and DB_* names, with DB_URL precedence; verify fake configuration cases cover fallback, invalid/missing fields, and secret redaction without reading the project environment file.
+- [ ] 1.4 Establish deterministic Vitest unit/application and MSW adapter test suites with fixed clocks/IDs, sanitized fixtures, and failing unhandled requests; verify a deliberate external request fails and tests cannot load production configuration.
+- [ ] 1.5 Add Biome configuration, an explicit developer fix command, and canonical npm run check combining offline tests, type checks, build/CLI smoke checks, document links, and pinned local OpenSpec validation; verify it fails on representative lint/type/test/spec errors and never mutates validation inputs.
+- [ ] 1.6 Install Husky pre-commit checks and the fully staged validation-input guard; verify disposable Git cases accept staged changes and reject partial staging, unstaged tracked inputs, relevant untracked files, and changes during checks without automatic stashing/staging.
+- [ ] 1.7 Add a disposable PostgreSQL 17 test helper and test-only connection validation; verify the integration harness connects to its isolated target, cleans up its resources, and refuses operational DB settings.
+- [ ] 1.8 Add a pre-push gate running offline and PostgreSQL checks for the pushed current-HEAD content; verify mismatched targets, dirty/untracked validation inputs, and failing database checks block the push in disposable Git fixtures.
+- [ ] 1.9 Add PR/push GitHub Actions jobs using the pinned runtime, npm ci, offline checks, and isolated PostgreSQL; configure required PR checks where supported and verify a controlled failing check blocks merge, documenting any account limitation.
+- [ ] 1.10 Document setup, all validation inputs, command contracts, hooks, test database lifecycle, dependency updates, and branch/PR workflow; verify the instructions against a clean checkout without personal credentials for offline checks.
+- [ ] 1.11 Verify operational PostgreSQL connectivity and add an isolated Drizzle schema with reviewed generated SQL migrations and explicit generation/application commands; verify fresh apply, repeat apply, and an upgrade/recovery procedure on a disposable database while unrelated schemas remain unchanged.
+- [ ] 1.12 Add checkpoints, pending jobs, classification records, task links, suppressions, and write intents through PostgreSQL repositories; verify transaction rollback and duplicate-source constraints with database tests.
+- [ ] 1.13 Document independent Google OAuth and Todoist worker authorization and verify supported scopes, API versions, and request-id semantics with bounded connection checks that print no credentials.
 
 ## 2. Incremental Gmail synchronization
 
@@ -48,9 +58,11 @@
 
 ## 7. Five-minute operation
 
-- [ ] 7.1 Add the launchd definition with explicit Node path, five-minute cadence, and PostgreSQL run locking; verify a controlled overlapping invocation skips duplicate write execution.
-- [ ] 7.2 Implement bounded provider retries, failure diagnostics, and pending-work recovery; verify rate-limit, expired-credential, host interruption, and restart scenarios with sanitized output.
+- [ ] 7.1 Add the one-shot launchd definition with explicit runtime, compiled release entry point, environment path, five-minute cadence, and a dedicated-connection PostgreSQL advisory lock; verify an overlapping invocation skips writes and lock ownership is released on exit.
+- [ ] 7.2 Implement coordinated bounded provider retries, cycle deadlines, graceful termination, failure diagnostics, and pending-work recovery; verify rate-limit, expired-credential, host interruption, and restart scenarios preserve pending work and close database connections with sanitized output.
 - [ ] 7.3 Document start/stop, retention, diagnosis, and restart procedures; verify stopping preserves mappings and resuming processes pending work without duplicate tasks.
+- [ ] 7.4 Add reviewed-commit release preparation and an immutable compiled release directory with a stable pointer; verify runtime/commit recording and pointer switching without making production depend on the editable checkout.
+- [ ] 7.5 Document and exercise explicit migration deployment, schema-compatible code rollback, and database recovery on an isolated environment; verify the previous release can be restored when compatible and no user tasks or source mappings are deleted.
 
 ## 8. End-to-end rollout evidence
 
