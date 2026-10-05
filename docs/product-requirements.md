@@ -17,6 +17,10 @@ Keep a current, source-linked inventory of actionable obligations in the user's 
 - Daily Life Plan reads Todoist to select work for upcoming calendar blocks.
 - Google Drive holds Markdown artifacts and preprocessing handoff context.
 - Use the existing Docker PostgreSQL deployment for processing bookkeeping. Redis is available if a later operational need warrants it.
+- Run a Node 24/TypeScript CLI as a native launchd job; use Drizzle with pg and reviewed, versioned SQL migrations.
+- Use the approved application/domain/adapter structure and package stack, including Biome, Vitest/MSW, Husky, and npm. See the design for the complete package and command contracts.
+- Run full offline checks before every commit and require a fully staged application/configuration validation-input set. Run PostgreSQL integration tests against disposable databases before push and in CI.
+- Develop on short-lived branches and merge through PRs with required CI. Deploy reviewed compiled releases independently of the editable checkout.
 
 ## Sources and ownership
 
@@ -65,7 +69,11 @@ Gmail label writes, automatic completion based solely on model inference, calend
 
 ## Proposed implementation defaults
 
-These choices are planning defaults, not additional user-confirmed constraints: TypeScript on Node 24; launchd scheduling; isolated PostgreSQL storage; a configurable 30-day initial mail window; `jev-current.md` addressed by stable Drive file ID; a configurable 15-minute stale-input cutoff; source-based task title templates; waiting/review metadata conventions; an observation pilot before automatic capture. Model version and thresholds are selected using evaluation results.
+Node 24, launchd, Drizzle with pg, the folder/package choices, and the Git/testing gates above are user-confirmed. Bun and Kysely were considered; Node and Drizzle were selected for this project. Their configuration and foundation work are specified in [the design](../openspec/changes/add-personal-brief-preprocessing/design.md) and remain to be implemented.
+
+Remaining planning defaults: isolated PostgreSQL storage; a configurable 30-day initial mail window; `jev-current.md` addressed by stable Drive file ID; a configurable 15-minute stale-input cutoff; source-based task title templates; waiting/review metadata conventions; an observation pilot before automatic capture. Model version and thresholds are selected using evaluation results.
+
+The user has provided these configuration names: `JEV_API_KEY`, `DB_URL`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD`. The design uses DB_URL when present and the individual database fields as a fallback. Secret values are excluded from documents, logs, tracked files, and test fixtures; offline and database tests supply independent test configuration.
 
 The worker requires its own Google and Todoist authorization in addition to the existing Jev key. Current ChatGPT connections do not automatically authorize a separate background process. Verify actual scheduled-task access and latest-file retrieval before enabling the handoff.
 
@@ -79,11 +87,12 @@ The capability specs contain the normative requirements and scenarios. Release e
 - Manual Todoist edits survive synchronization; Retro content and reusable inventory are preserved.
 - Current-generation Drive retrieval and live Todoist access in both actual scheduled-task contexts.
 - Daily-plan recommendations fit calendar blocks and expose stale/failed source processing.
+- Reproducible offline checks, commit-content guards, isolated PostgreSQL tests, and required PR checks enforce the approved development workflow.
 
 Measure missed actions, incorrect captures, routing corrections, review rate, latency, and API cost. Evaluate roughly 100–200 representative corrected messages, including held-out examples and edge cases. Report observed trade-offs; do not declare unmeasured accuracy or cost guarantees.
 
 ## Progress tracking
 
-The canonical implementation checklist is [tasks.md](../openspec/changes/add-personal-brief-preprocessing/tasks.md). Its eight numbered groups are the delivery milestones, and each task includes verification evidence. Check a box only after its stated verification succeeds. Preserve task-level evidence during implementation and summarize it in a release report.
+The canonical implementation checklist is [tasks.md](../openspec/changes/add-personal-brief-preprocessing/tasks.md). Its eight numbered groups are the delivery milestones, and each task includes verification evidence. Complete the expanded application/testing/Git foundation in group 1 before feature work. Check a box only after its stated verification succeeds. Preserve task-level evidence during implementation and summarize it in a release report.
 
 The [proposal](../openspec/changes/add-personal-brief-preprocessing/proposal.md) defines scope, the [design](../openspec/changes/add-personal-brief-preprocessing/design.md) defines the approach, and the [six capability specs](../openspec/changes/add-personal-brief-preprocessing/specs/) define behavior. These delta specs describe the target system; they are not evidence that it is already running. Archive the change after implementation and verification to establish the durable specs under `openspec/specs/`.
