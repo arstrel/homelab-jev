@@ -1,0 +1,57 @@
+name: Validate
+on:
+  pull_request:
+  push:
+    branches: [main, "feat/**", "docs/**", "fix/**"]
+permissions:
+  contents: read
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  offline:
+    name: Offline checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HUSKY: "0"
+      TZ: UTC
+      OPENSPEC_TELEMETRY: "0"
+      DO_NOT_TRACK: "1"
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: git diff --exit-code
+  postgres:
+    name: PostgreSQL checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HUSKY: "0"
+      TZ: UTC
+      TEST_DATABASE_URL: postgresql://jev_test:jev_test@127.0.0.1:5432/jev_test
+      JEV_TEST_DATABASE: disposable
+    services:
+      postgres:
+        image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+        env:
+          POSTGRES_USER: jev_test
+          POSTGRES_PASSWORD: jev_test
+          POSTGRES_DB: jev_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U jev_test -d jev_test"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run test:integration

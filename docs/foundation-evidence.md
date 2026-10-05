@@ -1,0 +1,11 @@
+# Section 1 evidence
+
+Implementation branch: `feat/application-foundation`, based on merged main `12b179ec512ebd7479264cac80b49b3451934122`.
+
+Verified so far: strict application/test/script types; compiled offline help/version; fake configuration precedence, fallback validation and sanitized errors; Git guard fixtures; MSW provider contracts and unexpected-request rejection; fresh/repeated migrations, upgrade/failure recovery, unrelated schema preservation and ledger constraints against a disposable PostgreSQL 17 container. Live read-only PostgreSQL connectivity and Jev model-list authorization passed using existing `.env`, without printing values.
+
+Google OAuth and Todoist worker authorization are absent, so task 1.13 remains incomplete even though setup and offline SDK contracts are provided. Actual required-check configuration, CI results and a controlled failed-PR enforcement check are pending and must be recorded before task 1.9 is marked complete.
+
+The dependency audit reports four high-severity dev-tool findings in the pinned OpenSpec tree, rooted in braces 3.0.3 (nested-pattern denial of service). Runtime dependencies have no reported advisory. The registry currently offers no patched braces version; npm's proposed force fixes downgrade unrelated major versions. Gates operate on reviewed local specifications. The migration tool's older esbuild advisory was removed with a pinned 0.28.2 override in its legacy loader, verified by clean resolution and unchanged migration generation. The OpenSpec finding remains open for an upstream-compatible fix; it is not represented as resolved.
+
+Clean `npm ci` from the lockfile passed in a disposable checkout with no `.env` or inherited personal credentials. The full gate passed there without modifying validation inputs. Independently injected lint, TypeScript, test and malformed-spec regressions were each rejected by the canonical command, with checked inputs unchanged. Local offline checks pass 32 tests; PostgreSQL integration passes seven tests. The disposable test container was removed afterward. Husky is installed at `.husky/_`; actual commit/push execution and remote evidence will be recorded after those steps.
