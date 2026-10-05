@@ -1,0 +1,28 @@
+{
+  "name": "homelab-jev",
+  "version": "1.0.0",
+  "description": "helper to pre process emails and todoist projects",
+  "homepage": "https://github.com/arstrel/homelab-jev#readme",
+  "bugs": {
+    "url": "https://github.com/arstrel/homelab-jev/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arstrel/homelab-jev.git"
+  },
+  "license": "ISC",
+  "author": "Arstrel@gmail.com",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "@doist/todoist-sdk": "^15.3.1",
+    "@typesafe-ai/sdk": "^0.6.0",
+    "googleapis": "^183.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
