@@ -4,7 +4,7 @@
 
 Complete this foundation before starting feature work in groups 2–6. Commands and hooks are implemented on the foundation branch; remaining account/authorization checks are tracked below and in [foundation evidence](../../../docs/foundation-evidence.md).
 
-- [ ] 1.1 Pin the Node 24 patch and approved direct packages, retain the three installed provider SDKs, and commit the npm lockfile; verify npm ci succeeds from a clean installation using the documented runtime.
+- [x] 1.1 Pin the Node 24 patch and approved direct packages, retain the three installed provider SDKs, and commit the npm lockfile; verify npm ci succeeds from a clean installation using the documented runtime.
 - [x] 1.2 Add the approved application/domain/adapter layout, strict ESM/NodeNext TypeScript configuration, tsx development entry point, and compiled CLI; verify application/tests/scripts type-check and compiled help/version run without credentials or network access.
 - [x] 1.3 Add environment validation and sanitized diagnostics using the provided JEV_API_KEY and DB_* names, with DB_URL precedence; verify fake configuration cases cover fallback, invalid/missing fields, and secret redaction without reading the project environment file.
 - [x] 1.4 Establish deterministic Vitest unit/application and MSW adapter test suites with fixed clocks/IDs, sanitized fixtures, and failing unhandled requests; verify a deliberate external request fails and tests cannot load production configuration.
