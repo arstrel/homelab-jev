@@ -9,8 +9,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-11T21:30:08.389Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
   - id: s1
@@ -47,6 +47,6 @@ Offline test wrappers strip operational environment variables. Test setup reject
 
 PostgreSQL checks use a disposable pinned PostgreSQL 17 Docker container or validated CI test service. The runner binds local ports and cleans up its own labeled container. Never substitute the production `DB_URL` or load `.env` into the test suite.
 
-Current tests cover configuration, Git guards, bounded SDK contracts, repeatable Google authorization and migration/ledger behavior. New OKF tests cover parsing, metadata, root/relative navigation, escaping, confinement, drift and server boundaries. These are documentation-tool tests, not classifier quality evidence.
+Current tests cover configuration, Git guards, bounded SDK contracts, repeatable Google authorization and migration/ledger behavior. New OKF tests cover parsing, metadata, root/relative navigation, escaping, confinement, drift and server boundaries. These are documentation-tool tests, not classifier quality evidence. Synthetic Gmail suites now cover normalized evidence, fingerprints, bounded reads, MIME coverage and preview privacy. Credentialed live previews remain manual and outside tests/CI; their counts do not establish classifier quality.
 
 See [development gates](development-gates.md) and [classification evaluation](classification-evaluation.md).

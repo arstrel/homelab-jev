@@ -7,9 +7,34 @@ import { status } from "./application/status.js";
 import { databaseUrl, diagnostic } from "./config.js";
 
 const help =
-  "Jev preprocessing foundation\nUsage: jev <status|db:check|db:migrate|connections>\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
+  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
 async function main() {
   const [command, ...extra] = process.argv.slice(2);
+  if (command === "mail:preview") {
+    const { runMailPreview } = await import("./cli-mail.js");
+    const { previewReportText } = await import("./application/preview-mail.js");
+    const controller = new AbortController();
+    let signalExit: number | undefined;
+    const interrupt = () => {
+      signalExit = 130;
+      controller.abort();
+    };
+    const terminate = () => {
+      signalExit = 143;
+      controller.abort();
+    };
+    process.once("SIGINT", interrupt);
+    process.once("SIGTERM", terminate);
+    try {
+      const result = await runMailPreview(extra, process.env, { signal: controller.signal });
+      console.log(previewReportText(result));
+      process.exitCode = signalExit ?? result.report.exitCode;
+    } finally {
+      process.removeListener("SIGINT", interrupt);
+      process.removeListener("SIGTERM", terminate);
+    }
+    return;
+  }
   if (extra.length) throw new Error("Unexpected arguments");
   if (!command || command === "--help") {
     console.log(help);

@@ -9,8 +9,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-11T21:30:08.389Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
   - id: s1
@@ -28,7 +28,7 @@ x_jev_sources:
 
 # Gmail evidence and checkpoint safety
 
-The ledger foundation has an ingestion transaction that stores sources, deduplicated pending jobs and the checkpoint together. The Gmail synchronization orchestrator is planned.
+The ledger foundation has an ingestion transaction that stores source identities, deduplicated pending jobs and the checkpoint together. Manual [Gmail evidence retrieval](gmail-evidence.md) is implemented without ledger writes; the durable Gmail synchronization orchestrator remains planned. The current ledger does not store normalized message payloads: subsequent ingestion must add immutable evidence versions and bind each job to the version actually classified before advancing a safe cursor.
 
 Poll incremental history every five minutes, paginate completely and expand affected full threads as required. Include incoming and sent evidence, including already-read mail; read/unread is not the obligation boundary. The proposed initial window is configurable, initially 30 days, and is still a planning default.
 
