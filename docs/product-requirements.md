@@ -1,6 +1,6 @@
 # Jev personal brief preprocessing
 
-Created: October 4, 2026. Status: requirements and implementation plan drafted; implementation has not started.
+Created: October 4, 2026. Updated: October 10, 2026. Status: section 1 foundation complete; processing and rollout in sections 2–8 remain planned.
 
 ## Product outcome
 
@@ -69,7 +69,7 @@ Gmail label writes, automatic completion based solely on model inference, calend
 
 ## Proposed implementation defaults
 
-Node 24, launchd, Drizzle with pg, the folder/package choices, and the Git/testing gates above are user-confirmed. Bun and Kysely were considered; Node and Drizzle were selected for this project. Their configuration and foundation work are specified in [the design](../openspec/changes/add-personal-brief-preprocessing/design.md) and remain to be implemented.
+Node 24, launchd, Drizzle with pg, the folder/package choices, and the Git/testing gates above are user-confirmed. Bun and Kysely were considered; Node and Drizzle were selected for this project. Their configuration and foundation work are specified in [the design](../openspec/changes/add-personal-brief-preprocessing/design.md) ; the section 1 foundation is implemented.
 
 Remaining planning defaults: isolated PostgreSQL storage; a configurable 30-day initial mail window; `jev-current.md` addressed by stable Drive file ID; a configurable 15-minute stale-input cutoff; source-based task title templates; waiting/review metadata conventions; an observation pilot before automatic capture. Model version and thresholds are selected using evaluation results.
 

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2026 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>OKF Bundle Viewer</title>
+<!-- Jev modification: libraries bundled locally; no CDN requests. -->
+<!--__LOCAL_LIBRARIES__-->
+<style>
+/*__VIZ_CSS__*/
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted" id="bundle-summary">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <button id="index">Read index</button>
+    <input id="search" type="search" aria-label="Search concepts" placeholder="Search title / id / tag">
+    <select id="filter-type" aria-label="Concept type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout" aria-label="Graph layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <div class="badges" id="detail-badges"></div>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+        <dt>Generated</dt><dd id="detail-generated"></dd>
+        <dt>Verified</dt><dd id="detail-verified"></dd>
+        <dt>Sources</dt><dd id="detail-sources"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+
+<script>
+window.BUNDLE_NAME = __BUNDLE_NAME__;
+window.BUNDLE = JSON.parse(__BUNDLE_DATA__);
+</script>
+<script>
+/*__VIZ_JS__*/
+</script>
+</body>
+</html>

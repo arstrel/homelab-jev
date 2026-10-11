@@ -6,7 +6,13 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/.agents", "!**/migrations/meta", "!**/package-lock.json"]
+    "includes": [
+      "**",
+      "!**/.agents",
+      "!**/migrations/meta",
+      "!**/package-lock.json",
+      "!**/tools/okf-viewer"
+    ]
   },
   "formatter": {
     "enabled": true,

@@ -1,0 +1,47 @@
+---
+type: Runbook
+title: Node development and Git gates
+description: Use exact pinned tooling and checks over the full staged validation input set.
+tags:
+  - operations
+  - jev
+  - implemented
+status: draft
+generated:
+  by: codex/gpt-6
+  at: "2026-10-11T02:21:58Z"
+stale_after: "2026-11-10T02:21:58Z"
+x_jev_delivery: implemented
+sources:
+  - id: s1
+    resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/package.json
+    title: package.json
+  - id: s2
+    resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/scripts/check.ts
+    title: scripts/check.ts
+  - id: s3
+    resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/scripts/git-gate.ts
+    title: scripts/git-gate.ts
+  - id: s4
+    resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/docs/development.md
+    title: docs/development.md
+x_jev_sources:
+  - path: package.json
+    sha256: fee94fab0c6ab9128e929af26d83006b6dd04d3b3c540be5e466a7035be17004
+  - path: scripts/check.ts
+    sha256: 265c3bdb561a903fb53a7119604f76cdf9ef0be9d7932077d1e5ff8ec785d392
+  - path: scripts/git-gate.ts
+    sha256: d319d4731259e12a306add4853a84c0e4f5691b4bcd56d8e0ba5386010adde12
+  - path: docs/development.md
+    sha256: 97fae7003ee397c4f42fb77215cb44609d231be835ff95df8064a0418e6d5866
+---
+
+# Node development and Git gates
+
+Use Node 24.21.0 and the pinned npm toolchain. Run `npm ci`, then `npm run check`. Biome checks formatting/linting without rewriting; TypeScript checks source/scripts/tests; Vitest/MSW runs offline cases; the CLI is compiled and smoke-tested without network; local document links and OpenSpec are validated. OKF validation joins this same gate.
+
+Pre-commit requires a fully staged application/config/documentation validation set and runs full offline checks. The input snapshot must remain unchanged during validation. Do not hide unstaged code to obtain a misleading pass. Use `npm run fix` explicitly when formatting changes are intended.
+
+Pre-push repeats appropriate checks and runs PostgreSQL integration tests on disposable databases. Short-lived branches and PRs require both offline and PostgreSQL CI. Native releases are separate from an editable checkout.
+
+See [test isolation](test-isolation.md), [migrations](database-migrations.md), and [OKF maintenance](okf-maintenance.md).

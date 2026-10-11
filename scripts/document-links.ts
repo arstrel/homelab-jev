@@ -1,10 +1,22 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
+// The dedicated OKF checker resolves knowledge/ links against its bundle root.
 function markdown(root: string): string[] {
   return readdirSync(root, { withFileTypes: true }).flatMap((item) => {
     const path = `${root}/${item.name}`;
-    if (["node_modules", ".git", ".agents", "dist", "coverage", ".husky"].includes(item.name))
+    if (
+      [
+        "node_modules",
+        ".git",
+        ".agents",
+        "dist",
+        "coverage",
+        ".husky",
+        ".cache",
+        "knowledge",
+      ].includes(item.name)
+    )
       return [];
     return item.isDirectory() ? markdown(path) : path.endsWith(".md") ? [path] : [];
   });
