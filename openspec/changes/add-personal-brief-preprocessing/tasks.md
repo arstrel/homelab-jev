@@ -2,21 +2,21 @@
 
 ## 1. Application and connection foundation
 
-Complete this foundation before starting feature work in groups 2–6. Planned commands and hooks are not yet implemented.
+Complete this foundation before starting feature work in groups 2–6. Commands and hooks are implemented on the foundation branch; remaining account/authorization checks are tracked below and in [foundation evidence](../../../docs/foundation-evidence.md).
 
-- [ ] 1.1 Pin the Node 24 patch and approved direct packages, retain the three installed provider SDKs, and commit the npm lockfile; verify npm ci succeeds from a clean installation using the documented runtime.
-- [ ] 1.2 Add the approved application/domain/adapter layout, strict ESM/NodeNext TypeScript configuration, tsx development entry point, and compiled CLI; verify application/tests/scripts type-check and compiled help/version run without credentials or network access.
-- [ ] 1.3 Add environment validation and sanitized diagnostics using the provided JEV_API_KEY and DB_* names, with DB_URL precedence; verify fake configuration cases cover fallback, invalid/missing fields, and secret redaction without reading the project environment file.
-- [ ] 1.4 Establish deterministic Vitest unit/application and MSW adapter test suites with fixed clocks/IDs, sanitized fixtures, and failing unhandled requests; verify a deliberate external request fails and tests cannot load production configuration.
-- [ ] 1.5 Add Biome configuration, an explicit developer fix command, and canonical npm run check combining offline tests, type checks, build/CLI smoke checks, document links, and pinned local OpenSpec validation; verify it fails on representative lint/type/test/spec errors and never mutates validation inputs.
-- [ ] 1.6 Install Husky pre-commit checks and the fully staged validation-input guard; verify disposable Git cases accept staged changes and reject partial staging, unstaged tracked inputs, relevant untracked files, and changes during checks without automatic stashing/staging.
-- [ ] 1.7 Add a disposable PostgreSQL 17 test helper and test-only connection validation; verify the integration harness connects to its isolated target, cleans up its resources, and refuses operational DB settings.
-- [ ] 1.8 Add a pre-push gate running offline and PostgreSQL checks for the pushed current-HEAD content; verify mismatched targets, dirty/untracked validation inputs, and failing database checks block the push in disposable Git fixtures.
-- [ ] 1.9 Add PR/push GitHub Actions jobs using the pinned runtime, npm ci, offline checks, and isolated PostgreSQL; configure required PR checks where supported and verify a controlled failing check blocks merge, documenting any account limitation.
-- [ ] 1.10 Document setup, all validation inputs, command contracts, hooks, test database lifecycle, dependency updates, and branch/PR workflow; verify the instructions against a clean checkout without personal credentials for offline checks.
-- [ ] 1.11 Verify operational PostgreSQL connectivity and add an isolated Drizzle schema with reviewed generated SQL migrations and explicit generation/application commands; verify fresh apply, repeat apply, and an upgrade/recovery procedure on a disposable database while unrelated schemas remain unchanged.
-- [ ] 1.12 Add checkpoints, pending jobs, classification records, task links, suppressions, and write intents through PostgreSQL repositories; verify transaction rollback and duplicate-source constraints with database tests.
-- [ ] 1.13 Document independent Google OAuth and Todoist worker authorization and verify supported scopes, API versions, and request-id semantics with bounded connection checks that print no credentials.
+- [x] 1.1 Pin the Node 24 patch and approved direct packages, retain the three installed provider SDKs, and commit the npm lockfile; verify npm ci succeeds from a clean installation using the documented runtime.
+- [x] 1.2 Add the approved application/domain/adapter layout, strict ESM/NodeNext TypeScript configuration, tsx development entry point, and compiled CLI; verify application/tests/scripts type-check and compiled help/version run without credentials or network access.
+- [x] 1.3 Add environment validation and sanitized diagnostics using the provided JEV_API_KEY and DB_* names, with DB_URL precedence; verify fake configuration cases cover fallback, invalid/missing fields, and secret redaction without reading the project environment file.
+- [x] 1.4 Establish deterministic Vitest unit/application and MSW adapter test suites with fixed clocks/IDs, sanitized fixtures, and failing unhandled requests; verify a deliberate external request fails and tests cannot load production configuration.
+- [x] 1.5 Add Biome configuration, an explicit developer fix command, and canonical npm run check combining offline tests, type checks, build/CLI smoke checks, document links, and pinned local OpenSpec validation; verify it fails on representative lint/type/test/spec errors and never mutates validation inputs.
+- [x] 1.6 Install Husky pre-commit checks and the fully staged validation-input guard; verify disposable Git cases accept staged changes and reject partial staging, unstaged tracked inputs, relevant untracked files, and changes during checks without automatic stashing/staging.
+- [x] 1.7 Add a disposable PostgreSQL 17 test helper and test-only connection validation; verify the integration harness connects to its isolated target, cleans up its resources, and refuses operational DB settings.
+- [x] 1.8 Add a pre-push gate running offline and PostgreSQL checks for the pushed current-HEAD content; verify mismatched targets, dirty/untracked validation inputs, and failing database checks block the push in disposable Git fixtures.
+- [x] 1.9 Add PR/push GitHub Actions jobs using the pinned runtime, npm ci, offline checks, and isolated PostgreSQL; configure required PR checks where supported and verify a controlled failing check blocks merge, documenting any account limitation.
+- [x] 1.10 Document setup, all validation inputs, command contracts, hooks, test database lifecycle, dependency updates, and branch/PR workflow; verify the instructions against a clean checkout without personal credentials for offline checks.
+- [x] 1.11 Verify operational PostgreSQL connectivity and add an isolated Drizzle schema with reviewed generated SQL migrations and explicit generation/application commands; verify fresh apply, repeat apply, and an upgrade/recovery procedure on a disposable database while unrelated schemas remain unchanged.
+- [x] 1.12 Add checkpoints, pending jobs, classification records, task links, suppressions, and write intents through PostgreSQL repositories; verify transaction rollback and duplicate-source constraints with database tests.
+- [x] 1.13 Document independent Google OAuth and Todoist worker authorization and verify supported scopes, API versions, and request-id semantics with bounded connection checks that print no credentials.
 
 ## 2. Incremental Gmail synchronization
 

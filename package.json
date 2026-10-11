@@ -13,16 +13,58 @@
   "license": "ISC",
   "author": "Arstrel@gmail.com",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/cli.js",
   "directories": {
     "doc": "docs"
   },
   "dependencies": {
-    "@doist/todoist-sdk": "^15.3.1",
-    "@typesafe-ai/sdk": "^0.6.0",
-    "googleapis": "^183.0.0"
+    "@doist/todoist-sdk": "15.3.1",
+    "@typesafe-ai/sdk": "0.6.0",
+    "drizzle-orm": "0.45.3",
+    "googleapis": "183.0.0",
+    "pg": "8.23.1",
+    "pino": "10.4.0",
+    "zod": "4.6.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "husky",
+    "dev": "tsx src/cli.ts",
+    "build": "node scripts/build.mjs",
+    "start": "node dist/cli.js",
+    "test": "node --import tsx scripts/test.ts",
+    "test:coverage": "node --import tsx scripts/test.ts --coverage",
+    "typecheck": "tsc -p tsconfig.check.json",
+    "check": "node --import tsx scripts/check.ts",
+    "fix": "biome check --write .",
+    "test:integration": "node --import tsx scripts/integration.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node --env-file=.env dist/cli.js db:migrate",
+    "db:check": "node --env-file=.env dist/cli.js db:check",
+    "connections": "node --env-file=.env dist/cli.js connections",
+    "google:authorize": "node --import tsx scripts/google-authorize.ts",
+    "verify:foundation": "node --import tsx scripts/verify-foundation.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@fission-ai/openspec": "1.14.0",
+    "@types/node": "24.19.1",
+    "@types/pg": "8.23.1",
+    "@vitest/coverage-v8": "5.0.3",
+    "drizzle-kit": "0.31.11",
+    "husky": "9.1.7",
+    "msw": "2.15.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  },
+  "private": true,
+  "engines": {
+    "node": "24.21.0"
+  },
+  "packageManager": "npm@11.19.0",
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.28.2"
+    }
   }
 }
