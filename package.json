@@ -42,7 +42,10 @@
     "db:check": "node --env-file=.env dist/cli.js db:check",
     "connections": "node --env-file=.env dist/cli.js connections",
     "google:authorize": "node --import tsx scripts/google-authorize.ts",
-    "verify:foundation": "node --import tsx scripts/verify-foundation.ts"
+    "verify:foundation": "node --import tsx scripts/verify-foundation.ts",
+    "okf:check": "node --import tsx scripts/okf-check.ts",
+    "okf:build": "node --import tsx scripts/okf-build.ts",
+    "okf:visualize": "node --import tsx scripts/okf-visualize.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
@@ -50,12 +53,16 @@
     "@types/node": "24.19.1",
     "@types/pg": "8.23.1",
     "@vitest/coverage-v8": "5.0.3",
+    "cytoscape": "3.34.3",
+    "dompurify": "3.4.16",
     "drizzle-kit": "0.31.11",
     "husky": "9.1.7",
+    "marked": "18.1.0",
     "msw": "2.15.0",
     "tsx": "4.23.15",
     "typescript": "7.0.2",
-    "vitest": "5.0.3"
+    "vitest": "5.0.3",
+    "yaml": "2.9.1"
   },
   "private": true,
   "engines": {

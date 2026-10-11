@@ -66,3 +66,7 @@ Start a short-lived branch from updated main, commit after offline checks, push 
 Main now requires both named GitHub Actions checks with administrator enforcement and up-to-date branches. A controlled failing PR verified merge blocking. A fine-grained GitHub token needs repository-scoped Workflows read/write to publish workflow changes and Administration read/write to configure branch protection. Actual evidence and remaining connection prerequisites are recorded in [foundation evidence](foundation-evidence.md).
 
 Update direct packages intentionally with exact versions and the lockfile. Review `npm audit`, upstream release notes, generated SQL changes and the relevant SDK/database tests. Never run blind `npm audit fix --force`; it currently suggests unrelated older major versions of OpenSpec/Drizzle. Dependency findings and limitations are recorded in the evidence report. Review coverage to choose meaningful new behavior tests; no arbitrary global percentage replaces scenario checks.
+
+## OKF context
+
+[OKF adoption and viewer commands](okf-adoption.md) and [knowledge index](../knowledge/index.md). Bundle validation is part of `npm run check`.

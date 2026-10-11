@@ -12,14 +12,10 @@ const steps = [
   [process.execPath, ["scripts/build.mjs"]],
   [process.execPath, ["--import", "tsx", "scripts/cli-smoke.ts"]],
   [process.execPath, ["--import", "tsx", "scripts/document-links.ts"]],
+  [process.execPath, ["--import", "tsx", "scripts/okf-check.ts"]],
   [
     process.execPath,
-    [
-      "node_modules/@fission-ai/openspec/bin/openspec.js",
-      "validate",
-      "add-personal-brief-preprocessing",
-      "--strict",
-    ],
+    ["node_modules/@fission-ai/openspec/bin/openspec.js", "validate", "--all", "--strict"],
   ],
 ] as const;
 for (const [command, args] of steps) run(command, [...args], env);
