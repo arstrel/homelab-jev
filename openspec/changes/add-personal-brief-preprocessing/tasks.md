@@ -16,7 +16,7 @@ Complete this foundation before starting feature work in groups 2–6. Commands 
 - [x] 1.10 Document setup, all validation inputs, command contracts, hooks, test database lifecycle, dependency updates, and branch/PR workflow; verify the instructions against a clean checkout without personal credentials for offline checks.
 - [x] 1.11 Verify operational PostgreSQL connectivity and add an isolated Drizzle schema with reviewed generated SQL migrations and explicit generation/application commands; verify fresh apply, repeat apply, and an upgrade/recovery procedure on a disposable database while unrelated schemas remain unchanged.
 - [x] 1.12 Add checkpoints, pending jobs, classification records, task links, suppressions, and write intents through PostgreSQL repositories; verify transaction rollback and duplicate-source constraints with database tests.
-- [ ] 1.13 Document independent Google OAuth and Todoist worker authorization and verify supported scopes, API versions, and request-id semantics with bounded connection checks that print no credentials.
+- [x] 1.13 Document independent Google OAuth and Todoist worker authorization and verify supported scopes, API versions, and request-id semantics with bounded connection checks that print no credentials.
 
 ## 2. Incremental Gmail synchronization
 

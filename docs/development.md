@@ -28,6 +28,7 @@ Offline checks need neither `.env` nor personal credentials. The database comman
 | `npm run db:generate` | Generate SQL and metadata for review; no connection needed |
 | `npm run db:migrate` | Explicitly apply reviewed migrations using `.env`; no implicit schema push |
 | `npm run connections` | Bounded read-only Jev, Todoist and Google authorization checks |
+| `npm run google:authorize` | One-time Desktop OAuth consent; temporary loopback listener and private refresh-token save to `.env` |
 | `npm test` | All offline unit/application and MSW contract tests |
 | `npm run test:coverage` | Offline tests with V8 branch coverage for review |
 | `npm run typecheck` | Strict checking of application, tests, scripts and TS configuration |

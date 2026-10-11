@@ -10,7 +10,12 @@ export default defineConfig({
     unstubEnvs: true,
     coverage: {
       provider: "v8",
-      include: ["src/**/*.ts", "scripts/git-gate.ts", "scripts/test-database.ts"],
+      include: [
+        "src/**/*.ts",
+        "scripts/git-gate.ts",
+        "scripts/test-database.ts",
+        "scripts/google-oauth.ts",
+      ],
     },
   },
 });
