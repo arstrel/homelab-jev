@@ -21,7 +21,9 @@
     "@doist/todoist-sdk": "15.3.1",
     "@typesafe-ai/sdk": "0.6.0",
     "drizzle-orm": "0.45.3",
+    "email-addresses": "5.0.0",
     "googleapis": "183.0.0",
+    "html-to-text": "10.0.1",
     "pg": "8.23.1",
     "pino": "10.4.0",
     "zod": "4.6.5"
@@ -41,6 +43,7 @@
     "db:migrate": "node --env-file=.env dist/cli.js db:migrate",
     "db:check": "node --env-file=.env dist/cli.js db:check",
     "connections": "node --env-file=.env dist/cli.js connections",
+    "mail:preview": "node --env-file=.env dist/cli.js mail:preview",
     "google:authorize": "node --import tsx scripts/google-authorize.ts",
     "verify:foundation": "node --import tsx scripts/verify-foundation.ts",
     "okf:check": "node --import tsx scripts/okf-check.ts",
@@ -50,6 +53,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
     "@fission-ai/openspec": "1.14.0",
+    "@types/html-to-text": "9.0.4",
     "@types/node": "24.19.1",
     "@types/pg": "8.23.1",
     "@vitest/coverage-v8": "5.0.3",

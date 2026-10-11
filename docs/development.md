@@ -28,6 +28,7 @@ Offline checks need neither `.env` nor personal credentials. The database comman
 | `npm run db:generate` | Generate SQL and metadata for review; no connection needed |
 | `npm run db:migrate` | Explicitly apply reviewed migrations using `.env`; no implicit schema push |
 | `npm run connections` | Bounded read-only Jev, Todoist and Google authorization checks |
+| `npm run mail:preview -- --days 30 --max-threads 20` | Compiled bounded Gmail evidence preview; build first, Google credentials only, sanitized counts and explicit coverage |
 | `npm run google:authorize` | One-time Desktop OAuth consent; temporary loopback listener and private refresh-token save to `.env` |
 | `npm test` | All offline unit/application and MSW contract tests |
 | `npm run test:coverage` | Offline tests with V8 branch coverage for review |
@@ -37,7 +38,7 @@ Offline checks need neither `.env` nor personal credentials. The database comman
 | `npm run fix` | Explicit developer-requested safe Biome fixes; review and stage the changes |
 | `npm run verify:foundation` | Slower clean-install and fault-injection evidence in a disposable checkout; requires populated `/private/tmp/jev-npm-cache` |
 
-`cycle --mode observe/capture` is a future command from Sections 2–7. It currently exits unsuccessfully instead of claiming to process mail. No launchd job is installed by this milestone. Status reports foundation ledger counts, not fabricated source freshness or publication success.
+`cycle --mode observe/capture` is a future command from Sections 2–7. It currently exits unsuccessfully instead of claiming to process mail. The manual [Gmail preview](gmail-preview.md) retrieves and normalizes evidence without persistent state or downstream writes. No launchd job is installed. Status reports foundation ledger counts, not fabricated source freshness or publication success.
 
 ## Boundaries
 
