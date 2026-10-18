@@ -1,6 +1,6 @@
 # Jev personal brief preprocessing
 
-Created: October 4, 2026. Updated: October 10, 2026. Status: section 1 foundation complete; processing and rollout in sections 2–8 remain planned.
+Created: October 4, 2026. Updated: October 17, 2026. Status: section 1 foundation, manual Gmail retrieval and durable evidence ingestion are implemented; incremental synchronization, classification and rollout remain planned.
 
 ## Product outcome
 
@@ -92,6 +92,8 @@ The capability specs contain the normative requirements and scenarios. Release e
 Measure missed actions, incorrect captures, routing corrections, review rate, latency, and API cost. Evaluate roughly 100–200 representative corrected messages, including held-out examples and edge cases. Report observed trade-offs; do not declare unmeasured accuracy or cost guarantees.
 
 ## Progress tracking
+
+Manual [durable ingestion](mail-ingestion.md) now retains immutable complete mail evidence and exact-bound pending jobs. This is a prerequisite portion of task 2.2, not completion of history/checkpoint orchestration. No operational migration, scheduled ingestion, classifier or task capture is implied.
 
 The canonical implementation checklist is [tasks.md](../openspec/changes/add-personal-brief-preprocessing/tasks.md). Its eight numbered groups are the delivery milestones, and each task includes verification evidence. Complete the expanded application/testing/Git foundation in group 1 before feature work. Check a box only after its stated verification succeeds. Preserve task-level evidence during implementation and summarize it in a release report.
 

@@ -12,6 +12,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { ThreadEvidence, ThreadObservation } from "../../domain/mail-evidence.js";
 
 export const jev = pgSchema("jev");
 const time = (name: string) => timestamp(name, { withTimezone: true, mode: "date" });
@@ -27,8 +28,35 @@ export const sources = jev.table(
     sourceId: text("source_id").notNull(),
     fingerprint: text("fingerprint").notNull(),
     observedAt: time("observed_at").notNull(),
+    observation: jsonb("observation").$type<ThreadObservation>(),
   },
   (t) => [primaryKey({ columns: [t.mailbox, t.sourceId] })],
+);
+export const mailEvidenceVersions = jev.table(
+  "mail_evidence_versions",
+  {
+    mailbox: text("mailbox").notNull(),
+    sourceId: text("source_id").notNull(),
+    fingerprint: text("fingerprint").notNull(),
+    schemaVersion: text("schema_version").notNull(),
+    evidence: jsonb("evidence").$type<ThreadEvidence>().notNull(),
+    createdAt: time("created_at").notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.mailbox, t.sourceId, t.fingerprint] }),
+    foreignKey({
+      columns: [t.mailbox, t.sourceId],
+      foreignColumns: [sources.mailbox, sources.sourceId],
+    }),
+    check(
+      "evidence_identity",
+      sql`coalesce(${t.evidence}->'source'->>'mailbox' = ${t.mailbox} and ${t.evidence}->'source'->>'threadId' = ${t.sourceId} and ${t.evidence}->>'schemaVersion' = ${t.schemaVersion}, false)`,
+    ),
+    check(
+      "evidence_complete",
+      sql`coalesce(${t.schemaVersion} = 'mail-evidence/v1' and ${t.evidence}->'coverage'->>'messageBodies' = 'complete', false)`,
+    ),
+  ],
 );
 export const pendingJobs = jev.table(
   "pending_jobs",
@@ -37,6 +65,7 @@ export const pendingJobs = jev.table(
     mailbox: text("mailbox").notNull(),
     sourceId: text("source_id").notNull(),
     fingerprint: text("fingerprint").notNull(),
+    evidenceFingerprint: text("evidence_fingerprint"),
     policyVersion: text("policy_version").notNull(),
     attempts: integer("attempts").notNull().default(0),
     availableAt: time("available_at").notNull(),
@@ -51,6 +80,18 @@ export const pendingJobs = jev.table(
       foreignColumns: [sources.mailbox, sources.sourceId],
     }),
     check("job_attempts_nonnegative", sql`${t.attempts} >= 0`),
+    foreignKey({
+      columns: [t.mailbox, t.sourceId, t.evidenceFingerprint],
+      foreignColumns: [
+        mailEvidenceVersions.mailbox,
+        mailEvidenceVersions.sourceId,
+        mailEvidenceVersions.fingerprint,
+      ],
+    }),
+    check(
+      "job_evidence_identity",
+      sql`${t.evidenceFingerprint} is null or ${t.evidenceFingerprint} = ${t.fingerprint}`,
+    ),
     check("job_state", sql`${t.state} in ('pending','complete')`),
     index("pending_ready").on(t.state, t.availableAt),
   ],

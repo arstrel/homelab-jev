@@ -37,7 +37,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   await client.pool.query(
-    "truncate jev.classifications, jev.task_links, jev.pending_jobs, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
+    "truncate jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
   );
 });
 
@@ -53,7 +53,7 @@ describe("PostgreSQL ledger guarantees", () => {
           "select count(*)::int as n from jev_migrations.__drizzle_migrations",
         )
       ).rows[0]?.n,
-    ).toBe(2);
+    ).toBe(3);
   });
   it("durably ingests before checkpoint advancement and deduplicates replay", async () => {
     await repo.ingest({ checkpoint, sources: [source], jobs: [job] });
@@ -161,7 +161,7 @@ it("upgrades a prior migration and recovers a failed migration by reviewed forwa
     const journal = JSON.parse(readFileSync(join(folder, "meta/_journal.json"), "utf8"));
     const second = journal.entries.pop();
     writeFileSync(join(folder, "meta/_journal.json"), JSON.stringify(journal));
-    // Separate disposable schemas mimic an installation on the prior version.
+    // Separate disposable schemas mimic an installation on the prior two migrations.
     for (const entry of [...journal.entries, second]) {
       const path = join(folder, `${entry.tag}.sql`);
       writeFileSync(path, readFileSync(path, "utf8").replaceAll('"jev"', '"jev_upgrade"'));
@@ -173,6 +173,15 @@ it("upgrades a prior migration and recovers a failed migration by reviewed forwa
     await client.pool.query(
       "insert into jev_upgrade.checkpoints values ('fixture','original', now())",
     );
+    await client.pool.query(`
+      insert into jev_upgrade.sources values ('fixture','old-thread','old-fingerprint',now());
+      insert into jev_upgrade.pending_jobs (id,mailbox,source_id,fingerprint,policy_version,available_at,attempts,state)
+        values ('10000000-0000-4000-8000-000000000001','fixture','old-thread','old-fingerprint','old-policy',now(),3,'complete');
+      insert into jev_upgrade.classifications values ('10000000-0000-4000-8000-000000000002','10000000-0000-4000-8000-000000000001','old-model','{}',null,now());
+      insert into jev_upgrade.task_links values ('fixture','old-thread','old-obligation','old-task','{}');
+      insert into jev_upgrade.suppressions values ('old-obligation','completed',now());
+    `);
+    const priorMigrationCount = journal.entries.length;
     journal.entries.push(second);
     writeFileSync(join(folder, "meta/_journal.json"), JSON.stringify(journal));
     const path = join(folder, `${second.tag}.sql`);
@@ -190,7 +199,7 @@ it("upgrades a prior migration and recovers a failed migration by reviewed forwa
           "select count(*)::int as n from jev_upgrade_migrations.__drizzle_migrations",
         )
       ).rows[0]?.n,
-    ).toBe(1);
+    ).toBe(priorMigrationCount);
     writeFileSync(path, reviewedSql);
     await migrate(client.db, {
       migrationsFolder: folder,
@@ -207,6 +216,17 @@ it("upgrades a prior migration and recovers a failed migration by reviewed forwa
     expect((await client.pool.query("select value from unrelated.kept")).rows[0]?.value).toBe(
       "preserve",
     );
+    expect(
+      (
+        await client.pool.query(
+          "select evidence_fingerprint,attempts,state from jev_upgrade.pending_jobs",
+        )
+      ).rows,
+    ).toEqual([{ evidence_fingerprint: null, attempts: 3, state: "complete" }]);
+    for (const table of ["classifications", "task_links", "suppressions"])
+      expect(
+        (await client.pool.query(`select count(*)::int as n from jev_upgrade.${table}`)).rows[0]?.n,
+      ).toBe(1);
   } finally {
     rmSync(folder, { recursive: true, force: true });
   }

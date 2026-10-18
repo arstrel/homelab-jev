@@ -23,6 +23,8 @@ Complete this foundation before starting feature work in groups 2–6. Commands 
 The isolated [Gmail thread-evidence change](../add-gmail-thread-evidence/proposal.md), with its own [design](../add-gmail-thread-evidence/design.md) and [tasks](../add-gmail-thread-evidence/tasks.md), delivers 2.1 and the pure fingerprinting portion of 2.3. It ends at in-memory normalized evidence and a manual read-only preview. Durable evidence-version storage, queueing/checkpoint advancement (2.2), expired-cursor recovery (remaining 2.3), and scheduled/no-change freshness observation (2.4) remain here. This link does not mark any implementation complete.
 
 - [x] 2.1 Implement configurable recent-mail bootstrap and incoming/sent thread retrieval; verify fixtures cover read messages, sent replies, and older threads resurfacing through new mail.
+The separate [durable evidence ingestion change](../add-durable-mail-evidence/proposal.md) implements immutable evidence versions, exact job binding and atomic manual persistence. It delivers the storage prerequisite of 2.2; history pagination, durable retrieval retries and safe cursor advancement remain pending. Preview remains read-only; ingestion requires explicit database setup.
+
 - [ ] 2.2 Implement paginated history ingestion and durable pending jobs before checkpoint advancement; verify crash and classification-failure tests retain every fetched change.
 - [ ] 2.3 Implement expired-cursor recovery and source fingerprinting; verify repeated runs and read-state-only changes do not generate new processing obligations.
 - [ ] 2.4 Document bootstrap/recovery behavior and deliver an observation-run report; verify a second no-change run advances sync freshness without redundant Jev calls.

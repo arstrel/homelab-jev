@@ -1,7 +1,8 @@
 ---
 type: Invariant
 title: Replay-safe remote writes
-description: Persist stable intent identity before Todoist writes and reconcile ambiguous outcomes.
+description: Persist stable intent identity before Todoist writes and reconcile
+  ambiguous outcomes.
 tags:
   - architecture
   - jev
@@ -9,8 +10,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-18T06:26:11.007Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
   - id: s1
@@ -27,7 +28,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
 x_jev_sources:
   - path: src/adapters/postgres/schema.ts
-    sha256: 12cbbb53628c196fe0b12afb2ae1217ab1c5f8786cfd28256ef68fd24fd3a47b
+    sha256: fd892a5a888f4048cbe8f288ad1505c92651b6e37dc56dbf5315abd5301e66f2
   - path: src/adapters/postgres/repositories.ts
     sha256: 3b180be48d0705cc565ec4b6e48293f83a3f1b1ef634c5d792675f69bc790414
   - path: src/adapters/todoist.ts
@@ -39,6 +40,8 @@ x_jev_sources:
 # Replay-safe remote writes
 
 The foundation stores unique request UUIDs and pending/ambiguous/complete write-intent states. The Todoist adapter preserves a caller-provided `X-Request-Id`; an offline contract test verifies that header. The orchestration described here is planned, not an existing exactly-once guarantee.
+
+[Durable mail ingestion](mail-ingestion.md) is implemented and only writes PostgreSQL evidence/jobs. The new evidence bindings do not enable task creation or change existing remote-write intent guarantees.
 
 Derive an immutable obligation key from source evidence and action identity. Persist the intent and request UUID before issuing the remote write. Reuse that UUID on retries. If a timeout leaves the result unknown, reconcile using the durable mapping and source marker before deciding whether another create is safe. Blind retries with new IDs can duplicate tasks.
 

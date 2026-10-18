@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-11T21:35:20.101Z
+  at: 2026-10-18T06:26:11.007Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -40,4 +40,4 @@ The Gmail adapter validates identities/timestamps, decodes supported primary tex
 
 Pure v1 fingerprints cover complete normalized material, with canonical message/address/attachment order. Labels, read state, observation time, history IDs and decision policy are excluded. Partial bodies receive no complete fingerprint. A thread is evidence, not necessarily one obligation. See [layers](layers.md), [checkpoint safety](gmail-checkpoints.md), [uncertainty](uncertainty.md), and [private-data boundaries](/operations/secret-handling.md).
 
-The bounded live sample retrieved 20 conversations, with 17 complete bodies and three partial (one unsupported, two oversized), and no downstream writes. This demonstrates retrieval/coverage reporting, not full synchronization or classification quality. The next ingestion slice needs immutable evidence versions bound to pending jobs; the current ledger stores only identity/fingerprint. See [ledger](ledger.md) and [evaluation](/operations/classification-evaluation.md).
+The bounded live sample retrieved 20 conversations, with 17 complete bodies and three partial (one unsupported, two oversized), and no downstream writes. This demonstrates retrieval/coverage reporting, not full synchronization or classification quality. The separate [durable ingestion](mail-ingestion.md) path now stores immutable complete versions bound to jobs; preview retains its in-memory boundary. History synchronization and classification remain planned. See [ledger](ledger.md) and [evaluation](/operations/classification-evaluation.md).

@@ -44,6 +44,7 @@
     "db:check": "node --env-file=.env dist/cli.js db:check",
     "connections": "node --env-file=.env dist/cli.js connections",
     "mail:preview": "node --env-file=.env dist/cli.js mail:preview",
+    "mail:ingest": "node --env-file=.env dist/cli.js mail:ingest",
     "google:authorize": "node --import tsx scripts/google-authorize.ts",
     "verify:foundation": "node --import tsx scripts/verify-foundation.ts",
     "okf:check": "node --import tsx scripts/okf-check.ts",

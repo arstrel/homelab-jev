@@ -7,12 +7,11 @@ import { status } from "./application/status.js";
 import { databaseUrl, diagnostic } from "./config.js";
 
 const help =
-  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
+  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
 async function main() {
   const [command, ...extra] = process.argv.slice(2);
-  if (command === "mail:preview") {
-    const { runMailPreview } = await import("./cli-mail.js");
-    const { previewReportText } = await import("./application/preview-mail.js");
+  if (command === "mail:preview" || command === "mail:ingest") {
+    const { runMailPreview, runMailIngest } = await import("./cli-mail.js");
     const controller = new AbortController();
     let signalExit: number | undefined;
     const interrupt = () => {
@@ -26,9 +25,12 @@ async function main() {
     process.once("SIGINT", interrupt);
     process.once("SIGTERM", terminate);
     try {
-      const result = await runMailPreview(extra, process.env, { signal: controller.signal });
-      console.log(previewReportText(result));
-      process.exitCode = signalExit ?? result.report.exitCode;
+      const report =
+        command === "mail:ingest"
+          ? await runMailIngest(extra, process.env, { signal: controller.signal })
+          : (await runMailPreview(extra, process.env, { signal: controller.signal })).report;
+      console.log(JSON.stringify(report, null, 2));
+      process.exitCode = signalExit ?? report.exitCode;
     } finally {
       process.removeListener("SIGINT", interrupt);
       process.removeListener("SIGTERM", terminate);
