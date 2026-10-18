@@ -9,8 +9,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-11T02:21:58Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: planned
 sources:
   - id: s1
@@ -21,7 +21,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/retro-feedback/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: fafbb4a836edbd853c451fd4e428f097086b8e55be24856d0feaafd66e7efcda
+    sha256: aa3618c539140b7993e86e1740221eae20af1824514f0ae78b1b6fb1e48e0a2d
   - path: openspec/changes/add-personal-brief-preprocessing/specs/retro-feedback/spec.md
     sha256: 6dbc33bf41d370c7822aac9b680dbeb82120944abeb56dbc6cfe898c41e15e51
 ---

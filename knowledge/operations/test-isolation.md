@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-11T21:30:08.389Z
+  at: 2026-10-18T06:26:11.007Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -39,6 +39,8 @@ x_jev_sources:
     sha256: 516db02eeb84abdad4de88dff06a2fb564dce2491a5bb1d0d84cad23a3949535
   - path: vitest.config.ts
     sha256: 2343aa99265208e2c873f2683d22139081a37cbd6be76b72b2f78eae94ffc38a
+  - path: tests/integration/mail-ingestion.test.ts
+    sha256: 5c99ae08993c7044e4bd7ab7b27bc4ed94c6a5add2190030ad2b11bacb613ee0
 ---
 
 # Offline and database test isolation
@@ -48,5 +50,7 @@ Offline test wrappers strip operational environment variables. Test setup reject
 PostgreSQL checks use a disposable pinned PostgreSQL 17 Docker container or validated CI test service. The runner binds local ports and cleans up its own labeled container. Never substitute the production `DB_URL` or load `.env` into the test suite.
 
 Current tests cover configuration, Git guards, bounded SDK contracts, repeatable Google authorization and migration/ledger behavior. New OKF tests cover parsing, metadata, root/relative navigation, escaping, confinement, drift and server boundaries. These are documentation-tool tests, not classifier quality evidence. Synthetic Gmail suites now cover normalized evidence, fingerprints, bounded reads, MIME coverage and preview privacy. Credentialed live previews remain manual and outside tests/CI; their counts do not establish classifier quality.
+
+Durable-ingestion fixtures now test immutable versions, exact lookup, concurrent replay, rollback, legacy recovery and the application-to-PostgreSQL path using synthetic mail only. Migration tests retain populated prior-version data through failure and repair. No operational ingestion result is claimed.
 
 See [development gates](development-gates.md) and [classification evaluation](classification-evaluation.md).

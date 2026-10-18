@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-11T21:30:08.389Z
+  at: 2026-10-18T06:26:11.007Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -24,11 +24,15 @@ x_jev_sources:
     sha256: 3b180be48d0705cc565ec4b6e48293f83a3f1b1ef634c5d792675f69bc790414
   - path: openspec/changes/add-personal-brief-preprocessing/specs/mail-synchronization/spec.md
     sha256: cd7c2aa91d93d41b935b8c3cc12ea3e9b6d18df35bfccab6262f0d7d0274f508
+  - path: src/adapters/postgres/mail-evidence.ts
+    sha256: 8c44a23b3411828bdd475c67b99ee0fdbafc1d30b854cbf7e6f3473fb604a72f
+  - path: src/application/ingest-mail.ts
+    sha256: deccd11cf8e73ebca2276f8480adbe2f1843cf55cfeee29c4076b2b2beb67a18
 ---
 
 # Gmail evidence and checkpoint safety
 
-The ledger foundation has an ingestion transaction that stores source identities, deduplicated pending jobs and the checkpoint together. Manual [Gmail evidence retrieval](gmail-evidence.md) is implemented without ledger writes; the durable Gmail synchronization orchestrator remains planned. The current ledger does not store normalized message payloads: subsequent ingestion must add immutable evidence versions and bind each job to the version actually classified before advancing a safe cursor.
+The ledger foundation has an ingestion transaction that stores source identities, deduplicated pending jobs and the checkpoint together. Manual [Gmail evidence retrieval](gmail-evidence.md) is implemented without ledger writes; the durable Gmail synchronization orchestrator remains planned. The separate [manual ingestion](mail-ingestion.md) path now stores immutable normalized versions and exact-bound jobs without changing checkpoints. The foundation checkpoint primitive still permits legacy unbound jobs; future history orchestration must combine the complete evidence transaction with safe cursor advancement.
 
 Poll incremental history every five minutes, paginate completely and expand affected full threads as required. Include incoming and sent evidence, including already-read mail; read/unread is not the obligation boundary. The proposed initial window is configurable, initially 30 days, and is still a planning default.
 

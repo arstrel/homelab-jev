@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-11T21:30:08.389Z
+  at: 2026-10-18T06:26:11.007Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -27,18 +27,20 @@ sources:
     title: docs/development.md
 x_jev_sources:
   - path: package.json
-    sha256: f9adf1c47d0eb7fa4a5be6f7138a2b7b1fa5c9c0e29e19c8ee74827ecf4005be
+    sha256: 6eed6212e9389cae21f091f20bf39136c4b854af4b1edad51d53bb1e4e134cfe
   - path: scripts/check.ts
     sha256: 265c3bdb561a903fb53a7119604f76cdf9ef0be9d7932077d1e5ff8ec785d392
   - path: scripts/git-gate.ts
     sha256: d319d4731259e12a306add4853a84c0e4f5691b4bcd56d8e0ba5386010adde12
   - path: docs/development.md
-    sha256: 72ba3b2c4810faa41c07cda078b9b737634558a99e51310e1bf8d41df9cc517e
+    sha256: 8c31a079571a2d5c05e10298d45236ef22c1555a1ef8caab9ad7a96d77067490
 ---
 
 # Node development and Git gates
 
 Use Node 24.21.0 and the pinned npm toolchain. Run `npm ci`, then `npm run check`. Biome checks formatting/linting without rewriting; TypeScript checks source/scripts/tests; Vitest/MSW runs offline cases; the CLI is compiled and smoke-tested without network; local document links and OpenSpec are validated. OKF validation joins this same gate. Pinned runtime address/HTML parsers support manual [Gmail preview](/architecture/gmail-evidence.md); its compiled option/configuration smoke checks remain offline. Build before invoking the credentialed preview npm command.
+
+The compiled manual ingestion command requires explicit migrations and Google/database configuration. It is smoke-tested offline; disposable PostgreSQL verifies its persistence invariants. The normal gates never ingest operational mail or migrate the homelab database.
 
 Pre-commit requires a fully staged application/config/documentation validation set and runs full offline checks. The input snapshot must remain unchanged during validation. Do not hide unstaged code to obtain a misleading pass. Use `npm run fix` explicitly when formatting changes are intended.
 

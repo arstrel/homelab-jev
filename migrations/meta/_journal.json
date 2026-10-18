@@ -15,6 +15,13 @@
       "when": 1791164938469,
       "tag": "0001_ambiguous_squadron_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792304430274,
+      "tag": "0002_durable_mail_evidence",
+      "breakpoints": true
     }
   ]
 }

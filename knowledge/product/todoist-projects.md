@@ -1,8 +1,8 @@
 ---
 type: Policy
 title: Existing project routing and task kinds
-description: Route concrete obligations to active existing projects while keeping optional inventory
-  and Retro distinct.
+description: Route concrete obligations to active existing projects while
+  keeping optional inventory and Retro distinct.
 tags:
   - product
   - jev
@@ -10,8 +10,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-11T02:21:58Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: planned
 sources:
   - id: s1
@@ -22,7 +22,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: fafbb4a836edbd853c451fd4e428f097086b8e55be24856d0feaafd66e7efcda
+    sha256: aa3618c539140b7993e86e1740221eae20af1824514f0ae78b1b6fb1e48e0a2d
   - path: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
     sha256: d6bef852b7c90292aacb8707eb6b911c1203f710a127aae5d5fbe2c356532373
 ---

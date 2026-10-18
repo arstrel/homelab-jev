@@ -11,6 +11,23 @@ export interface Ledger {
   status(): Promise<LedgerStatus>;
 }
 
+export interface PersistenceCounts {
+  newVersions: number;
+  newJobs: number;
+  boundLegacyJobs: number;
+}
+export interface EvidenceStore {
+  persistEvidence(
+    records: readonly import("../domain/stored-mail-evidence.js").EvidenceSubmission[],
+  ): Promise<PersistenceCounts>;
+  evidenceForJob(
+    jobId: string,
+  ): Promise<
+    | { status: "missing-job" | "missing-evidence" }
+    | { status: "ready"; evidence: import("../domain/mail-evidence.js").ThreadEvidence }
+  >;
+}
+
 /** SDK-free Gmail boundary; observations never imply durable synchronization. */
 export interface MailReader {
   listThreads(
