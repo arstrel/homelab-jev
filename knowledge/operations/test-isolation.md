@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:26:11.007Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -40,7 +40,13 @@ x_jev_sources:
   - path: vitest.config.ts
     sha256: 2343aa99265208e2c873f2683d22139081a37cbd6be76b72b2f78eae94ffc38a
   - path: tests/integration/mail-ingestion.test.ts
-    sha256: 5c99ae08993c7044e4bd7ab7b27bc4ed94c6a5add2190030ad2b11bacb613ee0
+    sha256: c0344ae6ab4000cf268b12bd383eb3ca88bd2ac1cf22efcd9c8680cc19cfa727
+  - path: tests/integration/mail-sync.test.ts
+    sha256: bdeae9fbb07c94896aa0c790803230b2e0409bc9c220e2573f8c174c77568326
+  - path: tests/adapters/gmail-sync.test.ts
+    sha256: ded556b50ec7829f3d4fa7d06c400517ed31377a0c0b92261ed2d7c7ee8f1e49
+  - path: tests/unit/mail-sync.test.ts
+    sha256: b5d0fd755cc374791794fd1ec89f60172e2e975a8f90f0916b416d61ba485f8d
 ---
 
 # Offline and database test isolation
@@ -54,3 +60,5 @@ Current tests cover configuration, Git guards, bounded SDK contracts, repeatable
 Durable-ingestion fixtures now test immutable versions, exact lookup, concurrent replay, rollback, legacy recovery and the application-to-PostgreSQL path using synthetic mail only. Migration tests retain populated prior-version data through failure and repair. No operational ingestion result is claimed.
 
 See [development gates](development-gates.md) and [classification evaluation](classification-evaluation.md).
+
+Sync fixtures now exercise resumable discovery, bootstrap overlap, partial retries with no new mail, checkpoint/evidence rollback, classification transaction failure, stale generations, and dedicated ownership loss via terminating only a disposable PostgreSQL backend. Provider contracts remain MSW-only; no live sync is performed by tests.

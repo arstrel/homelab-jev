@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import { z } from "zod";
 import type { MailBudget } from "../application/mail-budget.js";
-import type { MailReader, Runtime } from "../application/ports.js";
+import type { MailSyncReader, Runtime } from "../application/ports.js";
 import { MailReadError } from "../domain/mail-evidence.js";
 import { normalizeThread } from "./gmail-body.js";
 import type { googleAuth } from "./google.js";
@@ -19,13 +19,36 @@ const pageSchema = z.object({
     .optional(),
   nextPageToken: z.string().min(1).optional(),
 });
+const historyIdSchema = z.string().regex(/^\d{1,40}$/);
+const historyMessage = z.object({ id: z.string().min(1), threadId: z.string().min(1) });
+const changes = z
+  .array(z.object({ message: historyMessage }))
+  .max(1_000)
+  .optional();
+const historySchema = z.object({
+  historyId: historyIdSchema,
+  nextPageToken: z.string().min(1).optional(),
+  history: z
+    .array(
+      z.object({
+        id: historyIdSchema,
+        messages: z.array(historyMessage).max(1_000).optional(),
+        messagesAdded: changes,
+        messagesDeleted: changes,
+        labelsAdded: changes,
+        labelsRemoved: changes,
+      }),
+    )
+    .max(500)
+    .optional(),
+});
 
 /** Configure OAuth refresh too: SDK request options alone do not bound authentication. */
 export function gmailReader(
   auth: ReturnType<typeof googleAuth>,
   budget: MailBudget,
   clock: Pick<Runtime, "now">,
-): MailReader {
+): MailSyncReader {
   auth.transporter.defaults = { ...auth.transporter.defaults, ...budget.requestOptions() };
   // Refresh helpers explicitly enable retries, overriding Gaxios defaults.
   auth.transporter.interceptors.request.add({
@@ -44,7 +67,7 @@ export function gmailReader(
     return { ...budget.requestOptions(), headers: { authorization: `Bearer ${token}` } };
   }
   let identity: Promise<string> | undefined;
-  async function read<T>(operation: () => Promise<{ data: T }>): Promise<T> {
+  async function read<T>(operation: () => Promise<{ data: T }>, history = false): Promise<T> {
     try {
       return (await budget.read(operation)).data;
     } catch (error) {
@@ -52,7 +75,9 @@ export function gmailReader(
       if (error instanceof MailReadError) throw error;
       const status =
         error && typeof error === "object" && "status" in error ? error.status : undefined;
-      throw new MailReadError(status === 404 ? "missing-thread" : "provider-error");
+      throw new MailReadError(
+        status === 404 ? (history ? "history-expired" : "missing-thread") : "provider-error",
+      );
     }
   }
   const mailbox = () =>
@@ -67,6 +92,50 @@ export function gmailReader(
       },
     ));
   return {
+    async currentHistoryId() {
+      const profile = await read(async () =>
+        gmail.users.getProfile({ userId: "me" }, await options()),
+      );
+      const parsed = historyIdSchema.safeParse(profile.historyId);
+      if (!parsed.success) throw new MailReadError("invalid-data");
+      return parsed.data;
+    },
+    async listHistory(anchor, pageToken) {
+      if (!historyIdSchema.safeParse(anchor).success) throw new MailReadError("invalid-data");
+      const raw = await read(
+        async () =>
+          gmail.users.history.list(
+            {
+              userId: "me",
+              startHistoryId: anchor,
+              maxResults: 100,
+              ...(pageToken ? { pageToken } : {}),
+            },
+            await options(),
+          ),
+        true,
+      );
+      const parsed = historySchema.safeParse(raw);
+      if (!parsed.success || BigInt(parsed.data.historyId) < BigInt(anchor))
+        throw new MailReadError("invalid-data");
+      const ids = new Set<string>();
+      for (const entry of parsed.data.history ?? []) {
+        for (const message of entry.messages ?? []) ids.add(message.threadId);
+        for (const group of [
+          entry.messagesAdded,
+          entry.messagesDeleted,
+          entry.labelsAdded,
+          entry.labelsRemoved,
+        ])
+          for (const item of group ?? []) ids.add(item.message.threadId);
+      }
+      if (ids.size > 2_000) throw new MailReadError("too-large");
+      return {
+        ids: [...ids],
+        historyId: parsed.data.historyId,
+        ...(parsed.data.nextPageToken ? { nextToken: parsed.data.nextPageToken } : {}),
+      };
+    },
     async listThreads(query, pageToken) {
       const data = await read(async () =>
         gmail.users.threads.list(

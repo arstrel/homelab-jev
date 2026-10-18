@@ -21,6 +21,56 @@ export const checkpoints = jev.table("checkpoints", {
   historyId: text("history_id").notNull(),
   syncedAt: time("synced_at").notNull(),
 });
+export const mailSyncState = jev.table(
+  "mail_sync_state",
+  {
+    mailbox: text("mailbox").primaryKey(),
+    phase: text("phase", { enum: ["bootstrap", "history", "recovery-required"] }).notNull(),
+    days: integer("days").notNull(),
+    windowSince: time("window_since").notNull(),
+    windowUntil: time("window_until").notNull(),
+    historyId: text("history_id").notNull(),
+    pageToken: text("page_token"),
+    seenTokens: jsonb("seen_tokens").$type<string[]>().notNull().default([]),
+    revision: integer("revision").notNull().default(0),
+    discoveryCheckedAt: time("discovery_checked_at"),
+    evidenceSyncedAt: time("evidence_synced_at"),
+  },
+  (t) => [
+    check("sync_phase", sql`${t.phase} in ('bootstrap','history','recovery-required')`),
+    check(
+      "sync_bounds",
+      sql`${t.days} between 1 and 365 and ${t.windowSince} < ${t.windowUntil} and ${t.revision} >= 0`,
+    ),
+    check("sync_history_id", sql`${t.historyId} ~ '^[0-9]{1,40}$'`),
+    check(
+      "sync_tokens",
+      sql`jsonb_typeof(${t.seenTokens}) = 'array' and jsonb_array_length(${t.seenTokens}) <= 2000`,
+    ),
+  ],
+);
+export const mailRetrievals = jev.table(
+  "mail_retrievals",
+  {
+    mailbox: text("mailbox")
+      .notNull()
+      .references(() => mailSyncState.mailbox),
+    threadId: text("thread_id").notNull(),
+    generation: integer("generation").notNull().default(1),
+    fromHistory: integer("from_history").notNull().default(0),
+    attempts: integer("attempts").notNull().default(0),
+    availableAt: time("available_at").notNull(),
+    failure: text("failure").$type<import("../../domain/mail-sync.js").RetrievalFailure>(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.mailbox, t.threadId] }),
+    check(
+      "retrieval_counters",
+      sql`${t.generation} > 0 and ${t.attempts} >= 0 and ${t.fromHistory} in (0,1)`,
+    ),
+    index("retrieval_due").on(t.mailbox, t.availableAt),
+  ],
+);
 export const sources = jev.table(
   "sources",
   {

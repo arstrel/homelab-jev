@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:26:11.007Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -28,7 +28,7 @@ sources:
     title: migrations/0001_ambiguous_squadron_sinister.sql
 x_jev_sources:
   - path: docs/migrations.md
-    sha256: 51a657f51d85301c5ca856dd8d6f4f61d4707689f04457986e8f6f61a6359cc0
+    sha256: 7aa6c5dddb3867bfaa83c01eb2ba2bb3560605dcb532b1c20b3a64d4f01861fc
   - path: src/adapters/postgres/migrate.ts
     sha256: 8782971aeeddc143c47abf5eb86b892bfcaeedf5e141f36fff704ca6a1fbc147
   - path: migrations/0000_romantic_longshot.sql
@@ -37,6 +37,8 @@ x_jev_sources:
     sha256: fa1afdf14906ea532c16e23c677f71dc69b3dfade2eee363117b3cb73c9d14c4
   - path: migrations/0002_durable_mail_evidence.sql
     sha256: aa7e4e79bcedf00c1ca435e227f52ea347095fa0343a113575fc7638193f3e9d
+  - path: migrations/0003_incremental_mail_sync.sql
+    sha256: ad163f99b79099d404b78b786be6ca90f81a127125362f4dbfb9888dfae8ec36
 ---
 
 # Explicit database migrations
@@ -48,3 +50,5 @@ Before deployment, verify target, backup and compatibility. Test fresh initializ
 Migration 0002 adds immutable mail evidence, source observations and nullable exact job bindings while retaining populated legacy ledger data. Its trigger is explicit reviewed SQL alongside the Drizzle table snapshot. The upgrade/failed-repair suite now exercises the previous two migrations and preserves jobs, classifications, links and suppressions. It is code-tested, not automatically deployed. Prior code remains compatible with the additive schema.
 
 Restore/rollback procedures must be rehearsed in isolation and compatible with the selected compiled release. The presence of migration files does not prove production has applied them. Follow the detailed migration runbook and [native releases](native-releases.md).
+
+Migration 0003 adds sync state and a retrieval backlog without changing the legacy checkpoint/evidence contracts. The populated 0002-to-0003 failed/repaired upgrade and prior 0002 upgrade both remain tested. No operational migration or automatic startup migration is claimed.

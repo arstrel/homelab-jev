@@ -17,6 +17,8 @@ for (const args of [
   ["mail:preview"],
   ["mail:ingest", "--days", "private-option-marker"],
   ["mail:ingest"],
+  ["mail:sync", "--days", "private-option-marker"],
+  ["mail:sync"],
   ["status", "unexpected"],
 ]) {
   const result = spawnSync(

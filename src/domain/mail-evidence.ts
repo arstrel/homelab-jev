@@ -44,6 +44,7 @@ export interface ThreadRead {
 }
 export type MailFailure =
   | "provider-error"
+  | "history-expired"
   | "missing-thread"
   | "invalid-data"
   | "deadline"

@@ -20,7 +20,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   await client.pool.query(
-    "truncate jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
+    "truncate jev.mail_retrievals, jev.mail_sync_state, jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
   );
 });
 it("persists exact versions atomically and replays without duplicate jobs or checkpoints", async () => {

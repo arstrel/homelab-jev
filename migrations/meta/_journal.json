@@ -22,6 +22,13 @@
       "when": 1792304430274,
       "tag": "0002_durable_mail_evidence",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792365979817,
+      "tag": "0003_incremental_mail_sync",
+      "breakpoints": true
     }
   ]
 }

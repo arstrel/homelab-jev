@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:26:11.007Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -27,15 +27,19 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/design.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: 33ca579d0f5ba1b05d27ddbf4f8c1e9e2fd02a3224e936af4b0aafec37bbc966
+    sha256: 866db21607dee12965f76f0ae48b32017783d4250d1294c0171b69fe38531d16
   - path: src/application/ports.ts
-    sha256: abd7cd81c01a95cf36d5cffa17efd1fcee8e09ac5a998e50db22e84be6baba7f
+    sha256: 52c04034a8280e1705ac613ada1307839dcbfe8803d6d34b146e9ef6e4056626
   - path: src/domain/README.md
-    sha256: b038bc48b62c8d31a77b17e3f252ed13353ba775851e92a220c841da90b88d7d
+    sha256: 7d0d31f43ea8089296e0fa9e14ace8a7db2f1c3b627630082ed33a0499d2597c
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
-    sha256: 1ae7c84b9957c1449c1f66a4e192f822883abcd15353e29e825987b06be1a479
+    sha256: 4357f906b1b56ce9bf01dcbba3c8bc4999e497a3002022c51ac7bdf68d8d8b95
   - path: src/application/ingest-mail.ts
     sha256: deccd11cf8e73ebca2276f8480adbe2f1843cf55cfeee29c4076b2b2beb67a18
+  - path: src/application/sync-mail.ts
+    sha256: f28855912fa6b964fd5918aee3d5bf2bd77849a2521fb33c1aac2d74ceb62f84
+  - path: src/cli-mail-sync.ts
+    sha256: 3215916c5e8c32599ed344614b05a42d9986d9cf75b8a3ca392f66e0cf9785d7
 ---
 
 # Application boundaries and composition
@@ -47,3 +51,5 @@ Manual [durable ingestion](mail-ingestion.md) reuses the reader use case and wri
 Inject runtime time/identity and provider ports so offline tests do not require credentials or current wall-clock behavior. SDK response shapes stay at the adapter boundary. Validate external/model data before it enters application decisions.
 
 Do not perform remote calls inside database transactions. Separate durable ingestion from classification and remote writes. See [ledger](/architecture/ledger.md), [processing cycle](processing-cycle.md), and [test isolation](/operations/test-isolation.md).
+
+Manual [incremental sync](mail-sync.md) now coordinates a reader and a session-owned persistence port. Discovery, retrieval retries and evidence freshness remain separate from classification. The CLI creates the provider only after mailbox ownership is granted; no provider request occurs within a database transaction.
