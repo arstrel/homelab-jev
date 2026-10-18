@@ -3,6 +3,7 @@
 - [Application boundaries and composition](layers.md): Keep pure decisions separate from provider and database side effects. (mixed).
 - [Five-minute processing cycle](processing-cycle.md): A bounded native poller moves evidence through durable stages and publishes truthful context. (planned).
 - [Gmail evidence and checkpoint safety](gmail-checkpoints.md): Record evidence and jobs before advancing the mailbox cursor. (mixed).
+- [Bounded Gmail conversation evidence](gmail-evidence.md): Retrieve normalized text and stable fingerprints with explicit partial coverage and no downstream writes. (implemented).
 - [PostgreSQL processing ledger](ledger.md): Describe the current ledger schema and atomic ingestion without claiming remote exactly-once behavior. (implemented).
 - [Replay-safe remote writes](remote-write-safety.md): Persist stable intent identity before Todoist writes and reconcile ambiguous outcomes. (mixed).
 - [Preserve manual task changes](manual-edits.md): User task edits and completion override worker inference. (planned).

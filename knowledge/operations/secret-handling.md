@@ -1,7 +1,8 @@
 ---
 type: Invariant
 title: Configuration and private-data boundaries
-description: Keep credentials and private message data outside logs, tests and knowledge documents.
+description: Keep credentials and private message data outside logs, tests and
+  knowledge documents.
 tags:
   - operations
   - jev
@@ -9,8 +10,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-11T21:30:08.389Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
   - id: s1
@@ -37,6 +38,6 @@ Ignored `.env` holds independent worker credentials. `DB_URL` is authoritative w
 
 Diagnostics identify fields and fixed failure categories, not secret values or raw provider exceptions. Structured logging uses controlled dimensions and redaction. Do not put credentials, real mail bodies, refresh tokens, API responses or personal feedback in OKF concepts or committed evaluation fixtures.
 
-OKF is curated public-safe engineering knowledge. Its metadata is advisory and does not establish an authorization boundary. The local viewer never reads `.env`, serves repository paths or loads external images.
+The manual [Gmail preview](/architecture/gmail-evidence.md) prints only fixed status/reason counts and window bounds. Bodies, addresses, subjects, source IDs and fingerprints stay in memory; its runbook records sanitized live totals only. OKF is curated public-safe engineering knowledge. Its metadata is advisory and does not establish an authorization boundary. The local viewer never reads `.env`, serves repository paths or loads external images.
 
 See [Google grants](/providers/google-credentials.md), [test isolation](test-isolation.md), and [OKF maintenance](okf-maintenance.md).

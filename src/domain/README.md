@@ -1,6 +1,6 @@
 # Domain boundary
 
-Pure classification, obligation, routing and snapshot policy belongs here. Section 1 establishes the boundaries; these policies arrive in Sections 2–6. Domain modules must not import SDKs, PostgreSQL, environment configuration or wall-clock functions.
+Pure classification, obligation, routing and snapshot policy belongs here. [Mail evidence types and deterministic fingerprints](mail-evidence.md) are implemented; the remaining obligation policies arrive in Sections 2–6. Domain modules must not import SDKs, PostgreSQL, environment configuration or wall-clock functions.
 
 ## OKF context
 

@@ -10,11 +10,11 @@ Personal email preprocessing with TypeSafe AI's Jev: synchronize Gmail every fiv
 - [Implementation checklist](openspec/changes/add-personal-brief-preprocessing/tasks.md): eight milestones with verifiable tasks.
 - [Capability specifications](openspec/changes/add-personal-brief-preprocessing/specs/): six behavior contracts with acceptance scenarios.
 
-Section 1 foundation implementation is complete; sections 2–8 remain planned. Use the checklist as the implementation progress record; completing planning artifacts does not mean the product is implemented.
+Section 1 foundation and the isolated [Gmail evidence retrieval](docs/gmail-preview.md) slice are implemented. Durable synchronization and the remaining sections 2–8 remain planned. Use the checklist as the implementation progress record; completing planning artifacts does not mean the product is implemented.
 
 Foundation: Node 24.21.0/TypeScript, Drizzle with pg, npm, Biome, Vitest/MSW, and Husky. Full offline checks run before commit, with fully staged validation inputs; PostgreSQL checks run before push and in PR CI. Required remote enforcement is tracked separately in the checklist. Native launchd scheduling comes in Section 7. Bun is deferred to another project.
 
-Start with [development setup](docs/development.md), [independent connections](docs/connections.md), [migration operations](docs/migrations.md) and [foundation evidence](docs/foundation-evidence.md). Email processing and task capture are later milestones.
+Start with [development setup](docs/development.md), [independent connections](docs/connections.md), [Gmail preview](docs/gmail-preview.md), [migration operations](docs/migrations.md) and [foundation evidence](docs/foundation-evidence.md). Classification and task capture are later milestones.
 
 ## OpenSpec tracking
 

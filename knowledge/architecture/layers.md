@@ -9,8 +9,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-11T21:30:08.389Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
   - id: s1
@@ -27,18 +27,18 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/design.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: 85f0bedd18484ad0e7e77c632e24db86f804d3412aff38d15d920985e273de8c
+    sha256: 8e7438f34043743904c30baf0d95df002d6e8e90fa3fe306c8cf10af7b70039e
   - path: src/application/ports.ts
-    sha256: ca5c095dab4bd2c81683b6f4e156a2bb95a693d986eaebe8296d3a07d7607887
+    sha256: b3a7b787db334a819eaa4c7baa6842fdb110154915d068213041d3fce6bd28cb
   - path: src/domain/README.md
-    sha256: 2c8d04c8478e6ff89ddb9e94432835a46647a5db37b100847e4a9289f2116982
+    sha256: d768d0b3162a4e63a56d7cdceaf19ae1d78e400e9599fc167df50db2be4d4932
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
     sha256: 1ae7c84b9957c1449c1f66a4e192f822883abcd15353e29e825987b06be1a479
 ---
 
 # Application boundaries and composition
 
-`src/cli.ts` is the composition root. Configuration is explicit. Application use cases depend on ports; adapters implement Google, Todoist, Jev and PostgreSQL I/O. `src/domain/` is reserved for pure obligation identity, matching, routing, completion and freshness rules; those domain rules remain to be implemented.
+`src/cli.ts` is the composition root. Configuration is explicit. Application use cases depend on ports; adapters implement Google, Todoist, Jev and PostgreSQL I/O. `src/domain/` implements pure mail-evidence types and fingerprints; obligation identity, matching, routing, completion and freshness policy remain planned. Manual [Gmail preview](gmail-evidence.md) uses a reader port and shared budgets, with command composition in the CLI and its helper.
 
 Inject runtime time/identity and provider ports so offline tests do not require credentials or current wall-clock behavior. SDK response shapes stay at the adapter boundary. Validate external/model data before it enters application decisions.
 
