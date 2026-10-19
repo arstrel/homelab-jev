@@ -406,7 +406,46 @@ it("disables OAuth helper retries and does not replay unauthorized SDK reads", a
   await expect(valid.mail.listThreads("after:1", undefined)).rejects.toThrow("provider-error");
   expect(reads).toHaveBeenCalledTimes(1);
 });
-it("rejects decoded size mismatch, invalid UTF-8 and excessive MIME part counts", async () => {
+it.each(["inline", "external"])(
+  "accepts complete %s text with understated size metadata",
+  async (storage) => {
+    const data = Buffer.from("café").toString("base64url");
+    server.use(
+      http.get(`${root}/messages/m2/attachments/understated-text`, () =>
+        HttpResponse.json({ size: 4, data }),
+      ),
+    );
+    const { mail } = setup(
+      single(
+        textPart("café", "text/plain", {
+          body:
+            storage === "inline"
+              ? { size: 4, data }
+              : { size: 4, attachmentId: "understated-text" },
+        }),
+      ),
+    );
+    const read = await mail.readThreadEvidence("t-boiler");
+    expect(read.evidence.messages[0]?.body).toEqual({ status: "complete", text: "café" });
+    expect(read.evidence.coverage.messageBodies).toBe("complete");
+    expect(() => fingerprint(read.evidence)).not.toThrow();
+  },
+);
+it("enforces actual byte limits when provider size metadata is understated", async () => {
+  const { mail } = setup(
+    single(
+      textPart("ééééé", "text/plain", {
+        body: { size: 1, data: Buffer.from("ééééé").toString("base64url") },
+      }),
+    ),
+    { maxBodyBytes: 8 },
+  );
+  const read = await mail.readThreadEvidence("t-boiler");
+  expect(read.evidence.messages[0]?.body).toEqual({ status: "too-large" });
+  expect(read.evidence.coverage.messageBodies).toBe("partial");
+  expect(() => fingerprint(read.evidence)).toThrow();
+});
+it("rejects short decoded bodies, invalid UTF-8 and excessive MIME part counts", async () => {
   const mismatch = setup(
     single(textPart("short", "text/plain", { body: { size: 100, data: "eA" } })),
   );

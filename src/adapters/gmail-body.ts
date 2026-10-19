@@ -173,7 +173,8 @@ export async function normalizeBody(
         : part.body;
       if (!body || (body.data === undefined && body.size !== 0)) return { status: "unavailable" };
       const bytes = base64(body.data ?? "", budget.limits.maxBodyBytes - decodedSize);
-      if (body.size !== undefined && body.size !== bytes.length)
+      // Gmail can understate size; retain the check for a possible short read.
+      if (body.size !== undefined && body.size > bytes.length)
         throw new MailReadError("invalid-data");
       decodedSize += bytes.length;
       const charset = /charset\s*=\s*(?:"([^"]+)"|([^;\s]+))/i.exec(value(part, "content-type"));

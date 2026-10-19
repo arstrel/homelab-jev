@@ -16,6 +16,8 @@ Added bounded expired-cursor recovery, durable mapped-target coverage and explic
 
 ## 2026-10-18
 
+Diagnosed collection gaps after the triage merge: three sampled provider failures read successfully, while two partial-body samples exposed understated Gmail size metadata. Repaired the exact-size rejection with inline/external regressions and preserved short-read/actual-byte limits. Read-only verification accepted both affected bodies and kept the oversized control partial, without updating storage or freshness. Reviewed the evidence/retrieval snapshots and preserved review deadlines and draft/unverified state.
+
 Added manual incremental sync, separate discovery/evidence freshness and durable retry/acknowledgement ownership. Reviewed checkpoint, ledger, layers, delivery, provider, migration, test and evaluation claims against current code. Updated reviewed snapshots deliberately; unchanged policy claims keep their meaningful-change timestamps, and existing review deadlines/draft status are preserved. Automatic cursor recovery, scheduled deployment and live synchronization are not claimed.
 
 ## 2026-10-17
