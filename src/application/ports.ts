@@ -55,6 +55,11 @@ export interface MailSyncSession {
   readonly signal: AbortSignal;
   state(): Promise<import("../domain/mail-sync.js").MailSyncState | undefined>;
   initialize(state: import("../domain/mail-sync.js").MailSyncState): Promise<void>;
+  beginRecovery(
+    previous: import("../domain/mail-sync.js").MailSyncState,
+    next: import("../domain/mail-sync.js").MailSyncState,
+  ): Promise<void>;
+  mappedPage(after: string | null): Promise<{ ids: string[]; nextToken?: string }>;
   savePage(
     previous: import("../domain/mail-sync.js").MailSyncState,
     next: import("../domain/mail-sync.js").MailSyncState,

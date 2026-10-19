@@ -228,3 +228,81 @@ it("propagates ownership loss to an in-flight reader and closes the command pool
   expect(h.session.savePage).not.toHaveBeenCalled();
   expect(close).toHaveBeenCalledTimes(1);
 });
+
+it("automatically recovers with a fresh anchor, mapped coverage and history catch-up", async () => {
+  const h = syncHarness(syncState());
+  vi.mocked(h.mail.listHistory)
+    .mockRejectedValueOnce(new MailReadError("history-expired"))
+    .mockResolvedValue({ ids: ["during-recovery"], historyId: "40" });
+  vi.mocked(h.mail.currentHistoryId).mockResolvedValue("30");
+  vi.mocked(h.session.mappedPage).mockResolvedValue({ ids: ["old-mapped"] });
+  const report = await syncMail(options, { ...h, clock, budget: budget() });
+  expect(report).toMatchObject({
+    exitCode: 0,
+    phase: "history",
+    discoverySteps: 5,
+    pagesCommitted: 3,
+    recoveryCount: 1,
+    historyGap: true,
+    recoveryScope: "recent-window-and-all-mapped-threads",
+    evidenceComplete: true,
+    recoveryCompletedAt: mailInstant.toISOString(),
+  });
+  expect(h.mail.listHistory).toHaveBeenLastCalledWith("30", undefined);
+  expect(h.mail.readThreadEvidence).toHaveBeenCalledWith("old-mapped");
+  expect(h.mail.readThreadEvidence).toHaveBeenCalledWith("during-recovery");
+  expect(JSON.stringify(report)).not.toMatch(/old-mapped|during-recovery|previousHistoryId/);
+});
+
+it("bounds repeated expiry by discovery steps and preserves a resumable phase", async () => {
+  const h = syncHarness(syncState());
+  vi.mocked(h.mail.listHistory).mockRejectedValue(new MailReadError("history-expired"));
+  const report = await syncMail({ ...options, maxPages: 10 }, { ...h, clock, budget: budget() });
+  expect(report).toMatchObject({
+    exitCode: 2,
+    discoverySteps: 10,
+    recoveryCount: 3,
+    phase: "recovery-bootstrap",
+    evidenceComplete: false,
+    recoveryCompletedAt: null,
+    evidenceSyncedAt: null,
+  });
+  expect(h.mail.listHistory).toHaveBeenCalledTimes(3);
+});
+
+it("does not initialize recovery after cancellation or leak failed snapshot details", async () => {
+  const h = syncHarness(syncState("recovery-required"));
+  const controller = new AbortController();
+  vi.mocked(h.mail.currentHistoryId).mockImplementation(async () => {
+    controller.abort();
+    return "30";
+  });
+  expect(await syncMail(options, { ...h, clock, budget: budget(controller.signal) })).toMatchObject(
+    { exitCode: 1, phase: "recovery-required", reasons: ["cancelled"] },
+  );
+  expect(h.session.beginRecovery).not.toHaveBeenCalled();
+  vi.mocked(h.mail.currentHistoryId).mockResolvedValue("30");
+  vi.mocked(h.session.beginRecovery).mockRejectedValue(new Error("private-snapshot-sql"));
+  const report = await syncMail(options, { ...h, clock, budget: budget() });
+  expect(report).toMatchObject({ exitCode: 1, reasons: ["persistence-error"] });
+  expect(JSON.stringify(report)).not.toContain("private-snapshot-sql");
+});
+
+it("keeps old queued bootstrap work eligible when expiry consumes the last step", async () => {
+  const h = syncHarness(syncState());
+  h.queue.set("old-known", {
+    mailbox: "primary",
+    threadId: "old-known",
+    generation: 1,
+    fromHistory: false,
+    attempts: 0,
+    availableAt: mailInstant,
+  });
+  vi.mocked(h.mail.listHistory).mockRejectedValue(new MailReadError("history-expired"));
+  const read = threadRead("old-known");
+  for (const m of read.evidence.messages) m.receivedAt = "2020-01-01T00:00:00.000Z";
+  vi.mocked(h.mail.readThreadEvidence).mockResolvedValue(read);
+  expect(
+    await syncMail({ ...options, maxPages: 1 }, { ...h, clock, budget: budget() }),
+  ).toMatchObject({ phase: "recovery-required", newJobs: 1, excludedThreads: 0, exitCode: 2 });
+});

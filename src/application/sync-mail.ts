@@ -23,6 +23,12 @@ export interface SyncReport {
   discoveryCaughtUp: boolean;
   evidenceComplete: boolean;
   pagesCommitted: number;
+  discoverySteps: number;
+  recoveryCount: number;
+  recoveryStartedAt: string | null;
+  recoveryCompletedAt: string | null;
+  historyGap: boolean;
+  recoveryScope: "recent-window-and-all-mapped-threads" | null;
   queuedReferences: number;
   retrievalsAttempted: number;
   acknowledgedThreads: number;
@@ -45,6 +51,12 @@ export function emptySyncReport(): SyncReport {
     discoveryCaughtUp: false,
     evidenceComplete: false,
     pagesCommitted: 0,
+    discoverySteps: 0,
+    recoveryCount: 0,
+    recoveryStartedAt: null,
+    recoveryCompletedAt: null,
+    historyGap: false,
+    recoveryScope: null,
     queuedReferences: 0,
     retrievalsAttempted: 0,
     acknowledgedThreads: 0,
@@ -125,6 +137,11 @@ export async function syncMail(
         revision: 0,
         discoveryCheckedAt: null,
         evidenceSyncedAt: null,
+        recoveryCount: 0,
+        recoveryStartedAt: null,
+        recoveryCompletedAt: null,
+        previousHistoryId: null,
+        historyGap: false,
       };
       try {
         await session.initialize(initial);
@@ -134,13 +151,65 @@ export async function syncMail(
       }
       state = initial;
     }
-    while (report.pagesCommitted < options.maxPages && state.phase !== "recovery-required") {
+    while (report.discoverySteps < options.maxPages) {
       budget.assertActive();
-      const bootstrap = state.phase === "bootstrap";
+      report.discoverySteps++;
+      if (state.phase === "recovery-required") {
+        const historyId = await mail.currentHistoryId();
+        budget.assertActive();
+        const untilMs = (Math.floor(clock.now().getTime() / 1000) + 1) * 1000;
+        if (!Number.isFinite(untilMs)) throw new MailReadError("invalid-data");
+        const next: MailSyncState = {
+          ...state,
+          phase: "recovery-bootstrap",
+          historyId,
+          previousHistoryId: state.historyId,
+          windowSince: new Date(untilMs - state.days * 86_400_000),
+          windowUntil: new Date(untilMs),
+          pageToken: null,
+          seenTokens: [],
+          revision: state.revision + 1,
+          recoveryCount: state.recoveryCount + 1,
+          recoveryStartedAt: clock.now(),
+          recoveryCompletedAt: null,
+          historyGap: true,
+        };
+        try {
+          await session.beginRecovery(state, next);
+        } catch {
+          reasons.add("persistence-error");
+          throw new MailReadError("provider-error");
+        }
+        state = next;
+        continue;
+      }
+      const bootstrap = state.phase === "bootstrap" || state.phase === "recovery-bootstrap";
+      const mapped = state.phase === "recovery-mapped";
       const query = `after:${state.windowSince.getTime() / 1000 - 1} before:${state.windowUntil.getTime() / 1000}`;
-      const page = bootstrap
-        ? await mail.listThreads(query, state.pageToken ?? undefined)
-        : await mail.listHistory(state.historyId, state.pageToken ?? undefined);
+      let page: { ids: string[]; nextToken?: string; historyId?: string };
+      try {
+        page = bootstrap
+          ? await mail.listThreads(query, state.pageToken ?? undefined)
+          : mapped
+            ? await session.mappedPage(state.pageToken)
+            : await mail.listHistory(state.historyId, state.pageToken ?? undefined);
+      } catch (error) {
+        if (!bootstrap && !mapped && mailFailure(error) === "history-expired") {
+          await save(
+            {
+              ...state,
+              phase: "recovery-required",
+              historyGap: true,
+              revision: state.revision + 1,
+            },
+            [],
+            true,
+          );
+          continue;
+        }
+        if (mapped) reasons.add("persistence-error");
+        throw error;
+      }
       budget.assertActive();
       const token = page.nextToken ?? null;
       if (token && (state.seenTokens.includes(token) || state.seenTokens.length >= 2_000))
@@ -151,8 +220,10 @@ export async function syncMail(
         revision: state.revision + 1,
         seenTokens: token ? [...state.seenTokens, token] : [],
       };
-      if (!token && bootstrap) next.phase = "history";
-      if (!bootstrap && !token) {
+      if (!token && bootstrap)
+        next.phase = state.phase === "recovery-bootstrap" ? "recovery-mapped" : "history";
+      if (!token && mapped) next.phase = "history";
+      if (!bootstrap && !mapped && !token) {
         if (
           !("historyId" in page) ||
           typeof page.historyId !== "string" ||
@@ -166,27 +237,14 @@ export async function syncMail(
       await save(next, page.ids, !bootstrap);
       report.pagesCommitted++;
       report.queuedReferences += new Set(page.ids).size;
-      if (!bootstrap && !token) {
+      if (!bootstrap && !mapped && !token) {
         caughtUp = true;
         break;
       }
     }
-    if (state.phase === "recovery-required") reasons.add("recovery-required");
-    else if (!caughtUp) reasons.add("page-limit");
+    if (!caughtUp) reasons.add("page-limit");
   } catch (error) {
-    const failure = mailFailure(error);
-    if (failure === "history-expired" && state?.phase === "history") {
-      try {
-        await save(
-          { ...state, phase: "recovery-required", revision: state.revision + 1 },
-          [],
-          true,
-        );
-      } catch {
-        reasons.add("persistence-error");
-      }
-      reasons.add("recovery-required");
-    } else if (!reasons.has("persistence-error")) reasons.add(failure);
+    if (!reasons.has("persistence-error")) reasons.add(mailFailure(error));
   }
 
   if (
@@ -225,7 +283,7 @@ export async function syncMail(
             read.observation.messages.some((m) =>
               m.labels.some((l) => l === "SPAM" || l === "TRASH"),
             ) ||
-            (!item.fromHistory && !recent);
+            (!item.fromHistory && state.phase !== "recovery-required" && !recent);
           if (!excluded && !completeBodies(read.evidence)) {
             failure = "partial-body";
             report.partialThreads++;
@@ -277,6 +335,11 @@ export async function syncMail(
     report.phase = state.phase;
     report.discoveryCheckedAt = state.discoveryCheckedAt?.toISOString() ?? null;
     report.evidenceSyncedAt = state.evidenceSyncedAt?.toISOString() ?? null;
+    report.recoveryCount = state.recoveryCount;
+    report.recoveryStartedAt = state.recoveryStartedAt?.toISOString() ?? null;
+    report.recoveryCompletedAt = state.recoveryCompletedAt?.toISOString() ?? null;
+    report.historyGap = state.historyGap;
+    report.recoveryScope = state.historyGap ? "recent-window-and-all-mapped-threads" : null;
   }
   report.discoveryCaughtUp = caughtUp;
   report.evidenceComplete = caughtUp && report.pendingRetrievals === 0 && reasons.size === 0;

@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-19
+
+Added bounded expired-cursor recovery, durable mapped-target coverage and explicit unreplayed-history reporting. Reviewed changed sync, checkpoint, ledger, migration, test and delivery claims against implementation and synthetic tests. Reviewed unchanged classification, routing, manual-edit, Retro, planner, ownership, layering and release policies against the narrow product/design/schema changes before updating their snapshots. Meaningful-change timestamps advance only for changed claims; existing review deadlines and draft/unverified state remain intact. No operational migration, live recovery, scheduler or classifier quality is claimed.
+
 ## 2026-10-18
 
 Added manual incremental sync, separate discovery/evidence freshness and durable retry/acknowledgement ownership. Reviewed checkpoint, ledger, layers, delivery, provider, migration, test and evaluation claims against current code. Updated reviewed snapshots deliberately; unchanged policy claims keep their meaningful-change timestamps, and existing review deadlines/draft status are preserved. Automatic cursor recovery, scheduled deployment and live synchronization are not claimed.

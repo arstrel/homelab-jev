@@ -23,3 +23,9 @@ Rollback to the previous code is schema-compatible: stop ingestion, retain the a
 Migration 0003 adds `mail_sync_state` and `mail_retrievals`, keeping discovery and evidence freshness separate. It leaves legacy checkpoints, jobs, versions and mappings intact. Explicitly apply it before [mail synchronization](mail-sync.md); no command migrates on startup. The disposable upgrade test starts at populated 0002, injects a 0003 failure, verifies DDL rollback, repairs/reapplies and preserves exact job bindings and evidence. The earlier populated 0002 regression remains in place.
 
 Code rollback remains additive-schema compatible: stop sync, revert the release and retain state/backlog for later continuation. Do not delete state to force bootstrap or reverse applied migrations. No operational migration or credentialed sync has been performed during this implementation.
+
+## Expired-cursor recovery upgrade
+
+Migration 0004 adds defaulted recovery metadata, expands the phase constraint and creates `mail_recovery_targets`. Existing history anchors, backlog retry state and ledger rows remain intact. Apply explicitly before using automatic recovery; this implementation has not applied it to the operational database. The disposable populated 0003 upgrade test verifies failed DDL rollback, repaired/repeated application and preserved mappings/retries; prior upgrade regressions remain pinned to their original migrations.
+
+Stop sync before code rollback. The previous synchronizer cannot interpret `recovery-bootstrap` or `recovery-mapped`: finish recovery to a compatible `history` state before using that binary's sync command, or keep sync stopped until the recovery-capable release is restored. Retain the additive schema, targets and backlog. Preview/ingestion remain compatible; never delete recovery state to force compatibility.

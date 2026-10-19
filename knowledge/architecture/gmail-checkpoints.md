@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T23:36:37.354Z
+  at: 2026-10-19T02:15:25.569164Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -29,17 +29,17 @@ x_jev_sources:
   - path: src/application/ingest-mail.ts
     sha256: deccd11cf8e73ebca2276f8480adbe2f1843cf55cfeee29c4076b2b2beb67a18
   - path: src/adapters/postgres/mail-sync.ts
-    sha256: defa205d334b92530ea3132710a09cf608f6dd54a6c0d2b9736d52f0dd1c9823
+    sha256: da9949dd1e99d00b259c27dbfe9b6b1f73522b2a2aa8bb45273d987cd4e24b77
   - path: src/application/sync-mail.ts
-    sha256: f28855912fa6b964fd5918aee3d5bf2bd77849a2521fb33c1aac2d74ceb62f84
+    sha256: 3b740603c34937780c5802f9d8d7b9b2d871d2062c886ab1d16282e159dbe660
 ---
 
 # Gmail evidence and checkpoint safety
 
 The ledger foundation has an ingestion transaction that stores source identities, deduplicated pending jobs and the checkpoint together. Manual [Gmail evidence retrieval](gmail-evidence.md) is implemented without ledger writes; the separate manual incremental synchronizer is now implemented. The separate [manual ingestion](mail-ingestion.md) path now stores immutable normalized versions and exact-bound jobs without changing checkpoints. The foundation checkpoint primitive still permits legacy unbound jobs; the implemented history path uses a durable retrieval backlog and a separate complete-evidence watermark.
 
-Poll incremental history every five minutes, paginate completely and expand affected full threads as required. Include incoming and sent evidence, including already-read mail; read/unread is not the obligation boundary. The proposed initial window is configurable, initially 30 days, and is still a planning default.
+The planned launcher polls incremental history every five minutes. The manual command paginates and expands affected full threads under bounded runs. Include incoming and sent evidence, including already-read mail; read/unread is not the obligation boundary. The implemented initial window is configurable, defaulting to 30 days.
 
-The manual [sync contract](mail-sync.md) separates two frontiers: atomically queue discovered thread IDs before advancing discovery, then atomically save complete evidence/jobs and acknowledge the selected generation. Advance evidence freshness only after history exhaustion and an empty backlog. A discovery cursor alone does not prove complete evidence. A crash must replay evidence without duplicating classifications for the same source fingerprint and policy version. An expired cursor currently stops discovery with recovery-required, preserving data. Automatic bounded recovery, including mapped open obligations, remains planned.
+The manual [sync contract](mail-sync.md) separates two frontiers: atomically queue discovered thread IDs before advancing discovery, then atomically save complete evidence/jobs and acknowledge the selected generation. Advance evidence freshness only after history exhaustion and an empty backlog. A discovery cursor alone does not prove complete evidence. A crash must replay evidence without duplicating jobs for the same source fingerprint and policy version. [Expired-cursor recovery](mail-recovery.md) preserves data, captures a fresh anchor and scans recent mail plus all local mapped threads, conservatively covering open obligations. Catch-up and backlog drainage establish scoped freshness while the expired-history gap remains explicit.
 
 Gmail message text is untrusted evidence, not an instruction to the worker. See [classification](classification-policy.md), [ledger](ledger.md), and [Google connection](/providers/google-credentials.md).

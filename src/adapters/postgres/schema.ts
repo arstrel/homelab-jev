@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   check,
   foreignKey,
   index,
@@ -25,7 +26,9 @@ export const mailSyncState = jev.table(
   "mail_sync_state",
   {
     mailbox: text("mailbox").primaryKey(),
-    phase: text("phase", { enum: ["bootstrap", "history", "recovery-required"] }).notNull(),
+    phase: text("phase", {
+      enum: ["bootstrap", "history", "recovery-required", "recovery-bootstrap", "recovery-mapped"],
+    }).notNull(),
     days: integer("days").notNull(),
     windowSince: time("window_since").notNull(),
     windowUntil: time("window_until").notNull(),
@@ -35,9 +38,18 @@ export const mailSyncState = jev.table(
     revision: integer("revision").notNull().default(0),
     discoveryCheckedAt: time("discovery_checked_at"),
     evidenceSyncedAt: time("evidence_synced_at"),
+    recoveryCount: integer("recovery_count").notNull().default(0),
+    recoveryStartedAt: time("recovery_started_at"),
+    recoveryCompletedAt: time("recovery_completed_at"),
+    previousHistoryId: text("previous_history_id"),
+    historyGap: boolean("history_gap").notNull().default(false),
   },
   (t) => [
-    check("sync_phase", sql`${t.phase} in ('bootstrap','history','recovery-required')`),
+    check(
+      "sync_phase",
+      sql`${t.phase} in ('bootstrap','history','recovery-required','recovery-bootstrap','recovery-mapped')`,
+    ),
+    check("sync_recovery_count", sql`${t.recoveryCount} >= 0`),
     check(
       "sync_bounds",
       sql`${t.days} between 1 and 365 and ${t.windowSince} < ${t.windowUntil} and ${t.revision} >= 0`,
@@ -48,6 +60,16 @@ export const mailSyncState = jev.table(
       sql`jsonb_typeof(${t.seenTokens}) = 'array' and jsonb_array_length(${t.seenTokens}) <= 2000`,
     ),
   ],
+);
+export const mailRecoveryTargets = jev.table(
+  "mail_recovery_targets",
+  {
+    mailbox: text("mailbox")
+      .notNull()
+      .references(() => mailSyncState.mailbox),
+    threadId: text("thread_id").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.mailbox, t.threadId] })],
 );
 export const mailRetrievals = jev.table(
   "mail_retrievals",

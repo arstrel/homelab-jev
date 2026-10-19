@@ -46,6 +46,61 @@ export function mailSyncStore(client: ReturnType<typeof connect>): MailSyncStore
             if (value.mailbox !== mailbox) throw new MailReadError("invalid-data");
             await db.insert(s.mailSyncState).values(value);
           },
+          async beginRecovery(previous, next) {
+            active();
+            if (
+              previous.mailbox !== mailbox ||
+              next.mailbox !== mailbox ||
+              previous.phase !== "recovery-required" ||
+              next.phase !== "recovery-bootstrap" ||
+              next.revision !== previous.revision + 1 ||
+              next.recoveryCount !== previous.recoveryCount + 1
+            )
+              throw new MailReadError("invalid-data");
+            await db.transaction(async (tx) => {
+              // Retain unfinished targets if another anchor expires during catch-up.
+              await tx.execute(sql`insert into ${s.mailRecoveryTargets} (mailbox, thread_id)
+                select distinct ${s.taskLinks.mailbox}, ${s.taskLinks.sourceId}
+                from ${s.taskLinks} where ${s.taskLinks.mailbox} = ${mailbox}
+                on conflict do nothing`);
+              // A moved window must never exclude work discovered by a previous scan.
+              await tx
+                .update(s.mailRetrievals)
+                .set({
+                  fromHistory: 1,
+                  generation: sql`${s.mailRetrievals.generation} + 1`,
+                })
+                .where(eq(s.mailRetrievals.mailbox, mailbox));
+              const updated = await tx
+                .update(s.mailSyncState)
+                .set(next)
+                .where(
+                  and(
+                    eq(s.mailSyncState.mailbox, mailbox),
+                    eq(s.mailSyncState.revision, previous.revision),
+                  ),
+                )
+                .returning({ mailbox: s.mailSyncState.mailbox });
+              if (!updated.length) throw new MailReadError("invalid-data");
+            });
+          },
+          async mappedPage(after) {
+            active();
+            const rows = await db
+              .select({ id: s.mailRecoveryTargets.threadId })
+              .from(s.mailRecoveryTargets)
+              .where(
+                and(
+                  eq(s.mailRecoveryTargets.mailbox, mailbox),
+                  after === null ? undefined : gt(s.mailRecoveryTargets.threadId, after),
+                ),
+              )
+              .orderBy(s.mailRecoveryTargets.threadId)
+              .limit(101);
+            const ids = rows.slice(0, 100).map((row) => row.id);
+            const last = ids.at(-1);
+            return rows.length > 100 && last ? { ids, nextToken: last } : { ids };
+          },
           async savePage(previous, next, ids, fromHistory, now) {
             active();
             if (
@@ -86,6 +141,10 @@ export function mailSyncStore(client: ReturnType<typeof connect>): MailSyncStore
                 )
                 .returning({ mailbox: s.mailSyncState.mailbox });
               if (!updated.length) throw new MailReadError("invalid-data");
+              if (previous.phase === "recovery-mapped" && next.phase === "history")
+                await tx
+                  .delete(s.mailRecoveryTargets)
+                  .where(eq(s.mailRecoveryTargets.mailbox, mailbox));
             });
           },
           async due(now, limit) {
@@ -150,7 +209,13 @@ export function mailSyncStore(client: ReturnType<typeof connect>): MailSyncStore
             ) {
               const [updated] = await db
                 .update(s.mailSyncState)
-                .set({ evidenceSyncedAt: current.discoveryCheckedAt })
+                .set({
+                  evidenceSyncedAt: current.discoveryCheckedAt,
+                  recoveryCompletedAt:
+                    current.recoveryCount > 0
+                      ? (current.recoveryCompletedAt ?? current.discoveryCheckedAt)
+                      : null,
+                })
                 .where(eq(s.mailSyncState.mailbox, mailbox))
                 .returning();
               if (!updated) throw new MailReadError("invalid-data");

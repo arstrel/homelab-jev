@@ -29,6 +29,13 @@
       "when": 1792365979817,
       "tag": "0003_incremental_mail_sync",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792370091366,
+      "tag": "0004_mail_sync_recovery",
+      "breakpoints": true
     }
   ]
 }

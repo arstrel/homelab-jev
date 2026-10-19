@@ -13,6 +13,12 @@ export function syncHarness(initial?: MailSyncState) {
     initialize: vi.fn(async (value) => {
       state = value;
     }),
+    beginRecovery: vi.fn(async (_previous, next) => {
+      for (const [id, work] of queue)
+        queue.set(id, { ...work, fromHistory: true, generation: work.generation + 1 });
+      state = next;
+    }),
+    mappedPage: vi.fn(async () => ({ ids: [] })),
     savePage: vi.fn(async (_previous, next, ids, fromHistory, now) => {
       for (const id of ids)
         queue.set(id, {
@@ -38,7 +44,14 @@ export function syncHarness(initial?: MailSyncState) {
     finish: vi.fn(async (caughtUp) => {
       if (!state) throw new Error("Missing fake state");
       if (caughtUp && queue.size === 0)
-        state = { ...state, evidenceSyncedAt: state.discoveryCheckedAt };
+        state = {
+          ...state,
+          evidenceSyncedAt: state.discoveryCheckedAt,
+          recoveryCompletedAt:
+            state.recoveryCount > 0
+              ? (state.recoveryCompletedAt ?? state.discoveryCheckedAt)
+              : null,
+        };
       return {
         state,
         pending: queue.size,

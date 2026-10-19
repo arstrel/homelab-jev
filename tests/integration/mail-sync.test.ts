@@ -28,7 +28,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   await client.pool.query(
-    "truncate jev.mail_retrievals, jev.mail_sync_state, jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
+    "truncate jev.mail_recovery_targets, jev.mail_retrievals, jev.mail_sync_state, jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
   );
 });
 async function sessionTest(run: (session: MailSyncSession) => Promise<void>) {
@@ -262,17 +262,19 @@ it("preserves resumable failed history pages and makes label-only/no-change runs
   expect(third.evidenceSyncedAt).not.toBe(second.evidenceSyncedAt);
   expect(JSON.stringify(third)).not.toMatch(/t-boiler|private-provider|example.com/);
 });
-it("persists recovery-required without resetting the cursor or deleting prior work", async () => {
+it("retains the expired anchor when capped and when fresh anchor acquisition fails", async () => {
   await sessionTest(async (session) => {
     await session.initialize(syncState());
   });
   const mail = reader();
   vi.mocked(mail.listHistory).mockRejectedValue(new MailReadError("history-expired"));
-  expect(await run(mail)).toMatchObject({
+  expect(await run(mail, mailInstant, 1)).toMatchObject({
     phase: "recovery-required",
+    historyGap: true,
     evidenceComplete: false,
-    exitCode: 1,
+    exitCode: 2,
   });
+  vi.mocked(mail.currentHistoryId).mockRejectedValue(new Error("private-profile-error"));
   expect(await run(mail)).toMatchObject({ phase: "recovery-required", exitCode: 1 });
   expect(mail.listHistory).toHaveBeenCalledTimes(1);
   await sessionTest(async (session) => {
@@ -321,6 +323,7 @@ it("upgrades populated 0002 through failed/repaired 0003 without losing evidence
   try {
     cpSync("migrations", folder, { recursive: true });
     const journal = JSON.parse(readFileSync(join(folder, "meta/_journal.json"), "utf8"));
+    journal.entries = journal.entries.slice(0, 4);
     const newest = journal.entries.pop();
     for (const entry of [...journal.entries, newest]) {
       const path = join(folder, `${entry.tag}.sql`);
