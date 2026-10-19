@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T23:36:37.354Z
+  at: 2026-10-19T03:33:58.008101Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -27,7 +27,7 @@ sources:
     title: docs/development.md
 x_jev_sources:
   - path: package.json
-    sha256: 620e22e1252f5fef3e4c1e00bc4ee03fa6196ca8f26cc2dcf9462bbc53da2690
+    sha256: cfe12bbe09a145d2653fb3508f269d12684a72ed0e22c2d74de84c4261f4842b
   - path: scripts/check.ts
     sha256: 265c3bdb561a903fb53a7119604f76cdf9ef0be9d7932077d1e5ff8ec785d392
   - path: scripts/git-gate.ts
@@ -49,3 +49,5 @@ Pre-push repeats appropriate checks and runs PostgreSQL integration tests on dis
 See [test isolation](test-isolation.md), [migrations](database-migrations.md), and [OKF maintenance](okf-maintenance.md).
 
 The explicit compiled `mail:sync` command is now validated offline, with durable ownership/restart/freshness tests in disposable PostgreSQL. It requires reviewed migrations and Google/database configuration. The normal gates never run credentialed synchronization or enable launchd.
+
+The explicit `mail:classify` preview is also covered by offline compiled option/configuration checks and synthetic adapter/application tests. Disposable PostgreSQL checks exercise exact read-only evidence selection. Live Jev calls and private mail transfers are outside Git/CI gates.

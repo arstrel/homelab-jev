@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:02:02.103794Z
+  at: 2026-10-19T03:33:58.007148Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -34,7 +34,7 @@ x_jev_sources:
   - path: tests/unit/mail-status.test.ts
     sha256: 94fcb2b4a492fe368522e6ae4a0ce95b28450a9884d28a6dec6b22b54d1a51c3
   - path: scripts/cli-smoke.ts
-    sha256: f6f277d7fbd64596ed948a05d95bc98f7647f27a18882a0c0031ba8949035b9f
+    sha256: 2b2cc5002b9bd1885dec9dd7b2322632c538ebf1a0100770860f55ebdd63ba15
   - path: tests/setup.ts
     sha256: 848618590ddc9c3f5f53c84b13b41537b040c7f0c62ad0c6ba3cd41caab706b3
   - path: scripts/environment.ts
@@ -53,6 +53,12 @@ x_jev_sources:
     sha256: ded556b50ec7829f3d4fa7d06c400517ed31377a0c0b92261ed2d7c7ee8f1e49
   - path: tests/unit/mail-sync.test.ts
     sha256: 6db9df740bdeabf5013309fb60a65d786fd518eaf8fd425e1e4f2fe689451fba
+  - path: tests/unit/mail-triage.test.ts
+    sha256: d0b8ffd5ed626c9976924a797c2338e9e0d30fb40235eee606ca02d4ebceed77
+  - path: tests/adapters/jev-triage.test.ts
+    sha256: 00599738213ca9d2fff6049c28de8b1c0156fc185bf4bea742969c93b8446a11
+  - path: tests/integration/mail-triage.test.ts
+    sha256: bc1de0b163fa87580ba65753e30f6752d28d247355f31a29a1c96a3f08ad14c3
 ---
 
 # Offline and database test isolation
@@ -72,3 +78,5 @@ Sync fixtures now exercise resumable discovery, bootstrap overlap, partial retri
 Recovery fixtures cover stage-by-stage restarts, a 101-thread mapped snapshot, older/missing/partial mail, history catch-up, repeated expiry caps, preserved backoff, stale initialization/final-page rollback and populated 0004 failure/repair. Read-state replay preserves evidence/job identity. These results establish synthetic recovery behavior only.
 
 Observation tests verify read-only transaction enforcement, schema readiness without setup, coherent aggregates across concurrent commits, observation during held sync ownership, and sanitized connection loss. Fixture initialization inserts typed sync state directly; it does not race teardown of an unnecessary setup ownership session against the test's lock acquisition. Disposable schema resets and backend termination remain confined to the validated test database. The compiled DB-only diagnostic uses a fake failing driver with network access denied; live pilot acceptance is never a Git gate.
+
+Triage tests use synthetic conversations, fixed results and MSW for malformed answers, hostile-state boundaries, cancellation and timeout/no-retry contracts. Disposable PostgreSQL tests select exact historical versions, preserve legacy gaps and detect corrupt evidence while leaving jobs/results unchanged. Credentialed Jev checks are explicit separate operations; deterministic gates never send real mail to Jev or claim measured classifier quality.

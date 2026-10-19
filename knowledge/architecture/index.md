@@ -10,7 +10,7 @@
 - [Bounded expired-cursor recovery](mail-recovery.md): Resume recent and mapped scans while preserving pending work and disclosing history gaps. (implemented).
 - [Replay-safe remote writes](remote-write-safety.md): Persist stable intent identity before Todoist writes and reconcile ambiguous outcomes. (mixed).
 - [Preserve manual task changes](manual-edits.md): User task edits and completion override worker inference. (planned).
-- [Typed classification and evidence policy](classification-policy.md): Ask Jev narrow questions and let deterministic code enforce effects. (planned).
+- [Typed classification and evidence policy](classification-policy.md): Preview bounded typed judgments; evaluated matching, routing and capture remain planned. (mixed).
 - [Uncertainty remains visible](uncertainty.md): Prefer explicit review states to invented precision or silent loss. (planned).
 - [Retro interpretation and reusable inventory](retro-feedback.md): Use daily feedback without consuming broad goals or recurring activity options. (planned).
 - [Drive snapshot and planner freshness](planner-handoff.md): Publish worker-owned context with honest source freshness for real scheduled planners. (planned).

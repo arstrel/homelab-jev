@@ -1,7 +1,7 @@
 ---
 type: Contract
 title: Jev adapter and judgment boundary
-description: The SDK connection exists; typed obligation judgment use cases remain planned.
+description: Bounded typed triage is implemented; evaluated matching, routing and capture remain planned.
 tags:
   - providers
   - jev
@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
+  at: 2026-10-19T03:33:58.004078Z
 stale_after: "2026-11-10T02:21:58Z"
 x_jev_delivery: mixed
 sources:
@@ -24,12 +24,16 @@ x_jev_sources:
     sha256: 9018768dc73a9852ea92a2c208b29441bfb2573a7b34d24290a09b6d6573642b
   - path: openspec/changes/add-personal-brief-preprocessing/specs/email-classification/spec.md
     sha256: 56bc45f00cc0e95c1eafd63afef8a262ce537c3e012fec5de66a374eb2e04e9a
+  - path: src/adapters/jev-triage.ts
+    sha256: b88247e2ac8d915a1f365b46a7d3fe04fdd1207eec715d9aaac1eca7f5ce0646
+  - path: src/domain/mail-triage.ts
+    sha256: 5476e6c425cd5c30430d78459f5faedb11b6d52fc297c64a624fd9674768c7db
 ---
 
 # Jev adapter and judgment boundary
 
 The current TypeSafe AI SDK adapter checks model availability with a bounded read-only call, retries disabled and SDK logging disabled. `JEV_API_KEY` belongs only in local/runtime secret configuration.
 
-Future use cases ask narrow typed questions about evidence, matches and routing. Schema validation and deterministic code decide what can be persisted or written. No model output can extend project IDs, bypass manual overrides or request arbitrary tool execution.
+The explicit `mail:classify` preview asks independent kind, attention and lifecycle choices on complete stored evidence. Zod validates exact keys, enum choices, numeric probabilities/confidence, usage and returned model identity. Policy `mail-triage/v1` uses live-confirmed numeric model revision `jev-1.13.0`; mutable aliases are rejected. The initial setting is uncalibrated. Preview leaves storage/jobs/tasks unchanged. Matching and routing remain planned. No model output can extend project IDs, bypass manual overrides or request arbitrary tool execution.
 
-Avoid sending whole mailbox history when a bounded thread and candidate list suffice. Pin and record the chosen model and policy version when classification is implemented. Use [evaluation](/operations/classification-evaluation.md) to choose thresholds, and follow [classification policy](/architecture/classification-policy.md).
+Only necessary subject/body/timestamp/direction state is sent, capped at 32 KiB without truncation; address lists, dedicated source IDs and attachment contents are omitted. Body text can contain private information. Calls have five-second timeouts, disabled retries/logging and shared cancellation/deadline bounds. Use [evaluation](/operations/classification-evaluation.md) to choose later thresholds, and follow [classification policy](/architecture/classification-policy.md).

@@ -47,6 +47,7 @@
     "mail:ingest": "node --env-file=.env dist/cli.js mail:ingest",
     "mail:sync": "node --env-file=.env dist/cli.js mail:sync",
     "mail:status": "node --env-file=.env dist/cli.js mail:status",
+    "mail:classify": "node --env-file=.env dist/cli.js mail:classify",
     "google:authorize": "node --import tsx scripts/google-authorize.ts",
     "verify:foundation": "node --import tsx scripts/verify-foundation.ts",
     "okf:check": "node --import tsx scripts/okf-check.ts",
