@@ -48,6 +48,8 @@ npm run mail:sync -- --max-pages 5 --max-threads 20
 npm run mail:status
 ```
 
+For manual catch-up, allow at least **60 seconds between a batch completing and starting the next 20-thread batch**, and respect any longer saved retry dates. Google's current [quota table](https://developers.google.com/workspace/gmail/api/reference/quota) lists 6,000 units per user per project per minute for new projects and 120 units per full-thread read; 50 such reads alone use that allowance. The configured project quota and other clients can affect available capacity. The application's request/concurrency bounds do not meter quota units. Stop the session if provider failures recur rather than immediately launching another batch; see the [observed throttling](mail-observation-evidence.md#resumed-session-after-pr-12). Waiting counts toward the 60-minute session budget.
+
 The first uninitialized sync uses the existing 30-day default. Resume without `--days` to respect the saved window; do not reset state to shrink it. Preserve all evidence, jobs, retry dates, mappings and suppressions. Unsupported/incomplete bodies remain visible gaps and may prevent complete evidence catch-up.
 
 Stop after **20 sync invocations or 60 minutes elapsed**, whichever occurs first, including preparation pauses after session start. Each run retains its own provider/request/deadline bounds. Stop earlier for incompatible schema, credential failure, persistent provider/database errors or cancellation. Exit 2 from sync is a resumable cap, not complete catch-up. Respect retry times; do not repeatedly poll work that is not due. Record gaps and stop at the budget; extending the session is a separate deliberate decision.
