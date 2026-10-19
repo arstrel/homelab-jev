@@ -2,6 +2,8 @@
 
 ## 2026-10-19
 
+Observed merged PR #14 under the existing manual session limits: 20 paced runs / 400 retrieval attempts added 351 complete versions/jobs without a new provider error or throttle report. Stopped at the invocation cap with 516 exact-bound jobs and 409 pending retrievals; partial-body coverage and prior failures remain visible, evidence freshness is null and catch-up/no-change acceptance stays open. Reviewed the current observation/delivery claims and evidence snapshots while preserving review deadlines and draft/unverified state. No new runtime change, scheduler or live classifier call occurred.
+
 Resumed the authorized collection observation after Google reauthorization: discovery caught up, 115 complete versions/jobs were stored and 769 retrievals remained when the session stopped at provider failures. No complete/no-change acceptance was claimed. Added read-only bounded Jev triage preview over exact evidence, with finite independent judgments, runtime schemas, numeric model revision, cancellation and synthetic/disposable tests. Reviewed changed delivery/layering/provider/test/privacy claims and source snapshots; existing review deadlines and draft/unverified status are preserved. One explicitly approved real-conversation smoke check passed with stored jobs/classifications/sync unchanged; this is not a classifier-quality evaluation.
 
 Recorded the first authorized operational observation: verified target, private readable backup, reviewed migrations through 0004 and ready/uninitialized storage. The initial sync failed at Google token refresh before retrieving mail; the report retains incomplete status and the acceptance tasks remain open. No live catch-up, no-change result, recovery or classification quality is claimed.

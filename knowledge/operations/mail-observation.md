@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T04:14:23Z
+  at: 2026-10-19T14:07:14Z
 stale_after: "2026-11-18T02:37:00Z"
 x_jev_delivery: mixed
 sources:
@@ -26,7 +26,7 @@ x_jev_sources:
   - path: docs/mail-observation.md
     sha256: c90734a42b29772097e9177ad38f98ba4d4d5814299c28dc704335309a3d90d3
   - path: docs/mail-observation-evidence.md
-    sha256: 1b6936e02395950d68f7225f764db9d70f2753c2005439de658f426f1a6c35af
+    sha256: b804e0269de1e48d9c5a910face20c9c604bf6c674f5d250143ffd7aab24e167
 ---
 
 # Manual mail observation
@@ -43,4 +43,4 @@ Follow-up read-only diagnosis found three sampled provider failures recoverable 
 
 See [sync](/architecture/mail-sync.md), [migration preparation](database-migrations.md), [secret boundaries](secret-handling.md) and [test isolation](test-isolation.md). The operator runbook and evidence report are the reviewed repository snapshots above. Classification, downstream provider writes and scheduling remain later work.
 
-The post-PR #12 session added 50 complete versions/jobs, reaching 165 exact-bound pending jobs with 735 retrievals remaining. A read-only follow-up captured Gmail HTTP 403 `rateLimitExceeded`; the other selected samples shared that failed profile lookup. Rapid manual batches can exceed quota even under request/concurrency limits. The current reader now enforces a 1.5-second gap between Gmail request starts and latches on recognized throttling; the runbook preserves retry dates and session stop limits. DB-only diagnostics recognize `rate-limited`. This invocation-local pacing has synthetic coverage; a later live session must establish its operational behavior. Freshness remains null in the recorded observations and live acceptance stays open.
+The post-PR #12 session added 50 complete versions/jobs, reaching 165 exact-bound pending jobs with 735 retrievals remaining. A read-only follow-up captured Gmail HTTP 403 `rateLimitExceeded`; the other selected samples shared that failed profile lookup. Rapid manual batches can exceed quota even under request/concurrency limits. The current reader now enforces a 1.5-second gap between Gmail request starts and latches on recognized throttling; the runbook preserves retry dates and session stop limits. DB-only diagnostics recognize `rate-limited`. The later paced session completed 20 bounded runs / 400 retrieval attempts without a new throttle or provider-error report. It added 351 complete versions/jobs, reaching 516 exact-bound jobs with 409 retrievals pending. The session stopped at its invocation cap; 60 partial-body and 16 prior provider-error entries remain. Exact dispatch spacing and stop-on-throttle behavior retain synthetic evidence; the latter was not triggered live. Freshness remains null and catch-up/no-change acceptance stays open.

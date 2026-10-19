@@ -1,6 +1,6 @@
 # Gmail observation evidence
 
-Status: **incomplete — discovery caught up, evidence backlog remains**. The latest session resumed from merged PR #12 and added 50 complete versions/jobs, reaching 165 pending exact-bound jobs and 735 pending retrievals. It stopped after three bounded invocations when provider errors recurred. A read-only follow-up captured Gmail HTTP 403 `rateLimitExceeded`. Evidence freshness remains null; parent task 2.4 and observation task 3.1 remain open. Follow the [manual observation procedure](mail-observation.md).
+Status: **incomplete — paced collection works in the observed sample, evidence backlog remains**. The [latest session after PR #14](#paced-session-after-pr-14) completed 20 bounded runs / 400 retrieval attempts without a new provider error or throttle report. It added 351 complete versions/jobs, reaching 516 exact-bound pending jobs and 409 pending retrievals. The session stopped at its invocation cap. Evidence freshness remains null; parent task 2.4 and observation task 3.1 stay open. Follow the [manual observation procedure](mail-observation.md).
 
 ## Session record
 
@@ -40,7 +40,7 @@ Runs 2–3 completed bootstrap/history discovery. Runs 4–8 observed no newly q
 
 The remaining backlog exceeded what the session's remaining 12 invocations could drain at 20 attempts each. Stopping at the documented provider-failure boundary retains useful evidence and avoids an unjustified successful-pilot claim. Later explicit sessions can resume the saved state without repeating bootstrap.
 
-## Acceptance matrix
+## First-session acceptance matrix
 
 | Behavior | Evidence |
 | --- | --- |
@@ -94,3 +94,63 @@ Google's current [Gmail quota table](https://developers.google.com/workspace/gma
 A later deliberately resumed manual session should space 20-thread batches by at least 60 seconds after each completion, retaining any longer saved retry times. The runbook now records that pacing. Request-count and concurrency caps are not quota-unit pacing, and per-item retry backoff does not stop subsequent reads in the same invocation. Application-level throttle handling remains a separate possible change; no new limiter, runner, scheduler or schema was added here.
 
 Acceptance remains incomplete: discovery stayed caught up and exact-bound evidence increased to 165 versions/jobs, but neither complete evidence nor a strict no-change run was observed. Due-retry success was not separately traced in this session; live recovery remains unobserved. The executed collection/diagnosis paths made zero Jev calls and no Gmail/Todoist/Drive writes. Pending work remains intact for continuation; no real conversations were sent to Jev.
+
+
+## Paced session after PR #14
+
+Observed on October 19, 2026 (Pacific time); all timestamps below use UTC. Earlier sessions above remain historical records, including their former pacing guidance. This session uses the application admission pacing from merged PR #14. It validates continued collection under that build; it does not claim complete catch-up or scheduled availability.
+
+| Item | Observation |
+| --- | --- |
+| Reviewed commit / runtime | `e21504dccd1fe552333381feec3a4d56e389bc72` (merged PR #14); Node 24.21.0; clean checkout and fresh build |
+| Preparation | Configured database/role privately reverified; PostgreSQL 17, managed schemas ready; prior owner-only PostgreSQL archive retained; no migration or new backup required |
+| Gates before live access | 211 offline tests plus formatting, types, build, compiled CLI, 146 document links, 30 OKF concepts and 11 strict OpenSpec changes; 46 disposable PostgreSQL tests passed |
+| Baseline / final diagnostic | 2026-10-19T13:52:29.025Z / 2026-10-19T14:05:56.715Z; about 13 minutes 28 seconds |
+| Budget and stop | Maximum 20 sync invocations or 60 minutes; stopped after exactly 20; each retained 5 discovery steps, 20 retrieval attempts and the existing request/deadline/body bounds |
+| Baseline | 735 pending retrievals, all due, 35 with prior attempts; 12 partial-body and 16 provider-error entries; 165 pending jobs, none unbound |
+| Session totals | 26 queued references; 400 retrieval attempts; 352 acknowledgements, including one eligibility exclusion; 351 new complete versions and exact-bound jobs; 48 partial-body attempts, no missing threads |
+| Observed failures | No `provider-error` or `rate-limited` reason in any session run; all incomplete outcomes were `partial-body` / `retry-pending` |
+| Batch durations | 32.524–32.863 seconds (median 32.6225 seconds); consistent with the paced build, compared with 3.371–4.204 seconds in the earlier unpaced resumed session |
+| Final backlog | 409 pending retrievals, 391 due, 83 with prior attempts; 326 have no prior attempt; earliest future retry 2026-10-19T14:05:57.296Z |
+| Final failures / jobs | 60 partial-body and 16 prior provider-error entries remain; 516 pending classification jobs, none unbound |
+| Freshness / scope | Discovery checked at 2026-10-19T14:05:15.530Z; evidence timestamp remains null; original 30-day window unchanged; history phase throughout, no recovery/history gap |
+
+Every run committed one exhausted history page, reported discovery caught up and incomplete evidence, and exited 1 because partial/retrying work remained. A successful paced retrieval batch is not a successful whole-mailbox catch-up claim.
+
+| Run | Start / duration | Pages / references / attempts / acknowledgements | Partial / versions / jobs | Pending / prior attempts | Fixed reasons |
+| --- | --- | --- | --- | --- | --- |
+| P1 | 2026-10-19T13:52:34.480Z / 32.596s | 1 / 25 / 20 / 19 | 1 / 19 / 19 | 741 / 36 | partial-body, retry-pending |
+| P2 | 2026-10-19T13:53:16.255Z / 32.692s | 1 / 0 / 20 / 19 | 1 / 18 / 18 | 722 / 37 | partial-body, retry-pending |
+| P3 | 2026-10-19T13:53:55.487Z / 32.567s | 1 / 0 / 20 / 19 | 1 / 19 / 19 | 703 / 38 | partial-body, retry-pending |
+| P4 | 2026-10-19T13:54:33.966Z / 32.525s | 1 / 0 / 20 / 20 | 0 / 20 / 20 | 683 / 38 | retry-pending |
+| P5 | 2026-10-19T13:55:13.254Z / 32.524s | 1 / 0 / 20 / 15 | 5 / 15 / 15 | 668 / 43 | partial-body, retry-pending |
+| P6 | 2026-10-19T13:55:51.381Z / 32.574s | 1 / 0 / 20 / 19 | 1 / 19 / 19 | 649 / 44 | partial-body, retry-pending |
+| P7 | 2026-10-19T13:56:29.568Z / 32.597s | 1 / 0 / 20 / 18 | 2 / 18 / 18 | 631 / 46 | partial-body, retry-pending |
+| P8 | 2026-10-19T13:57:14.971Z / 32.793s | 1 / 0 / 20 / 16 | 4 / 16 / 16 | 615 / 50 | partial-body, retry-pending |
+| P9 | 2026-10-19T13:57:53.782Z / 32.752s | 1 / 0 / 20 / 18 | 2 / 18 / 18 | 597 / 52 | partial-body, retry-pending |
+| P10 | 2026-10-19T13:58:31.658Z / 32.834s | 1 / 0 / 20 / 20 | 0 / 20 / 20 | 577 / 52 | retry-pending |
+| P11 | 2026-10-19T13:59:10.356Z / 32.527s | 1 / 0 / 20 / 11 | 9 / 11 / 11 | 566 / 61 | partial-body, retry-pending |
+| P12 | 2026-10-19T13:59:52.505Z / 32.782s | 1 / 0 / 20 / 16 | 4 / 16 / 16 | 550 / 65 | partial-body, retry-pending |
+| P13 | 2026-10-19T14:00:32.067Z / 32.861s | 1 / 0 / 20 / 19 | 1 / 19 / 19 | 531 / 66 | partial-body, retry-pending |
+| P14 | 2026-10-19T14:01:12.298Z / 32.862s | 1 / 1 / 20 / 19 | 1 / 19 / 19 | 513 / 67 | partial-body, retry-pending |
+| P15 | 2026-10-19T14:01:51.601Z / 32.551s | 1 / 0 / 20 / 18 | 2 / 18 / 18 | 495 / 69 | partial-body, retry-pending |
+| P16 | 2026-10-19T14:02:32.739Z / 32.601s | 1 / 0 / 20 / 17 | 3 / 17 / 17 | 478 / 72 | partial-body, retry-pending |
+| P17 | 2026-10-19T14:03:12.352Z / 32.863s | 1 / 0 / 20 / 20 | 0 / 20 / 20 | 458 / 72 | retry-pending |
+| P18 | 2026-10-19T14:03:52.658Z / 32.635s | 1 / 0 / 20 / 18 | 2 / 18 / 18 | 440 / 74 | partial-body, retry-pending |
+| P19 | 2026-10-19T14:04:33.850Z / 32.629s | 1 / 0 / 20 / 16 | 4 / 16 / 16 | 424 / 78 | partial-body, retry-pending |
+| P20 | 2026-10-19T14:05:14.481Z / 32.616s | 1 / 0 / 20 / 15 | 5 / 15 / 15 | 409 / 83 | partial-body, retry-pending |
+
+The 26 new references were discovered without resetting the saved window. Queue accounting reconciles: 735 baseline + 26 queued − 352 acknowledgements = 409 final pending. Exact-bound job accounting also reconciles: 165 baseline + 351 new = 516 final. Partial-body entries increased from 12 to 60; the 16 pre-existing provider-error entries remain, and no new provider failure was reported. Preserve them for normal due processing; absence of new errors does not prove those older conversations were repaired.
+
+| Acceptance behavior | Latest evidence |
+| --- | --- |
+| Paced collection continues across repeated batches | Live-observed: 20 runs / 400 attempts without a new throttle or provider-error report; exact dispatch spacing remains covered by deterministic adapter tests |
+| Partial work remains separate from complete jobs | Live-observed: 48 partial attempts retained, 351 complete versions/jobs added, no unbound pending jobs |
+| Stop-on-throttle handling | Synthetic transport/application/PostgreSQL evidence only; no throttle occurred in this session |
+| Complete catch-up and strict later no-change freshness | Not observed; 409 retrievals remain and evidence time is null |
+| Successful due retry / expired-anchor recovery | No new live claim; synthetic acceptance remains authoritative |
+| Scheduling / classifier quality | Not exercised or established |
+
+The executed collection command path made zero Jev calls and no Gmail/Todoist/Drive writes. This is supported by the command's capabilities and synthetic checks, not an independent audit of all account activity. No real conversation was sent to Jev in this session, and classification jobs were not consumed.
+
+Next action: resume the remaining queue in a later deliberate bounded session, retain saved retry dates, and diagnose persistent partial-body coverage before claiming completeness. Do not widen limits, discard work or mark partial bodies complete to pass acceptance. Parent 2.4 and observation 3.1 remain open; this report adds operational evidence without changing runtime policy.
