@@ -6,4 +6,4 @@
 
 ## 2. Delivery
 
-- [ ] 2.1 Run offline and disposable PostgreSQL gates, review the small manual scope and deliver through normal Git/CI checks and a PR; retain pending parent rollout/evaluation tasks and do not send real email or create live tasks during tests.
+- [x] 2.1 Run offline and disposable PostgreSQL gates, review the small manual scope and deliver through normal Git/CI checks and a PR; retain pending parent rollout/evaluation tasks and do not send real email or create live tasks during tests.
