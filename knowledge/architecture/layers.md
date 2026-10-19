@@ -29,15 +29,15 @@ x_jev_sources:
   - path: src/cli.ts
     sha256: 866db21607dee12965f76f0ae48b32017783d4250d1294c0171b69fe38531d16
   - path: src/application/ports.ts
-    sha256: 52c04034a8280e1705ac613ada1307839dcbfe8803d6d34b146e9ef6e4056626
+    sha256: 2ea37f58e95f31e10d4ddf18baf0f265de97c285d6701bae0c14be262023eff5
   - path: src/domain/README.md
     sha256: 7d0d31f43ea8089296e0fa9e14ace8a7db2f1c3b627630082ed33a0499d2597c
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
-    sha256: 4357f906b1b56ce9bf01dcbba3c8bc4999e497a3002022c51ac7bdf68d8d8b95
+    sha256: 57608a033d0e0b7e39ae997a387239b8b34ae35720ffcf68f2039cdb06fec00d
   - path: src/application/ingest-mail.ts
     sha256: deccd11cf8e73ebca2276f8480adbe2f1843cf55cfeee29c4076b2b2beb67a18
   - path: src/application/sync-mail.ts
-    sha256: f28855912fa6b964fd5918aee3d5bf2bd77849a2521fb33c1aac2d74ceb62f84
+    sha256: 3b740603c34937780c5802f9d8d7b9b2d871d2062c886ab1d16282e159dbe660
   - path: src/cli-mail-sync.ts
     sha256: 3215916c5e8c32599ed344614b05a42d9986d9cf75b8a3ca392f66e0cf9785d7
 ---

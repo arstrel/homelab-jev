@@ -7,6 +7,7 @@
 - [PostgreSQL processing ledger](ledger.md): Describe the current ledger schema and atomic ingestion without claiming remote exactly-once behavior. (implemented).
 - [Durable mail evidence ingestion](mail-ingestion.md): Preserve exact complete evidence and replay-safe jobs through explicit manual ingestion. (implemented).
 - [Manual incremental Gmail synchronization](mail-sync.md): Resume discovery and durable retrieval retries with separate evidence freshness. (implemented).
+- [Bounded expired-cursor recovery](mail-recovery.md): Resume recent and mapped scans while preserving pending work and disclosing history gaps. (implemented).
 - [Replay-safe remote writes](remote-write-safety.md): Persist stable intent identity before Todoist writes and reconcile ambiguous outcomes. (mixed).
 - [Preserve manual task changes](manual-edits.md): User task edits and completion override worker inference. (planned).
 - [Typed classification and evidence policy](classification-policy.md): Ask Jev narrow questions and let deterministic code enforce effects. (planned).

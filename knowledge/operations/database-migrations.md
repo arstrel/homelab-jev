@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T23:36:37.354Z
+  at: 2026-10-19T02:15:25.563821Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -28,7 +28,7 @@ sources:
     title: migrations/0001_ambiguous_squadron_sinister.sql
 x_jev_sources:
   - path: docs/migrations.md
-    sha256: 7aa6c5dddb3867bfaa83c01eb2ba2bb3560605dcb532b1c20b3a64d4f01861fc
+    sha256: 6f3ba78d1c7947636f3e5dfb0b0caa4abae30f3864383b446338f92699660ef2
   - path: src/adapters/postgres/migrate.ts
     sha256: 8782971aeeddc143c47abf5eb86b892bfcaeedf5e141f36fff704ca6a1fbc147
   - path: migrations/0000_romantic_longshot.sql
@@ -52,3 +52,5 @@ Migration 0002 adds immutable mail evidence, source observations and nullable ex
 Restore/rollback procedures must be rehearsed in isolation and compatible with the selected compiled release. The presence of migration files does not prove production has applied them. Follow the detailed migration runbook and [native releases](native-releases.md).
 
 Migration 0003 adds sync state and a retrieval backlog without changing the legacy checkpoint/evidence contracts. The populated 0002-to-0003 failed/repaired upgrade and prior 0002 upgrade both remain tested. No operational migration or automatic startup migration is claimed.
+
+Migration 0004 adds recovery metadata, expands phases and creates mapped-target snapshots. Existing expired states receive the history-gap flag. A populated 0003-to-0004 failure/repair test preserves anchors, retry state, exact evidence and task links. Stop sync before rollback: the prior synchronizer cannot interpret active recovery phases. Finish recovery to compatible history state before invoking its sync command, or keep sync stopped until restoring recovery-capable code. Preserve the additive schema and pending work. See [recovery](/architecture/mail-recovery.md).

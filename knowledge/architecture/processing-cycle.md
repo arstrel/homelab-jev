@@ -22,7 +22,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/worker-operations/spec.md
 x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
-    sha256: 4357f906b1b56ce9bf01dcbba3c8bc4999e497a3002022c51ac7bdf68d8d8b95
+    sha256: 57608a033d0e0b7e39ae997a387239b8b34ae35720ffcf68f2039cdb06fec00d
   - path: openspec/changes/add-personal-brief-preprocessing/specs/worker-operations/spec.md
     sha256: cb573cbb85a6a53ad61363014df299c6f4eea8b6707a48b6aeb1d99b639e0408
 ---

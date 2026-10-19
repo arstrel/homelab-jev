@@ -25,7 +25,7 @@ x_jev_sources:
   - path: src/adapters/postgres/mail-evidence.ts
     sha256: 1acf970e497c75f58aedbf3fe832b4d8a20e3b0d5588cb38bf12056ed1a46d51
   - path: src/adapters/postgres/schema.ts
-    sha256: eabe26f0a5f20e98ba63c18a7d4bbb7301a91d3e439f6855afd29b01c886ed77
+    sha256: 24dbe743ecb812b02c3250cf7315edd142c4dfdecbec1edfe65396f3766c39f5
   - path: docs/mail-ingestion.md
     sha256: fb0d10754aff3141d59374902664640b5fe4472a6f4ddb952fa50b01ae7ac4a9
   - path: migrations/0002_durable_mail_evidence.sql

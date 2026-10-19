@@ -27,8 +27,8 @@ The separate [durable evidence ingestion change](../add-durable-mail-evidence/pr
 
 - [x] 2.2 Implement paginated history ingestion and durable pending jobs before checkpoint advancement; verify crash and classification-failure tests retain every fetched change.
 
-The [incremental sync change](../add-incremental-mail-sync/proposal.md) implements manual resumable bootstrap/history and a durable retrieval backlog. Its discovery frontier means IDs are safely queued; complete evidence freshness advances separately after retrieval drains. Exact evidence/jobs and work acknowledgement commit together. Automatic expired-cursor recovery (2.3) and the real observation pilot in 2.4 remain pending; synthetic no-change tests are not a live rollout report.
-- [ ] 2.3 Implement expired-cursor recovery and source fingerprinting; verify repeated runs and read-state-only changes do not generate new processing obligations.
+The [incremental sync change](../add-incremental-mail-sync/proposal.md) implements manual resumable bootstrap/history and a durable retrieval backlog. Its discovery frontier means IDs are safely queued; complete evidence freshness advances separately after retrieval drains. Exact evidence/jobs and work acknowledgement commit together. The [recovery change](../add-mail-sync-recovery/proposal.md) implements bounded recent/mapped recovery, preservation of known work and explicit history-gap reporting. The real observation pilot in 2.4 remains pending; synthetic no-change tests are not a live rollout report.
+- [x] 2.3 Implement expired-cursor recovery and source fingerprinting; verify repeated runs and read-state-only changes do not generate new processing obligations.
 - [ ] 2.4 Document bootstrap/recovery behavior and deliver an observation-run report; verify a second no-change run advances sync freshness without redundant Jev calls.
 
 ## 3. Jev decisions and evaluation

@@ -28,7 +28,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
 x_jev_sources:
   - path: src/adapters/postgres/schema.ts
-    sha256: eabe26f0a5f20e98ba63c18a7d4bbb7301a91d3e439f6855afd29b01c886ed77
+    sha256: 24dbe743ecb812b02c3250cf7315edd142c4dfdecbec1edfe65396f3766c39f5
   - path: src/adapters/postgres/repositories.ts
     sha256: 3b180be48d0705cc565ec4b6e48293f83a3f1b1ef634c5d792675f69bc790414
   - path: src/adapters/todoist.ts

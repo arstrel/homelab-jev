@@ -37,7 +37,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   await client.pool.query(
-    "truncate jev.mail_retrievals, jev.mail_sync_state, jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
+    "truncate jev.mail_recovery_targets, jev.mail_retrievals, jev.mail_sync_state, jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
   );
 });
 
@@ -53,7 +53,7 @@ describe("PostgreSQL ledger guarantees", () => {
           "select count(*)::int as n from jev_migrations.__drizzle_migrations",
         )
       ).rows[0]?.n,
-    ).toBe(4);
+    ).toBe(5);
   });
   it("durably ingests before checkpoint advancement and deduplicates replay", async () => {
     await repo.ingest({ checkpoint, sources: [source], jobs: [job] });

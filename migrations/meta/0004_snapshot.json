@@ -1,0 +1,937 @@
+{
+  "id": "38906fd5-6a65-4e0a-af35-9e0db166b38f",
+  "prevId": "5b4a9efd-165f-4522-9cac-e20bbcb72430",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "jev.checkpoints": {
+      "name": "checkpoints",
+      "schema": "jev",
+      "columns": {
+        "mailbox": {
+          "name": "mailbox",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "history_id": {
+          "name": "history_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "synced_at": {
+          "name": "synced_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "jev.classifications": {
+      "name": "classifications",
+      "schema": "jev",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "job_id": {
+          "name": "job_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_version": {
+          "name": "model_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "result": {
+          "name": "result",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "correction": {
+          "name": "correction",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "classifications_job_id_pending_jobs_id_fk": {
+          "name": "classifications_job_id_pending_jobs_id_fk",
+          "tableFrom": "classifications",
+          "tableTo": "pending_jobs",
+          "schemaTo": "jev",
+          "columnsFrom": [
+            "job_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "jev.mail_evidence_versions": {
+      "name": "mail_evidence_versions",
+      "schema": "jev",
+      "columns": {
+        "mailbox": {
+          "name": "mailbox",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fingerprint": {
+          "name": "fingerprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "schema_version": {
+          "name": "schema_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "evidence": {
+          "name": "evidence",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "mail_evidence_versions_mailbox_source_id_sources_mailbox_source_id_fk": {
+          "name": "mail_evidence_versions_mailbox_source_id_sources_mailbox_source_id_fk",
+          "tableFrom": "mail_evidence_versions",
+          "tableTo": "sources",
+          "schemaTo": "jev",
+          "columnsFrom": [
+            "mailbox",
+            "source_id"
+          ],
+          "columnsTo": [
+            "mailbox",
+            "source_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "mail_evidence_versions_mailbox_source_id_fingerprint_pk": {
+          "name": "mail_evidence_versions_mailbox_source_id_fingerprint_pk",
+          "columns": [
+            "mailbox",
+            "source_id",
+            "fingerprint"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "evidence_identity": {
+          "name": "evidence_identity",
+          "value": "coalesce(\"jev\".\"mail_evidence_versions\".\"evidence\"->'source'->>'mailbox' = \"jev\".\"mail_evidence_versions\".\"mailbox\" and \"jev\".\"mail_evidence_versions\".\"evidence\"->'source'->>'threadId' = \"jev\".\"mail_evidence_versions\".\"source_id\" and \"jev\".\"mail_evidence_versions\".\"evidence\"->>'schemaVersion' = \"jev\".\"mail_evidence_versions\".\"schema_version\", false)"
+        },
+        "evidence_complete": {
+          "name": "evidence_complete",
+          "value": "coalesce(\"jev\".\"mail_evidence_versions\".\"schema_version\" = 'mail-evidence/v1' and \"jev\".\"mail_evidence_versions\".\"evidence\"->'coverage'->>'messageBodies' = 'complete', false)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "jev.mail_recovery_targets": {
+      "name": "mail_recovery_targets",
+      "schema": "jev",
+      "columns": {
+        "mailbox": {
+          "name": "mailbox",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thread_id": {
+          "name": "thread_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "mail_recovery_targets_mailbox_mail_sync_state_mailbox_fk": {
+          "name": "mail_recovery_targets_mailbox_mail_sync_state_mailbox_fk",
+          "tableFrom": "mail_recovery_targets",
+          "tableTo": "mail_sync_state",
+          "schemaTo": "jev",
+          "columnsFrom": [
+            "mailbox"
+          ],
+          "columnsTo": [
+            "mailbox"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "mail_recovery_targets_mailbox_thread_id_pk": {
+          "name": "mail_recovery_targets_mailbox_thread_id_pk",
+          "columns": [
+            "mailbox",
+            "thread_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "jev.mail_retrievals": {
+      "name": "mail_retrievals",
+      "schema": "jev",
+      "columns": {
+        "mailbox": {
+          "name": "mailbox",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thread_id": {
+          "name": "thread_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "generation": {
+          "name": "generation",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "from_history": {
+          "name": "from_history",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "available_at": {
+          "name": "available_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "failure": {
+          "name": "failure",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "retrieval_due": {
+          "name": "retrieval_due",
+          "columns": [
+            {
+              "expression": "mailbox",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "available_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "mail_retrievals_mailbox_mail_sync_state_mailbox_fk": {
+          "name": "mail_retrievals_mailbox_mail_sync_state_mailbox_fk",
+          "tableFrom": "mail_retrievals",
+          "tableTo": "mail_sync_state",
+          "schemaTo": "jev",
+          "columnsFrom": [
+            "mailbox"
+          ],
+          "columnsTo": [
+            "mailbox"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "mail_retrievals_mailbox_thread_id_pk": {
+          "name": "mail_retrievals_mailbox_thread_id_pk",
+          "columns": [
+            "mailbox",
+            "thread_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "retrieval_counters": {
+          "name": "retrieval_counters",
+          "value": "\"jev\".\"mail_retrievals\".\"generation\" > 0 and \"jev\".\"mail_retrievals\".\"attempts\" >= 0 and \"jev\".\"mail_retrievals\".\"from_history\" in (0,1)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "jev.mail_sync_state": {
+      "name": "mail_sync_state",
+      "schema": "jev",
+      "columns": {
+        "mailbox": {
+          "name": "mailbox",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "phase": {
+          "name": "phase",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "days": {
+          "name": "days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "window_since": {
+          "name": "window_since",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "window_until": {
+          "name": "window_until",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "history_id": {
+          "name": "history_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_token": {
+          "name": "page_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "seen_tokens": {
+          "name": "seen_tokens",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
+        },
+        "revision": {
+          "name": "revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "discovery_checked_at": {
+          "name": "discovery_checked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "evidence_synced_at": {
+          "name": "evidence_synced_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recovery_count": {
+          "name": "recovery_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "recovery_started_at": {
+          "name": "recovery_started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recovery_completed_at": {
+          "name": "recovery_completed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "previous_history_id": {
+          "name": "previous_history_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "history_gap": {
+          "name": "history_gap",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "sync_phase": {
+          "name": "sync_phase",
+          "value": "\"jev\".\"mail_sync_state\".\"phase\" in ('bootstrap','history','recovery-required','recovery-bootstrap','recovery-mapped')"
+        },
+        "sync_recovery_count": {
+          "name": "sync_recovery_count",
+          "value": "\"jev\".\"mail_sync_state\".\"recovery_count\" >= 0"
+        },
+        "sync_bounds": {
+          "name": "sync_bounds",
+          "value": "\"jev\".\"mail_sync_state\".\"days\" between 1 and 365 and \"jev\".\"mail_sync_state\".\"window_since\" < \"jev\".\"mail_sync_state\".\"window_until\" and \"jev\".\"mail_sync_state\".\"revision\" >= 0"
+        },
+        "sync_history_id": {
+          "name": "sync_history_id",
+          "value": "\"jev\".\"mail_sync_state\".\"history_id\" ~ '^[0-9]{1,40}$'"
+        },
+        "sync_tokens": {
+          "name": "sync_tokens",
+          "value": "jsonb_typeof(\"jev\".\"mail_sync_state\".\"seen_tokens\") = 'array' and jsonb_array_length(\"jev\".\"mail_sync_state\".\"seen_tokens\") <= 2000"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "jev.pending_jobs": {
+      "name": "pending_jobs",
+      "schema": "jev",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "mailbox": {
+          "name": "mailbox",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fingerprint": {
+          "name": "fingerprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "evidence_fingerprint": {
+          "name": "evidence_fingerprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "policy_version": {
+          "name": "policy_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "available_at": {
+          "name": "available_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        }
+      },
+      "indexes": {
+        "job_source_policy": {
+          "name": "job_source_policy",
+          "columns": [
+            {
+              "expression": "mailbox",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "fingerprint",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "policy_version",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "pending_ready": {
+          "name": "pending_ready",
+          "columns": [
+            {
+              "expression": "state",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "available_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "pending_jobs_mailbox_source_id_sources_mailbox_source_id_fk": {
+          "name": "pending_jobs_mailbox_source_id_sources_mailbox_source_id_fk",
+          "tableFrom": "pending_jobs",
+          "tableTo": "sources",
+          "schemaTo": "jev",
+          "columnsFrom": [
+            "mailbox",
+            "source_id"
+          ],
+          "columnsTo": [
+            "mailbox",
+            "source_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pending_jobs_mailbox_source_id_evidence_fingerprint_mail_evidence_versions_mailbox_source_id_fingerprint_fk": {
+          "name": "pending_jobs_mailbox_source_id_evidence_fingerprint_mail_evidence_versions_mailbox_source_id_fingerprint_fk",
+          "tableFrom": "pending_jobs",
+          "tableTo": "mail_evidence_versions",
+          "schemaTo": "jev",
+          "columnsFrom": [
+            "mailbox",
+            "source_id",
+            "evidence_fingerprint"
+          ],
+          "columnsTo": [
+            "mailbox",
+            "source_id",
+            "fingerprint"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "job_attempts_nonnegative": {
+          "name": "job_attempts_nonnegative",
+          "value": "\"jev\".\"pending_jobs\".\"attempts\" >= 0"
+        },
+        "job_evidence_identity": {
+          "name": "job_evidence_identity",
+          "value": "\"jev\".\"pending_jobs\".\"evidence_fingerprint\" is null or \"jev\".\"pending_jobs\".\"evidence_fingerprint\" = \"jev\".\"pending_jobs\".\"fingerprint\""
+        },
+        "job_state": {
+          "name": "job_state",
+          "value": "\"jev\".\"pending_jobs\".\"state\" in ('pending','complete')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "jev.sources": {
+      "name": "sources",
+      "schema": "jev",
+      "columns": {
+        "mailbox": {
+          "name": "mailbox",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fingerprint": {
+          "name": "fingerprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "observed_at": {
+          "name": "observed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "observation": {
+          "name": "observation",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "sources_mailbox_source_id_pk": {
+          "name": "sources_mailbox_source_id_pk",
+          "columns": [
+            "mailbox",
+            "source_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "jev.suppressions": {
+      "name": "suppressions",
+      "schema": "jev",
+      "columns": {
+        "obligation_key": {
+          "name": "obligation_key",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "suppression_reason": {
+          "name": "suppression_reason",
+          "value": "\"jev\".\"suppressions\".\"reason\" in ('completed','deleted')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "jev.task_links": {
+      "name": "task_links",
+      "schema": "jev",
+      "columns": {
+        "mailbox": {
+          "name": "mailbox",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "obligation_key": {
+          "name": "obligation_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "task_id": {
+          "name": "task_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "overrides": {
+          "name": "overrides",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        }
+      },
+      "indexes": {
+        "links_task": {
+          "name": "links_task",
+          "columns": [
+            {
+              "expression": "task_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "task_links_mailbox_source_id_sources_mailbox_source_id_fk": {
+          "name": "task_links_mailbox_source_id_sources_mailbox_source_id_fk",
+          "tableFrom": "task_links",
+          "tableTo": "sources",
+          "schemaTo": "jev",
+          "columnsFrom": [
+            "mailbox",
+            "source_id"
+          ],
+          "columnsTo": [
+            "mailbox",
+            "source_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "task_links_mailbox_source_id_obligation_key_pk": {
+          "name": "task_links_mailbox_source_id_obligation_key_pk",
+          "columns": [
+            "mailbox",
+            "source_id",
+            "obligation_key"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "jev.write_intents": {
+      "name": "write_intents",
+      "schema": "jev",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "destination": {
+          "name": "destination",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "obligation_key": {
+          "name": "obligation_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "request_id": {
+          "name": "request_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "outcome": {
+          "name": "outcome",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "intent_request": {
+          "name": "intent_request",
+          "columns": [
+            {
+              "expression": "request_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "intent_obligation_destination": {
+          "name": "intent_obligation_destination",
+          "columns": [
+            {
+              "expression": "obligation_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "destination",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "intent_state": {
+          "name": "intent_state",
+          "value": "\"jev\".\"write_intents\".\"state\" in ('pending','ambiguous','complete')"
+        },
+        "intent_destination": {
+          "name": "intent_destination",
+          "value": "\"jev\".\"write_intents\".\"destination\" in ('todoist','drive')"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {
+    "jev": "jev"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

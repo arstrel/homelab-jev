@@ -14,5 +14,10 @@ export function syncState(phase: MailSyncState["phase"] = "history"): MailSyncSt
     revision: 0,
     discoveryCheckedAt: null,
     evidenceSyncedAt: null,
+    recoveryCount: 0,
+    recoveryStartedAt: null,
+    recoveryCompletedAt: null,
+    previousHistoryId: null,
+    historyGap: phase.startsWith("recovery-"),
   };
 }
