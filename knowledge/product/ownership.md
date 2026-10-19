@@ -21,9 +21,9 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/design.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: aa3618c539140b7993e86e1740221eae20af1824514f0ae78b1b6fb1e48e0a2d
+    sha256: 3e37ed5a952c167b8428497a4dd8a296c3b7b7db02eb69bdc301e380674f5e80
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
-    sha256: 1ae7c84b9957c1449c1f66a4e192f822883abcd15353e29e825987b06be1a479
+    sha256: 4357f906b1b56ce9bf01dcbba3c8bc4999e497a3002022c51ac7bdf68d8d8b95
 ---
 
 # Authority and data ownership

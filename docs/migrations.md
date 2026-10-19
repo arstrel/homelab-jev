@@ -17,3 +17,9 @@ Migration 0002 adds `mail_evidence_versions`, source observations and nullable `
 The populated upgrade test starts at 0000/0001, retains jobs/classifications/task links/suppressions/checkpoints, injects a failure after 0002 DDL, and checks rollback followed by repeatable repair. Runtime ingestion never applies migrations. Build and explicitly apply the reviewed migration before [manual ingestion](mail-ingestion.md). This code change has not migrated the operational database.
 
 Rollback to the previous code is schema-compatible: stop ingestion, retain the added columns/table and revert the compiled release. Existing preview and ledger commands continue to work. Do not drop evidence, remove referenced versions, or reverse the migration automatically. PostgreSQL backups now contain private message text and require the same access controls as the database.
+
+## Incremental synchronization upgrade
+
+Migration 0003 adds `mail_sync_state` and `mail_retrievals`, keeping discovery and evidence freshness separate. It leaves legacy checkpoints, jobs, versions and mappings intact. Explicitly apply it before [mail synchronization](mail-sync.md); no command migrates on startup. The disposable upgrade test starts at populated 0002, injects a 0003 failure, verifies DDL rollback, repairs/reapplies and preserves exact job bindings and evidence. The earlier populated 0002 regression remains in place.
+
+Code rollback remains additive-schema compatible: stop sync, revert the release and retain state/backlog for later continuation. Do not delete state to force bootstrap or reverse applied migrations. No operational migration or credentialed sync has been performed during this implementation.

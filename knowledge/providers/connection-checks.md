@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-11T21:30:08.389Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -35,7 +35,7 @@ x_jev_sources:
   - path: src/adapters/jev.ts
     sha256: 9018768dc73a9852ea92a2c208b29441bfb2573a7b34d24290a09b6d6573642b
   - path: src/adapters/gmail.ts
-    sha256: ba932459699a447c0f2b2882667a05ffc673adcb66d12591148c5dc1ba99aa3d
+    sha256: 68d953c97b4a72d3d635679d3764e1212272a6ccab899997a8c427c576618da4
   - path: src/adapters/drive.ts
     sha256: d76eb0f4a07f5d9a3da155eea00de0c3792b5023a6f167486ab90b68ba1b6c02
   - path: src/adapters/todoist.ts
@@ -49,3 +49,5 @@ The connection command reads Jev model availability, one page of Todoist project
 A passing check proves those bounded reads succeeded with current credentials. It does not prove Gmail history recovery, mailbox-body permissions beyond the requested scope, Todoist writes, access to a specific Drive file, worker deployment or scheduled-planner retrieval.
 
 The Gmail adapter now also exposes a separate bounded [manual evidence reader](/architecture/gmail-evidence.md); connection checks still do not retrieve mail bodies or run processing. SDK adapters isolate provider contracts and do not turn a connection check into a background processing run. See [Google grants](google-credentials.md), [Todoist identity](todoist-boundary.md), [Jev judgments](jev-boundary.md), and [delivery boundary](/product/delivery-boundary.md).
+
+The Gmail adapter also supports profile/history reads for [manual sync](/architecture/mail-sync.md), with history-only expiry mapping. The connection-check command still performs only its bounded authentication/resource checks and cannot establish synchronization recovery or live freshness.

@@ -37,7 +37,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   await client.pool.query(
-    "truncate jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
+    "truncate jev.mail_retrievals, jev.mail_sync_state, jev.classifications, jev.task_links, jev.pending_jobs, jev.mail_evidence_versions, jev.sources, jev.checkpoints, jev.suppressions, jev.write_intents",
   );
 });
 
@@ -53,7 +53,7 @@ describe("PostgreSQL ledger guarantees", () => {
           "select count(*)::int as n from jev_migrations.__drizzle_migrations",
         )
       ).rows[0]?.n,
-    ).toBe(3);
+    ).toBe(4);
   });
   it("durably ingests before checkpoint advancement and deduplicates replay", async () => {
     await repo.ingest({ checkpoint, sources: [source], jobs: [job] });
@@ -159,6 +159,8 @@ it("upgrades a prior migration and recovers a failed migration by reviewed forwa
   try {
     cpSync("migrations", folder, { recursive: true });
     const journal = JSON.parse(readFileSync(join(folder, "meta/_journal.json"), "utf8"));
+    // Retain the existing 0002 populated-upgrade regression when later migrations are added.
+    journal.entries = journal.entries.slice(0, 3);
     const second = journal.entries.pop();
     writeFileSync(join(folder, "meta/_journal.json"), JSON.stringify(journal));
     // Separate disposable schemas mimic an installation on the prior two migrations.

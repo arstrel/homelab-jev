@@ -21,7 +21,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/email-classification/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: aa3618c539140b7993e86e1740221eae20af1824514f0ae78b1b6fb1e48e0a2d
+    sha256: 3e37ed5a952c167b8428497a4dd8a296c3b7b7db02eb69bdc301e380674f5e80
   - path: openspec/changes/add-personal-brief-preprocessing/specs/email-classification/spec.md
     sha256: 56bc45f00cc0e95c1eafd63afef8a262ce537c3e012fec5de66a374eb2e04e9a
 ---

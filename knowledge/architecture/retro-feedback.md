@@ -21,7 +21,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/retro-feedback/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: aa3618c539140b7993e86e1740221eae20af1824514f0ae78b1b6fb1e48e0a2d
+    sha256: 3e37ed5a952c167b8428497a4dd8a296c3b7b7db02eb69bdc301e380674f5e80
   - path: openspec/changes/add-personal-brief-preprocessing/specs/retro-feedback/spec.md
     sha256: 6dbc33bf41d370c7822aac9b680dbeb82120944abeb56dbc6cfe898c41e15e51
 ---

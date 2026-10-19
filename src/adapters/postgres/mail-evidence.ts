@@ -8,95 +8,9 @@ export function mailEvidenceStore(client: ReturnType<typeof connect>): EvidenceS
   return {
     async persistEvidence(records) {
       // Snapshot before awaiting; no network calls or caller-owned objects in the transaction.
-      const values = records.map(snapshotSubmission).sort((a, b) => {
-        const left = JSON.stringify([
-          a.evidence.source.mailbox,
-          a.evidence.source.threadId,
-          a.fingerprint,
-        ]);
-        const right = JSON.stringify([
-          b.evidence.source.mailbox,
-          b.evidence.source.threadId,
-          b.fingerprint,
-        ]);
-        return left < right ? -1 : left > right ? 1 : 0;
-      });
+      const values = snapshotEvidence(records);
       if (!values.length) return { newVersions: 0, newJobs: 0, boundLegacyJobs: 0 };
-      return client.db.transaction(async (tx) => {
-        const counts = { newVersions: 0, newJobs: 0, boundLegacyJobs: 0 };
-        for (const value of values) {
-          const source = {
-            mailbox: value.evidence.source.mailbox,
-            sourceId: value.evidence.source.threadId,
-          };
-          await tx
-            .insert(s.sources)
-            .values({
-              ...source,
-              fingerprint: value.fingerprint,
-              observedAt: new Date(value.observation.observedAt),
-              observation: value.observation,
-            })
-            .onConflictDoUpdate({
-              target: [s.sources.mailbox, s.sources.sourceId],
-              set: {
-                fingerprint: value.fingerprint,
-                observedAt: new Date(value.observation.observedAt),
-                observation: value.observation,
-              },
-              setWhere: sql`${s.sources.observedAt} <= ${new Date(value.observation.observedAt)}`,
-            });
-          const versions = await tx
-            .insert(s.mailEvidenceVersions)
-            .values({
-              ...source,
-              fingerprint: value.fingerprint,
-              schemaVersion: value.evidence.schemaVersion,
-              evidence: value.evidence,
-              createdAt: value.availableAt,
-            })
-            .onConflictDoNothing()
-            .returning({ fingerprint: s.mailEvidenceVersions.fingerprint });
-          counts.newVersions += versions.length;
-          const jobs = await tx
-            .insert(s.pendingJobs)
-            .values({
-              ...source,
-              id: value.jobId,
-              fingerprint: value.fingerprint,
-              evidenceFingerprint: value.fingerprint,
-              policyVersion: value.policyVersion,
-              availableAt: value.availableAt,
-            })
-            .onConflictDoNothing({
-              target: [
-                s.pendingJobs.mailbox,
-                s.pendingJobs.sourceId,
-                s.pendingJobs.fingerprint,
-                s.pendingJobs.policyVersion,
-              ],
-            })
-            .returning({ id: s.pendingJobs.id });
-          counts.newJobs += jobs.length;
-          if (!jobs.length) {
-            const bound = await tx
-              .update(s.pendingJobs)
-              .set({ evidenceFingerprint: value.fingerprint })
-              .where(
-                and(
-                  eq(s.pendingJobs.mailbox, source.mailbox),
-                  eq(s.pendingJobs.sourceId, source.sourceId),
-                  eq(s.pendingJobs.fingerprint, value.fingerprint),
-                  eq(s.pendingJobs.policyVersion, value.policyVersion),
-                  isNull(s.pendingJobs.evidenceFingerprint),
-                ),
-              )
-              .returning({ id: s.pendingJobs.id });
-            counts.boundLegacyJobs += bound.length;
-          }
-        }
-        return counts;
-      });
+      return client.db.transaction((tx) => persistEvidenceTransaction(tx, values));
     },
     async evidenceForJob(jobId) {
       const [row] = await client.db
@@ -121,4 +35,104 @@ export function mailEvidenceStore(client: ReturnType<typeof connect>): EvidenceS
       return { status: "ready", evidence: storedEvidence(row.evidence, row) };
     },
   };
+}
+
+export type EvidenceTransaction = Parameters<
+  Parameters<ReturnType<typeof connect>["db"]["transaction"]>[0]
+>[0];
+export function snapshotEvidence(
+  records: readonly import("../../domain/stored-mail-evidence.js").EvidenceSubmission[],
+) {
+  const values = records.map(snapshotSubmission).sort((a, b) => {
+    const left = JSON.stringify([
+      a.evidence.source.mailbox,
+      a.evidence.source.threadId,
+      a.fingerprint,
+    ]);
+    const right = JSON.stringify([
+      b.evidence.source.mailbox,
+      b.evidence.source.threadId,
+      b.fingerprint,
+    ]);
+    return left < right ? -1 : left > right ? 1 : 0;
+  });
+  return values;
+}
+export async function persistEvidenceTransaction(
+  tx: EvidenceTransaction,
+  values: ReturnType<typeof snapshotEvidence>,
+) {
+  const counts = { newVersions: 0, newJobs: 0, boundLegacyJobs: 0 };
+  for (const value of values) {
+    const source = {
+      mailbox: value.evidence.source.mailbox,
+      sourceId: value.evidence.source.threadId,
+    };
+    await tx
+      .insert(s.sources)
+      .values({
+        ...source,
+        fingerprint: value.fingerprint,
+        observedAt: new Date(value.observation.observedAt),
+        observation: value.observation,
+      })
+      .onConflictDoUpdate({
+        target: [s.sources.mailbox, s.sources.sourceId],
+        set: {
+          fingerprint: value.fingerprint,
+          observedAt: new Date(value.observation.observedAt),
+          observation: value.observation,
+        },
+        setWhere: sql`${s.sources.observedAt} <= ${new Date(value.observation.observedAt)}`,
+      });
+    const versions = await tx
+      .insert(s.mailEvidenceVersions)
+      .values({
+        ...source,
+        fingerprint: value.fingerprint,
+        schemaVersion: value.evidence.schemaVersion,
+        evidence: value.evidence,
+        createdAt: value.availableAt,
+      })
+      .onConflictDoNothing()
+      .returning({ fingerprint: s.mailEvidenceVersions.fingerprint });
+    counts.newVersions += versions.length;
+    const jobs = await tx
+      .insert(s.pendingJobs)
+      .values({
+        ...source,
+        id: value.jobId,
+        fingerprint: value.fingerprint,
+        evidenceFingerprint: value.fingerprint,
+        policyVersion: value.policyVersion,
+        availableAt: value.availableAt,
+      })
+      .onConflictDoNothing({
+        target: [
+          s.pendingJobs.mailbox,
+          s.pendingJobs.sourceId,
+          s.pendingJobs.fingerprint,
+          s.pendingJobs.policyVersion,
+        ],
+      })
+      .returning({ id: s.pendingJobs.id });
+    counts.newJobs += jobs.length;
+    if (!jobs.length) {
+      const bound = await tx
+        .update(s.pendingJobs)
+        .set({ evidenceFingerprint: value.fingerprint })
+        .where(
+          and(
+            eq(s.pendingJobs.mailbox, source.mailbox),
+            eq(s.pendingJobs.sourceId, source.sourceId),
+            eq(s.pendingJobs.fingerprint, value.fingerprint),
+            eq(s.pendingJobs.policyVersion, value.policyVersion),
+            isNull(s.pendingJobs.evidenceFingerprint),
+          ),
+        )
+        .returning({ id: s.pendingJobs.id });
+      counts.boundLegacyJobs += bound.length;
+    }
+  }
+  return counts;
 }

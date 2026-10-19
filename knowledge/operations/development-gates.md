@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:26:11.007Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -27,13 +27,13 @@ sources:
     title: docs/development.md
 x_jev_sources:
   - path: package.json
-    sha256: 6eed6212e9389cae21f091f20bf39136c4b854af4b1edad51d53bb1e4e134cfe
+    sha256: 483ce523f20c846bc545ae11d1461fb16854d505cd33854438c435b62adddb57
   - path: scripts/check.ts
     sha256: 265c3bdb561a903fb53a7119604f76cdf9ef0be9d7932077d1e5ff8ec785d392
   - path: scripts/git-gate.ts
     sha256: d319d4731259e12a306add4853a84c0e4f5691b4bcd56d8e0ba5386010adde12
   - path: docs/development.md
-    sha256: 8c31a079571a2d5c05e10298d45236ef22c1555a1ef8caab9ad7a96d77067490
+    sha256: 2aa7be5a04227dc49ec618c114bcf16abad2d90d579abc38ddd5db28e5b85237
 ---
 
 # Node development and Git gates
@@ -47,3 +47,5 @@ Pre-commit requires a fully staged application/config/documentation validation s
 Pre-push repeats appropriate checks and runs PostgreSQL integration tests on disposable databases. Short-lived branches and PRs require both offline and PostgreSQL CI. Native releases are separate from an editable checkout.
 
 See [test isolation](test-isolation.md), [migrations](database-migrations.md), and [OKF maintenance](okf-maintenance.md).
+
+The explicit compiled `mail:sync` command is now validated offline, with durable ownership/restart/freshness tests in disposable PostgreSQL. It requires reviewed migrations and Google/database configuration. The normal gates never run credentialed synchronization or enable launchd.

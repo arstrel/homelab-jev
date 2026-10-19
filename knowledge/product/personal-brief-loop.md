@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:27:12.786Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: planned
 sources:
@@ -22,7 +22,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/brief-handoff/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: aa3618c539140b7993e86e1740221eae20af1824514f0ae78b1b6fb1e48e0a2d
+    sha256: 3e37ed5a952c167b8428497a4dd8a296c3b7b7db02eb69bdc301e380674f5e80
   - path: openspec/changes/add-personal-brief-preprocessing/specs/brief-handoff/spec.md
     sha256: 6295d7a2e38f5233f274b976d54399a7176e35efb594338e1b1be5973a1fb778
 ---
@@ -31,7 +31,7 @@ x_jev_sources:
 
 The target outcome is a current, source-linked obligation inventory in existing Todoist projects. Gmail contributes evidence; Jev answers bounded interpretation questions; deterministic code applies policy. Daily Inbox Digest explains incoming work. Daily Life Plan selects suitable Todoist actions for upcoming themed calendar blocks.
 
-This loop is planned. The merged foundation connects providers. Manual retrieval and durable ingestion now preserve complete evidence and exact-bound jobs. Incremental synchronization, classification, task writes and brief publication remain planned.
+This loop is planned. The merged foundation connects providers. Manual retrieval and durable ingestion now preserve complete evidence and exact-bound jobs. Manual normal-path incremental synchronization now queues retrieval work and tracks separate evidence freshness. Automatic cursor recovery, scheduled operation, classification, task writes and brief publication remain planned.
 
 The worker polls Gmail every five minutes. It publishes a dedicated Drive snapshot for scheduled planners; it does not invoke GPT to generate plans. Planner access to the latest snapshot must be demonstrated in the actual scheduled-task context before relying on this handoff.
 

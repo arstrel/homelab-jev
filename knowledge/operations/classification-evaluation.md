@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:26:11.007Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: planned
 sources:
@@ -25,9 +25,9 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/email-classification/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: aa3618c539140b7993e86e1740221eae20af1824514f0ae78b1b6fb1e48e0a2d
+    sha256: 3e37ed5a952c167b8428497a4dd8a296c3b7b7db02eb69bdc301e380674f5e80
   - path: openspec/changes/add-personal-brief-preprocessing/tasks.md
-    sha256: e52dbdd0d935777af8462c90bd7563a985a2711328f872100387c8f54b9b0ae4
+    sha256: 737c69077c312a210ff583255345680d34ef2b0fdd3a4ee6fd208103494d3815
   - path: openspec/changes/add-personal-brief-preprocessing/specs/email-classification/spec.md
     sha256: 56bc45f00cc0e95c1eafd63afef8a262ce537c3e012fec5de66a374eb2e04e9a
 ---
@@ -43,3 +43,5 @@ Demonstrate replay, manual overrides, suppression, ambiguity reconciliation and 
 [Durable ingestion](/architecture/mail-ingestion.md) now supplies reproducible complete evidence versions to pending jobs. Its initial queue policy string is not an evaluated classifier/model choice, and no Jev calls or automatic capture occur.
 
 OKF token/search savings are a separate pilot hypothesis, not a claimed benchmark for Jev. See [classification policy](/architecture/classification-policy.md), [uncertainty](/architecture/uncertainty.md), and [OKF maintenance](okf-maintenance.md).
+
+Manual incremental collection now provides an evidence-completion timestamp separate from discovery progress. Neither timestamp establishes classification or task freshness. The no-change/retry suites remain synthetic collection evidence, not a Jev quality evaluation.

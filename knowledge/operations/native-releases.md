@@ -1,7 +1,8 @@
 ---
 type: Runbook
 title: Native Node releases and scheduling
-description: Deploy reviewed compiled releases with explicit migrations and bounded launchd cycles.
+description: Deploy reviewed compiled releases with explicit migrations and
+  bounded launchd cycles.
 tags:
   - operations
   - jev
@@ -9,8 +10,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-11T02:21:58Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: planned
 sources:
   - id: s1
@@ -28,7 +29,7 @@ x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/specs/worker-operations/spec.md
     sha256: cb573cbb85a6a53ad61363014df299c6f4eea8b6707a48b6aeb1d99b639e0408
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
-    sha256: 1ae7c84b9957c1449c1f66a4e192f822883abcd15353e29e825987b06be1a479
+    sha256: 4357f906b1b56ce9bf01dcbba3c8bc4999e497a3002022c51ac7bdf68d8d8b95
 ---
 
 # Native Node releases and scheduling

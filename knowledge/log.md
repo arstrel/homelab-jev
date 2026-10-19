@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-18
+
+Added manual incremental sync, separate discovery/evidence freshness and durable retry/acknowledgement ownership. Reviewed checkpoint, ledger, layers, delivery, provider, migration, test and evaluation claims against current code. Updated reviewed snapshots deliberately; unchanged policy claims keep their meaningful-change timestamps, and existing review deadlines/draft status are preserved. Automatic cursor recovery, scheduled deployment and live synchronization are not claimed.
+
 ## 2026-10-17
 
 Added durable evidence ingestion and reviewed ledger, layers, checkpoint handoff, delivery boundaries, remote-effect scope, migration compatibility, private database storage, testing and evaluation claims. Updated only reviewed concept snapshots and meaningful-change timestamps; retained existing review deadlines and draft/unverified state. No operational migration, live ingestion or classifier evaluation is claimed.

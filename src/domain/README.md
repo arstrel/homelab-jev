@@ -6,4 +6,6 @@ Pure classification, obligation, routing and snapshot policy belongs here. [Mail
 
 [Durable evidence validation](stored-mail-evidence.md) validates and snapshots exact complete inputs before persistence; malformed/partial payloads cannot become complete job inputs.
 
+[Incremental sync types](mail-sync.md) distinguish discovery state, retryable retrieval work and successful evidence freshness without importing provider/storage models.
+
 [Classification policy](../../knowledge/architecture/classification-policy.md), [manual edits](../../knowledge/architecture/manual-edits.md), [uncertainty](../../knowledge/architecture/uncertainty.md) and [Retro](../../knowledge/architecture/retro-feedback.md).

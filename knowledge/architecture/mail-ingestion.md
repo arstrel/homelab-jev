@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:27:12.788Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-16T23:00:00Z
 x_jev_delivery: implemented
 sources:
@@ -23,9 +23,9 @@ x_jev_sources:
   - path: src/application/ingest-mail.ts
     sha256: deccd11cf8e73ebca2276f8480adbe2f1843cf55cfeee29c4076b2b2beb67a18
   - path: src/adapters/postgres/mail-evidence.ts
-    sha256: 8c44a23b3411828bdd475c67b99ee0fdbafc1d30b854cbf7e6f3473fb604a72f
+    sha256: 1acf970e497c75f58aedbf3fe832b4d8a20e3b0d5588cb38bf12056ed1a46d51
   - path: src/adapters/postgres/schema.ts
-    sha256: fd892a5a888f4048cbe8f288ad1505c92651b6e37dc56dbf5315abd5301e66f2
+    sha256: eabe26f0a5f20e98ba63c18a7d4bbb7301a91d3e439f6855afd29b01c886ed77
   - path: docs/mail-ingestion.md
     sha256: fb0d10754aff3141d59374902664640b5fe4472a6f4ddb952fa50b01ae7ac4a9
   - path: migrations/0002_durable_mail_evidence.sql
@@ -41,3 +41,5 @@ Versions are keyed by mailbox/thread/fingerprint and immutable against UPDATE. C
 Partial conversations are reported without a version or job; another manual run retries them only if selected again. Statement failure rolls back the entire bounded batch; a lost commit acknowledgement can leave an unknown outcome, resolved by safe replay. This is not a durable retrieval retry queue, history ingestion, checkpoint advancement, synchronization freshness, classification or remote writes. Preview stays read-only. See [checkpoint safety](gmail-checkpoints.md), [ledger](ledger.md), and [delivery boundary](/product/delivery-boundary.md).
 
 Payloads contain private mail; database access/backups need mailbox-level care. No automatic garbage collection exists and job references block deletion. Operational migration/ingestion has not been performed by implementation tests. See [privacy](/operations/secret-handling.md), [migrations](/operations/database-migrations.md) and [test isolation](/operations/test-isolation.md).
+
+A separate [manual sync command](mail-sync.md) now adds resumable history discovery and durable retrieval retries. It reuses the evidence transaction for atomic acknowledgement, while the older manual ingestion command retains its original recent-sample contract.

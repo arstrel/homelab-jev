@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:26:11.007Z
+  at: 2026-10-18T23:36:37.354Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -24,9 +24,9 @@ sources:
     title: docs/foundation-evidence.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: 33ca579d0f5ba1b05d27ddbf4f8c1e9e2fd02a3224e936af4b0aafec37bbc966
+    sha256: 866db21607dee12965f76f0ae48b32017783d4250d1294c0171b69fe38531d16
   - path: openspec/changes/add-personal-brief-preprocessing/tasks.md
-    sha256: e52dbdd0d935777af8462c90bd7563a985a2711328f872100387c8f54b9b0ae4
+    sha256: 737c69077c312a210ff583255345680d34ef2b0fdd3a4ee6fd208103494d3815
   - path: docs/foundation-evidence.md
     sha256: 0631d15b29a84b3bd873d14a3e76f86be6081ba85281aaaef6e4173a4e9b6270
 ---
@@ -35,7 +35,7 @@ x_jev_sources:
 
 Section 1 is complete: pinned Node/TypeScript tooling, configuration validation, bounded provider checks, structured logging, Drizzle/pg ledger schema and repositories, migrations, deterministic Git gates, PostgreSQL regression tests and required CI. The CLI can report ledger status and perform explicit connection/database commands. Google authorization tooling supports repeat grants.
 
-The isolated [Gmail evidence slice](/architecture/gmail-evidence.md) implements parent task 2.1 and pure fingerprints: bounded manual retrieval, normalized conversation text and private coverage reporting. Its live sample includes explicit partial bodies. Manual [durable ingestion](/architecture/mail-ingestion.md) now preserves complete evidence versions and exact-bound pending jobs. Operational migration/ingestion is not claimed. Incremental Gmail synchronization and the remaining Sections 2–8 remain planned: typed classification/evaluation, Todoist reconciliation, Retro interpretation, Drive handoff, launchd deployment and rollout evidence. `status` counts ledger rows; it does not currently prove provider freshness. `cycle` is not a working scheduler or processing loop.
+The isolated [Gmail evidence slice](/architecture/gmail-evidence.md) implements parent task 2.1 and pure fingerprints: bounded manual retrieval, normalized conversation text and private coverage reporting. Its live sample includes explicit partial bodies. Manual [durable ingestion](/architecture/mail-ingestion.md) now preserves complete evidence versions and exact-bound pending jobs. Operational migration/ingestion is not claimed. Manual [normal-path incremental sync](/architecture/mail-sync.md) now resumes bootstrap/history and durable retries with separate evidence freshness. Automatic cursor recovery and the remaining release behavior remain planned: typed classification/evaluation, Todoist reconciliation, Retro interpretation, Drive handoff, launchd deployment and rollout evidence. `status` counts ledger rows; it does not currently prove provider freshness. `cycle` is not a working scheduler or processing loop.
 
 The initial release includes obligation capture and routing. Inferred resolution remains a review suggestion. Gmail label writes, automatic completion from model inference, Calendar writes and whole-inbox cleanup require later changes.
 

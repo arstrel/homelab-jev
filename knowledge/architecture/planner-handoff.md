@@ -24,7 +24,7 @@ x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/specs/brief-handoff/spec.md
     sha256: 6295d7a2e38f5233f274b976d54399a7176e35efb594338e1b1be5973a1fb778
   - path: docs/product-requirements.md
-    sha256: aa3618c539140b7993e86e1740221eae20af1824514f0ae78b1b6fb1e48e0a2d
+    sha256: 3e37ed5a952c167b8428497a4dd8a296c3b7b7db02eb69bdc301e380674f5e80
 ---
 
 # Drive snapshot and planner freshness
