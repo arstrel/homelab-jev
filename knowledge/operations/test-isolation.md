@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:37:45.640197Z
+  at: 2026-10-19T03:02:02.103794Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -30,7 +30,7 @@ sources:
     title: vitest.config.ts
 x_jev_sources:
   - path: tests/integration/mail-status.test.ts
-    sha256: 17f0825fc8b55efa913fa0d34a3e68c4fb5ef200168cd74fcb630a83851b7a9c
+    sha256: 013f32313a277ed47c6c35ef4d11fd7c85c9a4fd3ea99a37d6ddd81448380efc
   - path: tests/unit/mail-status.test.ts
     sha256: 94fcb2b4a492fe368522e6ae4a0ce95b28450a9884d28a6dec6b22b54d1a51c3
   - path: scripts/cli-smoke.ts
@@ -71,4 +71,4 @@ Sync fixtures now exercise resumable discovery, bootstrap overlap, partial retri
 
 Recovery fixtures cover stage-by-stage restarts, a 101-thread mapped snapshot, older/missing/partial mail, history catch-up, repeated expiry caps, preserved backoff, stale initialization/final-page rollback and populated 0004 failure/repair. Read-state replay preserves evidence/job identity. These results establish synthetic recovery behavior only.
 
-Observation tests verify read-only transaction enforcement, schema readiness without setup, coherent aggregates across concurrent commits, observation during held sync ownership, and sanitized connection loss. Disposable schema resets and backend termination remain confined to the validated test database. The compiled DB-only diagnostic uses a fake failing driver with network access denied; live pilot acceptance is never a Git gate.
+Observation tests verify read-only transaction enforcement, schema readiness without setup, coherent aggregates across concurrent commits, observation during held sync ownership, and sanitized connection loss. Fixture initialization inserts typed sync state directly; it does not race teardown of an unnecessary setup ownership session against the test's lock acquisition. Disposable schema resets and backend termination remain confined to the validated test database. The compiled DB-only diagnostic uses a fake failing driver with network access denied; live pilot acceptance is never a Git gate.

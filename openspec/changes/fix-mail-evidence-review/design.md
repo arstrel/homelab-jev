@@ -12,6 +12,7 @@ Keep manual and incremental eligibility consistent while preserving history/reco
 
 - Put a shared eligibility predicate in the existing mail-evidence domain module. An optional window preserves history/recovery behavior. Duplicating the fix in preview would leave two policies to maintain.
 - Let the existing MIME selector return an unreadable sentinel for encrypted body containers. Mixed containers propagate it; alternatives may choose a readable representation. A blanket rejection of all unknown MIME leaves would incorrectly reject supplemental calendar/media attachments.
+- Seed observation fixtures directly through the existing typed schema. Acquiring/destroying a sync session during setup introduced an unnecessary race with the test's subsequent lock acquisition; actual held-lock observation remains exercised in the test body.
 
 ## Risks / Trade-offs
 

@@ -9,6 +9,7 @@ Ponytail review found two reproducible violations of existing mail-evidence requ
 - Share the existing conservative thread-eligibility policy between manual ingestion and incremental synchronization.
 - Propagate unreadable encrypted body coverage through MIME containers, preserving readable alternatives and attachment metadata behavior.
 - Add regression tests and correct stale implementation-status documentation.
+- Remove a CI-observed lock-teardown race from observation fixture setup; keep actual sync-lock behavior in the test itself.
 
 ## Capabilities
 
