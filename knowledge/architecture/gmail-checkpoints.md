@@ -31,7 +31,7 @@ x_jev_sources:
   - path: src/adapters/postgres/mail-sync.ts
     sha256: da9949dd1e99d00b259c27dbfe9b6b1f73522b2a2aa8bb45273d987cd4e24b77
   - path: src/application/sync-mail.ts
-    sha256: bb92f1d81ddade4e29268c7ee9a10fb878f5ffeb3c8b753bbaa35349b69765df
+    sha256: cb03f2894dec68d3a0935f2c24e002cb92c56d8fe70e493598eb2b52b7a6c891
 ---
 
 # Gmail evidence and checkpoint safety

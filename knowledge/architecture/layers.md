@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:33:58.003653Z
+  at: 2026-10-19T04:14:23Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -37,7 +37,7 @@ x_jev_sources:
   - path: src/application/ingest-mail.ts
     sha256: deccd11cf8e73ebca2276f8480adbe2f1843cf55cfeee29c4076b2b2beb67a18
   - path: src/application/sync-mail.ts
-    sha256: bb92f1d81ddade4e29268c7ee9a10fb878f5ffeb3c8b753bbaa35349b69765df
+    sha256: cb03f2894dec68d3a0935f2c24e002cb92c56d8fe70e493598eb2b52b7a6c891
   - path: src/cli-mail-sync.ts
     sha256: 3215916c5e8c32599ed344614b05a42d9986d9cf75b8a3ca392f66e0cf9785d7
   - path: src/cli-mail-triage.ts
@@ -61,3 +61,5 @@ Manual [incremental sync](mail-sync.md) now coordinates a reader and a session-o
 DB-only [mail observation](/operations/mail-observation.md) has its own SDK-free reader and read-only transaction. It does not request sync ownership or construct provider clients. The application validates the fixed report shape and converts unavailable/malformed reads to unknown measurements without exposing arbitrary data.
 
 Manual [triage](classification-policy.md) reads bounded exact job evidence through a separate SDK-free port. The read-only transaction closes before Jev requests. Domain code supplies finite criteria and validates answers; a shared budget bounds/cancels sequential calls. Reports exclude input content/identifiers and the preview has no persistence or task-write port.
+
+Gmail admission policy stays inside its existing adapter module: monotonic pacing, abortable waits and structured throttle interpretation share the reader interface. The generic `MailBudget` remains usable by Jev. Collection orchestration owns selection stop/backoff; MIME parsing propagates terminal throttling instead of replacing it with a body-coverage status. The architecture review retained existing ports, transactions and recovery structure.

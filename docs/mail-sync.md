@@ -23,6 +23,10 @@ After bootstrap, history starts at the original anchor, including mail arriving 
 
 Partial/failed conversations remain pending, with fixed reasons and next-attempt times. Backoff is 5, 10, 20, 40, then 60 minutes maximum, without an attempt-discard limit. Due work is retried even without new mail; rediscovery makes changed work due again. Unsupported/oversized bodies stay visible gaps and get no complete fingerprint/job. Running more frequently does not bypass backoff.
 
+Gmail reads share a 1.5-second minimum gap between request starts within each invocation, including profile/history/discovery and separately stored text. The first request can start immediately. Pacing is cancellable and counts toward the existing 120-second deadline; it does not coordinate other processes or clients.
+
+Recognized throttling reports `rate-limited` and stops the batch. A discovery throttle prevents backlog retrieval in that invocation. A conversation/body-part throttle defers only the attempted retrieval using normal durable backoff, then leaves later work untouched. Completed evidence/jobs survive; evidence freshness stays unchanged while work/failures remain. DB-only `mail:status` recognizes this failure category. No SDK retry or provider response text is exposed.
+
 Confirmed missing threads, draft-only threads, bootstrap selections with no recent non-draft mail, and threads with any non-draft Spam/Trash label are acknowledged with visible missing/excluded counts and no new evidence. Whole-thread Spam/Trash exclusion is conservative. Old evidence, jobs, mappings and user tasks are preserved. History-selected older threads retain context. Label-only replay of known complete evidence can update observations without duplicate versions/jobs.
 
 Statement failure rolls back its bounded transaction. Lost commit acknowledgement can leave an unknown outcome; counts report confirmed results only. Replay uses saved state and uniqueness, never an assumption that nothing committed.

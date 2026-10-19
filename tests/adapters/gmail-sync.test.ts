@@ -3,6 +3,7 @@ import { afterEach, expect, it } from "vitest";
 import { gmailReader } from "../../src/adapters/gmail.js";
 import { googleAuth } from "../../src/adapters/google.js";
 import { MailBudget } from "../../src/application/mail-budget.js";
+import { immediateGmailTiming } from "../fixtures/gmail-timing.js";
 import { mailInstant } from "../fixtures/mail.js";
 import { server } from "../setup.js";
 
@@ -20,7 +21,7 @@ function setup(limits = {}) {
     GOOGLE_REFRESH_TOKEN: "fake",
   });
   auth.setCredentials({ access_token: "fake", expiry_date: Date.now() + 10_000_000 });
-  return gmailReader(auth, budget, { now: () => mailInstant });
+  return gmailReader(auth, budget, { now: () => mailInstant }, immediateGmailTiming());
 }
 it("reads a string history anchor and deduplicates all change types across paginated transport", async () => {
   const anchor = "90071992547409930";

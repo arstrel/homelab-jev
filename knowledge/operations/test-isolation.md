@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:33:58.007148Z
+  at: 2026-10-19T04:14:23Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -48,17 +48,25 @@ x_jev_sources:
   - path: tests/integration/mail-ingestion.test.ts
     sha256: 92805931f6f060fe72af9fd17b87bcee6f329ee72270012d44daf9b57d318942
   - path: tests/integration/mail-sync.test.ts
-    sha256: d107036f77d477c3ae105bbc528bc5e10235c1a6789afde0760c5579e157c90a
+    sha256: 049008cf40812389ef3b01911cf1c3f01ec6a6a257d440aa7e4de69641ec56e4
   - path: tests/adapters/gmail-sync.test.ts
-    sha256: ded556b50ec7829f3d4fa7d06c400517ed31377a0c0b92261ed2d7c7ee8f1e49
+    sha256: 2d0d02c586dbe4766d90d0d0b254eb6ea429a3fd2d71fd630628d90783669f83
   - path: tests/unit/mail-sync.test.ts
-    sha256: 6db9df740bdeabf5013309fb60a65d786fd518eaf8fd425e1e4f2fe689451fba
+    sha256: c029b2ef11bc8ccc4db0c3770395b06beee32073af0ec7de0d4f930a08b9cdb6
   - path: tests/unit/mail-triage.test.ts
     sha256: d0b8ffd5ed626c9976924a797c2338e9e0d30fb40235eee606ca02d4ebceed77
   - path: tests/adapters/jev-triage.test.ts
     sha256: 00599738213ca9d2fff6049c28de8b1c0156fc185bf4bea742969c93b8446a11
   - path: tests/integration/mail-triage.test.ts
     sha256: bc1de0b163fa87580ba65753e30f6752d28d247355f31a29a1c96a3f08ad14c3
+  - path: tests/adapters/gmail-pacing.test.ts
+    sha256: 6889af2294f388336b9479623187f7ff7575b2cd5c685798c81a73c98cc7492f
+  - path: tests/fixtures/gmail-timing.ts
+    sha256: 003deddbaa38980f664af34855d2a1d869ba31213278adbfa312f35e4b28c8db
+  - path: tests/unit/mail-preview.test.ts
+    sha256: 9d3cb01ea7441e210a89c504d124b5fde5b1dcd9fab2e8c46b42b5ddb5e9a28d
+  - path: tests/unit/mail-ingestion.test.ts
+    sha256: cff8f13effa4351a59b05e923cc76f01e4232fcf18db0475cbb58cb9bcf4c5d9
 ---
 
 # Offline and database test isolation
@@ -80,3 +88,5 @@ Recovery fixtures cover stage-by-stage restarts, a 101-thread mapped snapshot, o
 Observation tests verify read-only transaction enforcement, schema readiness without setup, coherent aggregates across concurrent commits, observation during held sync ownership, and sanitized connection loss. Fixture initialization inserts typed sync state directly; it does not race teardown of an unnecessary setup ownership session against the test's lock acquisition. Disposable schema resets and backend termination remain confined to the validated test database. The compiled DB-only diagnostic uses a fake failing driver with network access denied; live pilot acceptance is never a Git gate.
 
 Triage tests use synthetic conversations, fixed results and MSW for malformed answers, hostile-state boundaries, cancellation and timeout/no-retry contracts. Disposable PostgreSQL tests select exact historical versions, preserve legacy gaps and detect corrupt evidence while leaving jobs/results unchanged. Credentialed Jev checks are explicit separate operations; deterministic gates never send real mail to Jev or claim measured classifier quality.
+
+Gmail admission tests cross the reader interface using synthetic transport responses and controlled monotonic timing, including concurrent reads released by a slow OAuth refresh. Separate production-wait tests cover cancellation/deadline without live calls. Body-part throttling remains terminal. Disposable PostgreSQL coverage verifies earlier commits, the failed item’s durable backoff, untouched later work, recognized diagnostics and a successful due retry. These tests do not establish live quota headroom or completed collection acceptance.

@@ -208,7 +208,9 @@ export async function normalizeBody(
   } catch (error) {
     if (
       error instanceof MailReadError &&
-      (error.reason === "deadline" || error.reason === "cancelled")
+      (error.reason === "deadline" ||
+        error.reason === "cancelled" ||
+        error.reason === "rate-limited")
     )
       throw error;
     if (error instanceof MailReadError && error.reason === "too-large")

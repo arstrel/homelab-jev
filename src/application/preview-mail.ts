@@ -101,9 +101,10 @@ export async function previewMail(
   const selected = [...ids];
   const outcomes: Outcome[] = [];
   let next = 0;
+  let throttled = reasons.has("rate-limited");
   await Promise.all(
     Array.from({ length: Math.min(deps.budget.limits.concurrency, selected.length) }, async () => {
-      while (next < selected.length) {
+      while (!throttled && next < selected.length) {
         const index = next++;
         const id = selected[index];
         if (!id) continue;
@@ -113,7 +114,9 @@ export async function previewMail(
           const eligible = eligibleThread(read, { since, until });
           outcomes[index] = { read, eligible };
         } catch (error) {
-          outcomes[index] = { failure: mailFailure(error) };
+          const failure = mailFailure(error);
+          outcomes[index] = { failure };
+          if (failure === "rate-limited") throttled = true;
         }
       }
     }),
@@ -160,7 +163,7 @@ export async function previewMail(
     report: {
       window: { since: new Date(since).toISOString(), until: new Date(until).toISOString() },
       discoveryComplete,
-      bodyCoverageComplete: failed === 0 && partial === 0,
+      bodyCoverageComplete: failed === 0 && partial === 0 && !throttled,
       discoveredThreads: selected.length,
       retrievedThreads: retrieved,
       eligibleThreads: records.length,

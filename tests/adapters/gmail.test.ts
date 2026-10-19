@@ -5,6 +5,7 @@ import { googleAuth } from "../../src/adapters/google.js";
 import { MailBudget } from "../../src/application/mail-budget.js";
 import { previewMail } from "../../src/application/preview-mail.js";
 import { fingerprint } from "../../src/domain/mail-evidence.js";
+import { immediateGmailTiming } from "../fixtures/gmail-timing.js";
 import { gmailMessage, gmailThread, mailInstant, threadRead } from "../fixtures/mail.js";
 import { server } from "../setup.js";
 
@@ -36,7 +37,10 @@ function setup(raw: Record<string, unknown> = gmailThread(), limits = {}) {
       return HttpResponse.json(raw);
     }),
   );
-  return { mail: gmailReader(auth, budget, { now: () => mailInstant }), budget };
+  return {
+    mail: gmailReader(auth, budget, { now: () => mailInstant }, immediateGmailTiming()),
+    budget,
+  };
 }
 function textPart(text: string, mimeType = "text/plain", extra = {}) {
   return {

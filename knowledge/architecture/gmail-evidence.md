@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:47:14.126040Z
+  at: 2026-10-19T04:14:23Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -19,17 +19,17 @@ sources:
     title: Google full thread API
 x_jev_sources:
   - path: src/domain/mail-evidence.ts
-    sha256: 120ff9656cf78c96db59945cf8a928063035a0ed4ed3ea131d2c73cc214f509e
+    sha256: b014980d2e99ac35da00dba3f71070b26e6a52216722110d3a86476d1cd93703
   - path: src/application/preview-mail.ts
-    sha256: 6c34e71ff2426ced89c2677a8f5662e7a341a72a98a38dd19b63678d0d52260a
+    sha256: a04b1556a028c8e4d8d27100d7ca75900865f5bf5bd2868a4be6544761415fea
   - path: src/application/mail-budget.ts
     sha256: d39ba17773481f6397b8bbfd6c6ff492fe636ac75daaf4721b470d1824098382
   - path: src/adapters/gmail.ts
-    sha256: 68d953c97b4a72d3d635679d3764e1212272a6ccab899997a8c427c576618da4
+    sha256: 87224a07d772828108d8ce67b295a22a1656802327116f63a750c280bafca0ae
   - path: src/adapters/gmail-body.ts
-    sha256: 11b9a39eb999a71b903a79b3ab21c6937b9b3598686f56e0b0c63a43bb2f717e
+    sha256: ac91de4980dc81ce69b679d311abeb8d528579ded41a9bbfcd35081fed88e480
   - path: docs/gmail-preview.md
-    sha256: 781fe09ad868c071241c56483f8563034965ef69ee07e7f81fc354ed94c591ae
+    sha256: 5b4a16300c1aa2fb5346dc4a83d8ecdfa1f166d503627fb08fbb218a0f4e0c87
 ---
 
 # Bounded Gmail conversation evidence
@@ -47,3 +47,5 @@ Pure v1 fingerprints cover complete normalized material, with canonical message/
 The bounded live sample retrieved 20 conversations, with 17 complete bodies and three partial (one unsupported, two oversized), and no downstream writes. This demonstrates retrieval/coverage reporting, not full synchronization or classification quality. The separate [durable ingestion](mail-ingestion.md) path now stores immutable complete versions bound to jobs; preview retains its in-memory boundary. Manual [history synchronization](mail-sync.md) and [bounded recovery](mail-recovery.md) are implemented; classification remains planned. See [ledger](ledger.md) and [evaluation](/operations/classification-evaluation.md).
 
 The reader also exposes bounded profile/history operations for [manual sync](mail-sync.md). Preview still performs no persistent writes; history-expired is a distinct fixed category from a missing full thread.
+
+Gmail request starts now use one invocation-local queue with a 1.5-second minimum gap. Structured HTTP 429 or known HTTP 403 rate-limit reasons stop the reader as `rate-limited`; body normalization preserves the signal. Preview stops new selection after throttling while retaining already-started successful evidence. Waiting shares cancellation/deadline limits. Other clients/processes are outside this pacing scope.
