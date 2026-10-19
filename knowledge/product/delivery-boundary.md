@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T14:07:14Z
+  at: 2026-10-19T14:41:33Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -24,7 +24,7 @@ sources:
     title: docs/foundation-evidence.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: 96bf2ee2199d7b16e89256019dc31664288b6a93eeff3167f1b21453f68254b9
+    sha256: f04858560cf99f3fbee4a4fcd8e5fc73bf8e4d7d93cd2d54f5be66bc2a9c416a
   - path: openspec/changes/add-personal-brief-preprocessing/tasks.md
     sha256: 306bfcf09d7a0e01b3cee6969a4606a6045ba4fc89f504d658bc2c75bd7f3a2e
   - path: docs/foundation-evidence.md
@@ -33,6 +33,8 @@ x_jev_sources:
     sha256: b804e0269de1e48d9c5a910face20c9c604bf6c674f5d250143ffd7aab24e167
   - path: docs/mail-triage.md
     sha256: 2a9a384419b55a6f6c1c71511759ea7e1ef960e2ef01cf57ca025155ca396057
+  - path: docs/email-tasks.md
+    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
 ---
 
 # Implemented foundation and planned release
@@ -47,4 +49,6 @@ DB-only [mail diagnostics](/operations/mail-observation.md) and a bounded manual
 
 Follow [development gates](/operations/development-gates.md) and [release operations](/operations/native-releases.md). Consult the current OpenSpec checklist before changing this summary.
 
-The authorized manual collection report now records applied migrations, discovery catch-up and 516 complete versions/jobs, with 409 retrievals still pending after the latest paced session reached its 20-run cap. Its 400 retrieval attempts reported no new provider error or throttling; partial coverage and older queued failures remain. Evidence freshness is still null. Parent 2.4 remains incomplete. A read-only [Jev triage preview](/architecture/classification-policy.md) implements kind/attention/lifecycle judgments on exact complete evidence; matching, routing, persistence/corrections, calibrated capture and scheduled rollout remain planned. No task is created or job consumed by preview.
+The [reviewed email task flow](/product/todoist-projects.md) now samples up to ten stored conversations and creates only explicitly approved source-sentence/project proposals. It reuses existing intents/links for duplicate and uncertain-response protection. This manual slice does not complete parent Sections 3/4: matching, automatic capture, evaluation, full reconciliation and live capture evidence remain pending.
+
+The authorized manual collection report now records applied migrations, discovery catch-up and 516 complete versions/jobs, with 409 retrievals still pending after the latest paced session reached its 20-run cap. Its 400 retrieval attempts reported no new provider error or throttling; partial coverage and older queued failures remain. Evidence freshness is still null. Parent 2.4 remains incomplete. A read-only [Jev triage preview](/architecture/classification-policy.md) implements kind/attention/lifecycle judgments on exact complete evidence; general matching, automatic routing, persistence/corrections, calibrated capture and scheduled rollout remain planned. Neither preview command creates tasks or consumes jobs.

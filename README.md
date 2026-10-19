@@ -14,7 +14,9 @@ Section 1 foundation, [Gmail evidence retrieval](docs/gmail-preview.md), [manual
 
 Foundation: Node 24.21.0/TypeScript, Drizzle with pg, npm, Biome, Vitest/MSW, and Husky. Full offline checks run before commit, with fully staged validation inputs; PostgreSQL checks run before push and in PR CI. Required remote enforcement is tracked separately in the checklist. Native launchd scheduling comes in Section 7. Bun is deferred to another project.
 
-Start with [development setup](docs/development.md), [independent connections](docs/connections.md), [Gmail preview](docs/gmail-preview.md), [migration operations](docs/migrations.md) and [foundation evidence](docs/foundation-evidence.md). Classification and task capture are later milestones.
+The small [reviewed email task flow](docs/email-tasks.md) now proposes source-based titles and existing Todoist projects from up to ten stored conversations, and creates only explicitly approved candidates. Automatic capture and full reconciliation remain later milestones.
+
+Start with [development setup](docs/development.md), [independent connections](docs/connections.md), [Gmail preview](docs/gmail-preview.md), [migration operations](docs/migrations.md) and [foundation evidence](docs/foundation-evidence.md).
 
 ## OpenSpec tracking
 

@@ -39,7 +39,7 @@ x_jev_sources:
   - path: src/adapters/drive.ts
     sha256: d76eb0f4a07f5d9a3da155eea00de0c3792b5023a6f167486ab90b68ba1b6c02
   - path: src/adapters/todoist.ts
-    sha256: 25d3f3101d99bef99549310651b2c86b35ff3422c7588d186ecc635ee24415da
+    sha256: 893a433a2878b505872f14719cced7bfede0521b4c505e203de0b9e1fda749a3
 ---
 
 # Bounded provider connection checks

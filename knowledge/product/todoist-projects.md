@@ -6,13 +6,13 @@ description: Route concrete obligations to active existing projects while
 tags:
   - product
   - jev
-  - planned
+  - mixed
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-11T02:21:58Z
+  at: 2026-10-19T14:41:33Z
 stale_after: 2026-11-10T02:21:58Z
-x_jev_delivery: planned
+x_jev_delivery: mixed
 sources:
   - id: s1
     resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/docs/product-requirements.md
@@ -25,6 +25,12 @@ x_jev_sources:
     sha256: 8aee3e08be20666e36dffa7a46b8a80acd682b76f6413ececc431fd63f9c46e7
   - path: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
     sha256: d6bef852b7c90292aacb8707eb6b911c1203f710a127aae5d5fbe2c356532373
+  - path: src/domain/email-task.ts
+    sha256: 558ebe892622bf60a60ee942c7d90e04a96f5c260bee85de367a06ee2aaad718
+  - path: src/application/email-tasks.ts
+    sha256: fdf398f242f481cb2a40d124b72705d60d83c6f07150c1b9e70209fddbda57e7
+  - path: docs/email-tasks.md
+    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
 ---
 
 # Existing project routing and task kinds
@@ -36,3 +42,5 @@ Confident actionable obligations can go into an existing themed project. Actiona
 Separate finite obligations from broad goals and reusable activity options. A fitness or leisure option is not necessarily mandatory or consumed by one session. The `Assistant` label is a convention, not ownership or completion evidence.
 
 See [manual edits](/architecture/manual-edits.md), [uncertainty](/architecture/uncertainty.md), and [Retro](/architecture/retro-feedback.md).
+
+The implemented [manual reviewed task flow](/providers/todoist-boundary.md) offers one source-sentence task per stored conversation, finite current project choices and Inbox on uncertain routing. Retro is excluded by name, optional configured ID and captured review identity. Apply requires explicit candidate approval and rejects a changed name/ID instead of silently rerouting. Automatic capture and broader task-kind synchronization remain planned.

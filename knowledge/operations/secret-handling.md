@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:37:45.641142Z
+  at: 2026-10-19T14:41:33Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -32,6 +32,10 @@ x_jev_sources:
     sha256: f887016114368f775e58c0c7945b8117f9ee016483a4e730842c8a06bdb196c8
   - path: docs/mail-ingestion.md
     sha256: 5fb67c4759c404bc599c53b606fa5c94bec7c2cb20e0e06ffb1719b8898defb6
+  - path: src/cli-email-tasks.ts
+    sha256: 03d03bcd3477bab151136626c8801c25267d15727583299a547fe616242f33e1
+  - path: docs/email-tasks.md
+    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
 ---
 
 # Configuration and private-data boundaries
@@ -47,3 +51,5 @@ Explicit [manual ingestion](/architecture/mail-ingestion.md) stores private mess
 DB-only [observation](mail-observation.md) fetches fixed metadata and aggregates rather than message payloads/identifiers. Unknown stored failure text becomes a fixed category in SQL and report validation strips unexpected fields. Committed pilot evidence contains reviewed aggregate results only; intermediate captures and credentials stay outside tracked artifacts.
 
 See [Google grants](/providers/google-credentials.md), [test isolation](test-isolation.md), and [OKF maintenance](okf-maintenance.md).
+
+The explicit [reviewed task flow](/product/todoist-projects.md) deliberately displays proposed private task titles and Gmail links for approval, and writes mode-600 files under ignored `.cache/mail-tasks/`. Keep those artifacts and terminal output outside Git/shared logs. Preview sends bounded mail/project context to hosted Jev only when invoked; apply uses the local review without another model call. Tests use synthetic data and never perform live capture.
