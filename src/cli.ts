@@ -7,7 +7,7 @@ import { status } from "./application/status.js";
 import { databaseUrl, diagnostic } from "./config.js";
 
 const help =
-  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:status\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev mail:sync [--days 30] [--max-pages 5] [--max-threads 20]\n       jev mail:classify [--max-jobs 5] [--model jev-1.13.0]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
+  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:status\n       jev mail:tasks preview [--offset 10]\n       jev mail:tasks apply <file> --approve 1,3\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev mail:sync [--days 30] [--max-pages 5] [--max-threads 20]\n       jev mail:classify [--max-jobs 5] [--model jev-1.13.0]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
 async function main() {
   const [command, ...extra] = process.argv.slice(2);
   if (command === "mail:status") {
@@ -21,7 +21,8 @@ async function main() {
     command === "mail:preview" ||
     command === "mail:ingest" ||
     command === "mail:sync" ||
-    command === "mail:classify"
+    command === "mail:classify" ||
+    command === "mail:tasks"
   ) {
     const { runMailPreview, runMailIngest } = await import("./cli-mail.js");
     const controller = new AbortController();
@@ -38,17 +39,21 @@ async function main() {
     process.once("SIGTERM", terminate);
     try {
       const report =
-        command === "mail:classify"
-          ? await (await import("./cli-mail-triage.js")).runMailTriage(extra, process.env, {
+        command === "mail:tasks"
+          ? await (await import("./cli-email-tasks.js")).runEmailTasks(extra, process.env, {
               signal: controller.signal,
             })
-          : command === "mail:sync"
-            ? await (await import("./cli-mail-sync.js")).runMailSync(extra, process.env, {
+          : command === "mail:classify"
+            ? await (await import("./cli-mail-triage.js")).runMailTriage(extra, process.env, {
                 signal: controller.signal,
               })
-            : command === "mail:ingest"
-              ? await runMailIngest(extra, process.env, { signal: controller.signal })
-              : (await runMailPreview(extra, process.env, { signal: controller.signal })).report;
+            : command === "mail:sync"
+              ? await (await import("./cli-mail-sync.js")).runMailSync(extra, process.env, {
+                  signal: controller.signal,
+                })
+              : command === "mail:ingest"
+                ? await runMailIngest(extra, process.env, { signal: controller.signal })
+                : (await runMailPreview(extra, process.env, { signal: controller.signal })).report;
       console.log(JSON.stringify(report, null, 2));
       process.exitCode = signalExit ?? report.exitCode;
     } finally {

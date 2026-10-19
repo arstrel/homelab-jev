@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:33:58.002192Z
+  at: 2026-10-19T14:41:33Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -30,6 +30,14 @@ x_jev_sources:
     sha256: 0b15b2f4910ac677fb09a8a7c3c19c081c0f13e680d32283143847dbebb7f2b9
   - path: docs/mail-triage.md
     sha256: 2a9a384419b55a6f6c1c71511759ea7e1ef960e2ef01cf57ca025155ca396057
+  - path: src/domain/email-task.ts
+    sha256: 558ebe892622bf60a60ee942c7d90e04a96f5c260bee85de367a06ee2aaad718
+  - path: src/application/email-tasks.ts
+    sha256: fdf398f242f481cb2a40d124b72705d60d83c6f07150c1b9e70209fddbda57e7
+  - path: src/adapters/jev-email-tasks.ts
+    sha256: 918a10eecf15005b16e8432756998596bee3860c74596da03bd931ed9edd828f
+  - path: docs/email-tasks.md
+    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
 ---
 
 # Typed classification and evidence policy
@@ -38,7 +46,9 @@ Jev should classify action/FYI/noise, identify finite obligations, judge candida
 
 Do not treat free-form model prose or email instructions as an executable plan. Supply only necessary evidence and context; keep credentials and unrelated private data out of requests. Source-based title templates and explicit review states limit unsupported invention.
 
-The manual `mail:classify` preview implements separate kind, attention and lifecycle choices with explicit unknown values under `mail-triage/v1`, pinned to live-confirmed revision `jev-1.13.0`. It reads exact complete job evidence in a read-only transaction, sends minimized bounded state, validates responses and prints sanitized judgments. It leaves jobs and stored results unchanged. Candidate matching, routing, corrections, capture thresholds and task effects remain planned; parent 3.1 stays open.
+The manual `mail:classify` preview implements separate kind, attention and lifecycle choices with explicit unknown values under `mail-triage/v1`, pinned to live-confirmed revision `jev-1.13.0`. It reads exact complete job evidence in a read-only transaction, sends minimized bounded state, validates responses and prints sanitized judgments. It leaves jobs and stored results unchanged. General candidate matching, corrections, calibrated thresholds and automatic task effects remain planned; parent 3.1 stays open.
+
+The separate [reviewed task flow](/product/todoist-projects.md) implements bounded action-sentence and current-project choices with explicit unknown outcomes. Source sentences and project text stay in untrusted state; trusted criteria reference only finite IDs. Code validates those IDs, uses Inbox for uncertain routing and revalidates approved proposals before effects. Human approval supplies the capture decision; original triage jobs/results remain untouched. Candidate matching, corrections and automatic capture remain planned.
 
 The initial model setting is uncalibrated. Evaluate a sanitized held-out set of representative messages, including ambiguous routing and matching, before choosing capture thresholds or enabling automatic capture. Low confidence and contradictory evidence route through [uncertainty](uncertainty.md). The triage runbook recorded in the source snapshots above describes privacy, bounds, replay charges and the model/evaluation boundary.
 

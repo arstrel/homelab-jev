@@ -23,6 +23,9 @@ for (const args of [
   ["mail:status"],
   ["mail:classify", "--max-jobs", "private-option-marker"],
   ["mail:classify"],
+  ["mail:tasks", "preview", "--offset", "private-option-marker"],
+  ["mail:tasks", "preview"],
+  ["mail:tasks", "apply"],
   ["status", "unexpected"],
 ]) {
   const result = spawnSync(
@@ -37,6 +40,12 @@ for (const args of [
     result.stderr.includes("private-option-marker")
   )
     throw new Error("Compiled CLI invalid/configuration handling failed.");
+  if (
+    args[0] === "mail:tasks" &&
+    (args.includes("--offset") || args[1] === "apply") &&
+    !result.stderr.includes("mail:tasks preview")
+  )
+    throw new Error("Compiled reviewed task dispatch failed.");
 }
 console.log("Compiled CLI preview options and configuration failures: OK");
 

@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T04:14:23Z
+  at: 2026-10-19T14:41:33Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -34,7 +34,7 @@ x_jev_sources:
   - path: tests/unit/mail-status.test.ts
     sha256: 94fcb2b4a492fe368522e6ae4a0ce95b28450a9884d28a6dec6b22b54d1a51c3
   - path: scripts/cli-smoke.ts
-    sha256: 2b2cc5002b9bd1885dec9dd7b2322632c538ebf1a0100770860f55ebdd63ba15
+    sha256: 0961ba43ea14db0593ce2741344a933ee061884f7b1d17d27b542d30fdcb88d3
   - path: tests/setup.ts
     sha256: 848618590ddc9c3f5f53c84b13b41537b040c7f0c62ad0c6ba3cd41caab706b3
   - path: scripts/environment.ts
@@ -90,3 +90,5 @@ Observation tests verify read-only transaction enforcement, schema readiness wit
 Triage tests use synthetic conversations, fixed results and MSW for malformed answers, hostile-state boundaries, cancellation and timeout/no-retry contracts. Disposable PostgreSQL tests select exact historical versions, preserve legacy gaps and detect corrupt evidence while leaving jobs/results unchanged. Credentialed Jev checks are explicit separate operations; deterministic gates never send real mail to Jev or claim measured classifier quality.
 
 Gmail admission tests cross the reader interface using synthetic transport responses and controlled monotonic timing, including concurrent reads released by a slow OAuth refresh. Separate production-wait tests cover cancellation/deadline without live calls. Body-part throttling remains terminal. Disposable PostgreSQL coverage verifies earlier commits, the failed item’s durable backoff, untouched later work, recognized diagnostics and a successful due retry. These tests do not establish live quota headroom or completed collection acceptance.
+
+Reviewed task tests use synthetic source sentences, projects and remote responses. Offline tests cover selected creation and a network error without SDK replay; disposable PostgreSQL verifies persisted uncertainty, repeated/overlapping apply and transactional settlement rollback. Compiled command checks remain network-denied. No real mail transfer or Todoist write is performed.

@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:33:58.008101Z
+  at: 2026-10-19T14:41:33Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -27,13 +27,19 @@ sources:
     title: docs/development.md
 x_jev_sources:
   - path: package.json
-    sha256: cfe12bbe09a145d2653fb3508f269d12684a72ed0e22c2d74de84c4261f4842b
+    sha256: 52810433e38f641e6dbe96bf471a8a1561161b36f988adc9ac0b024005186fa5
   - path: scripts/check.ts
     sha256: 265c3bdb561a903fb53a7119604f76cdf9ef0be9d7932077d1e5ff8ec785d392
   - path: scripts/git-gate.ts
     sha256: d319d4731259e12a306add4853a84c0e4f5691b4bcd56d8e0ba5386010adde12
   - path: docs/development.md
     sha256: 2aa7be5a04227dc49ec618c114bcf16abad2d90d579abc38ddd5db28e5b85237
+  - path: scripts/cli-smoke.ts
+    sha256: 0961ba43ea14db0593ce2741344a933ee061884f7b1d17d27b542d30fdcb88d3
+  - path: tests/unit/email-tasks.test.ts
+    sha256: 1ce6e201115e743514b2aa73ed14b4eaa5970947275ba51c0cc66a02ab2e1daa
+  - path: tests/integration/email-tasks.test.ts
+    sha256: 8e1ab858b0f01dfe160fcd6d9663df8f1a355ea44a1d2015761be3f6f3b6c9ff
 ---
 
 # Node development and Git gates
@@ -51,3 +57,5 @@ See [test isolation](test-isolation.md), [migrations](database-migrations.md), a
 The explicit compiled `mail:sync` command is now validated offline, with durable ownership/restart/freshness tests in disposable PostgreSQL. It requires reviewed migrations and Google/database configuration. The normal gates never run credentialed synchronization or enable launchd.
 
 The explicit `mail:classify` preview is also covered by offline compiled option/configuration checks and synthetic adapter/application tests. Disposable PostgreSQL checks exercise exact read-only evidence selection. Live Jev calls and private mail transfers are outside Git/CI gates.
+
+The [reviewed task commands](/providers/todoist-boundary.md) are covered by synthetic offline application/transport tests, compiled option checks and disposable PostgreSQL apply/replay/settlement tests. These gates never send real email to Jev or create live tasks.
