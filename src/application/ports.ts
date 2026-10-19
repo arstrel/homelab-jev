@@ -10,6 +10,9 @@ export interface LedgerStatus {
 export interface Ledger {
   status(): Promise<LedgerStatus>;
 }
+export interface MailStatusReader {
+  read(now: Date): Promise<import("../domain/mail-status.js").MailStatusSnapshot>;
+}
 
 export interface PersistenceCounts {
   newVersions: number;

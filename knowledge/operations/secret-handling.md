@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T06:26:11.007Z
+  at: 2026-10-19T02:37:45.641142Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -43,5 +43,7 @@ Diagnostics identify fields and fixed failure categories, not secret values or r
 The manual [Gmail preview](/architecture/gmail-evidence.md) prints only fixed status/reason counts and window bounds. Bodies, addresses, subjects, source IDs and fingerprints stay in memory; its runbook records sanitized live totals only. OKF is curated public-safe engineering knowledge. Its metadata is advisory and does not establish an authorization boundary. The local viewer never reads `.env`, serves repository paths or loads external images.
 
 Explicit [manual ingestion](/architecture/mail-ingestion.md) stores private message text/headers in PostgreSQL, requiring private database and backup access. Terminal reports remain sanitized. No automatic cleanup exists; retain job-referenced evidence until a reviewed retention mechanism is added. No operational ingestion is performed by tests or CI.
+
+DB-only [observation](mail-observation.md) fetches fixed metadata and aggregates rather than message payloads/identifiers. Unknown stored failure text becomes a fixed category in SQL and report validation strips unexpected fields. Committed pilot evidence contains reviewed aggregate results only; intermediate captures and credentials stay outside tracked artifacts.
 
 See [Google grants](/providers/google-credentials.md), [test isolation](test-isolation.md), and [OKF maintenance](okf-maintenance.md).

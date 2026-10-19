@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T23:36:37.354Z
+  at: 2026-10-19T02:37:45.636695Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -27,9 +27,9 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/design.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: 866db21607dee12965f76f0ae48b32017783d4250d1294c0171b69fe38531d16
+    sha256: eb950d1651538b3b94640addc51c5ec200ffadcb7224273cd2c4ff2685b9f0f3
   - path: src/application/ports.ts
-    sha256: 2ea37f58e95f31e10d4ddf18baf0f265de97c285d6701bae0c14be262023eff5
+    sha256: 9509b036a288aaa120239e05013ae4888708027ae210f5920280d35a55bf2c77
   - path: src/domain/README.md
     sha256: 7d0d31f43ea8089296e0fa9e14ace8a7db2f1c3b627630082ed33a0499d2597c
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
@@ -53,3 +53,5 @@ Inject runtime time/identity and provider ports so offline tests do not require 
 Do not perform remote calls inside database transactions. Separate durable ingestion from classification and remote writes. See [ledger](/architecture/ledger.md), [processing cycle](processing-cycle.md), and [test isolation](/operations/test-isolation.md).
 
 Manual [incremental sync](mail-sync.md) now coordinates a reader and a session-owned persistence port. Discovery, retrieval retries and evidence freshness remain separate from classification. The CLI creates the provider only after mailbox ownership is granted; no provider request occurs within a database transaction.
+
+DB-only [mail observation](/operations/mail-observation.md) has its own SDK-free reader and read-only transaction. It does not request sync ownership or construct provider clients. The application validates the fixed report shape and converts unavailable/malformed reads to unknown measurements without exposing arbitrary data.

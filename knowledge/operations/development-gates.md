@@ -27,7 +27,7 @@ sources:
     title: docs/development.md
 x_jev_sources:
   - path: package.json
-    sha256: 483ce523f20c846bc545ae11d1461fb16854d505cd33854438c435b62adddb57
+    sha256: 620e22e1252f5fef3e4c1e00bc4ee03fa6196ca8f26cc2dcf9462bbc53da2690
   - path: scripts/check.ts
     sha256: 265c3bdb561a903fb53a7119604f76cdf9ef0be9d7932077d1e5ff8ec785d392
   - path: scripts/git-gate.ts
