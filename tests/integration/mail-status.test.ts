@@ -11,7 +11,7 @@ import { mailEvidenceStore } from "../../src/adapters/postgres/mail-evidence.js"
 import { mailStatusReader } from "../../src/adapters/postgres/mail-status.js";
 import { mailSyncStore } from "../../src/adapters/postgres/mail-sync.js";
 import { applyMigrations } from "../../src/adapters/postgres/migrate.js";
-import { pendingJobs } from "../../src/adapters/postgres/schema.js";
+import { mailSyncState, pendingJobs } from "../../src/adapters/postgres/schema.js";
 import { mailStatus } from "../../src/application/mail-status.js";
 import { submission } from "../fixtures/ingestion.js";
 import { mailInstant } from "../fixtures/mail.js";
@@ -33,9 +33,7 @@ afterAll(async () => {
 });
 async function initialize() {
   await applyMigrations(client);
-  await mailSyncStore(client).exclusive("primary", async (session) => {
-    await session.initialize(syncState());
-  });
+  await client.db.insert(mailSyncState).values(syncState());
 }
 // Wrap the actual driver to inspect transaction settings or make a concurrent commit between reads.
 function afterQuery(callback: (text: string, connection: PoolClient) => Promise<void>) {

@@ -102,6 +102,45 @@ it("prefers plain text within alternatives and preserves primary mixed sections"
     text: "Primary\nQuote: keep me\n\nSecond section",
   });
 });
+it.each(["text", "attachment"])(
+  "keeps nested encrypted body coverage partial beside %s",
+  async (sibling) => {
+    const { mail } = setup(
+      single({
+        mimeType: "multipart/mixed",
+        parts: [
+          sibling === "text"
+            ? textPart("Readable introduction")
+            : {
+                partId: "2",
+                mimeType: "application/pdf",
+                filename: "file.pdf",
+                body: { size: 20, attachmentId: "must-not-read" },
+              },
+          { mimeType: "multipart/encrypted", parts: [] },
+        ],
+      }),
+    );
+    const read = await mail.readThreadEvidence("t-boiler");
+    expect(read.evidence.messages[0]?.body).toEqual({ status: "unsupported" });
+    expect(read.evidence.coverage.messageBodies).toBe("partial");
+    expect(() => fingerprint(read.evidence)).toThrow();
+  },
+);
+it("uses a readable MIME alternative when another representation is encrypted", async () => {
+  const { mail } = setup(
+    single({
+      mimeType: "multipart/alternative",
+      parts: [{ mimeType: "multipart/encrypted", parts: [] }, textPart("Readable alternative")],
+    }),
+  );
+  const read = await mail.readThreadEvidence("t-boiler");
+  expect(read.evidence.messages[0]?.body).toEqual({
+    status: "complete",
+    text: "Readable alternative",
+  });
+  expect(read.evidence.coverage.messageBodies).toBe("complete");
+});
 it("converts HTML-only text, entities, links and paragraphs without loading unsafe content", async () => {
   const { mail } = setup(
     single(

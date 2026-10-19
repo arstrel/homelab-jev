@@ -19,7 +19,7 @@ sources:
     title: Google history paging and expiry contract
 x_jev_sources:
   - path: src/application/sync-mail.ts
-    sha256: 3b740603c34937780c5802f9d8d7b9b2d871d2062c886ab1d16282e159dbe660
+    sha256: bb92f1d81ddade4e29268c7ee9a10fb878f5ffeb3c8b753bbaa35349b69765df
   - path: src/adapters/postgres/mail-sync.ts
     sha256: da9949dd1e99d00b259c27dbfe9b6b1f73522b2a2aa8bb45273d987cd4e24b77
   - path: src/adapters/gmail.ts

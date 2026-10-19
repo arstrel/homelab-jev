@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-18T23:36:37.354Z
+  at: 2026-10-19T02:57:51Z
 stale_after: 2026-11-16T23:00:00Z
 x_jev_delivery: implemented
 sources:
@@ -27,14 +27,14 @@ x_jev_sources:
   - path: src/adapters/postgres/schema.ts
     sha256: 24dbe743ecb812b02c3250cf7315edd142c4dfdecbec1edfe65396f3766c39f5
   - path: docs/mail-ingestion.md
-    sha256: fb0d10754aff3141d59374902664640b5fe4472a6f4ddb952fa50b01ae7ac4a9
+    sha256: 5fb67c4759c404bc599c53b606fa5c94bec7c2cb20e0e06ffb1719b8898defb6
   - path: migrations/0002_durable_mail_evidence.sql
     sha256: aa7e4e79bcedf00c1ca435e227f52ea347095fa0343a113575fc7638193f3e9d
 ---
 
 # Durable mail evidence ingestion
 
-The explicit `mail:ingest` command reads bounded Gmail evidence, then atomically persists only complete eligible conversations and exact-bound pending jobs. It requires Google/database credentials only and prints sanitized counts. Current implementation is represented by repository snapshots; the source URL identifies the merged evidence contract it builds on.
+The explicit `mail:ingest` command reads bounded Gmail evidence, then atomically persists only complete eligible conversations and exact-bound pending jobs. Shared eligibility excludes whole conversations containing any non-draft Spam/Trash message. Unreadable encrypted body sections remain partial and receive no version or job. It requires Google/database credentials only and prints sanitized counts. Current implementation is represented by repository snapshots; the source URL identifies the merged evidence contract it builds on.
 
 Versions are keyed by mailbox/thread/fingerprint and immutable against UPDATE. Composite job bindings preserve the exact input even after a new reply creates another version. Replays and concurrent batches deduplicate by evidence and policy identity. Latest labels/time remain separate observations. Legacy jobs lacking text remain unavailable until that exact fingerprint is recovered; they never acquire the latest conversation silently.
 

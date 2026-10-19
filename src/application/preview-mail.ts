@@ -1,5 +1,6 @@
 import {
   completeBodies,
+  eligibleThread,
   fingerprint,
   type MailFailure,
   MailReadError,
@@ -109,10 +110,7 @@ export async function previewMail(
         try {
           deps.budget.assertActive();
           const read = await deps.mail.readThreadEvidence(id);
-          const eligible = read.evidence.messages.some((m) => {
-            const time = Date.parse(m.receivedAt);
-            return time >= since && time < until;
-          });
+          const eligible = eligibleThread(read, { since, until });
           outcomes[index] = { read, eligible };
         } catch (error) {
           outcomes[index] = { failure: mailFailure(error) };

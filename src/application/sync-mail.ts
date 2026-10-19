@@ -1,5 +1,6 @@
 import {
   completeBodies,
+  eligibleThread,
   type MailFailure,
   MailReadError,
   mailFailure,
@@ -272,18 +273,12 @@ export async function syncMail(
         budget.assertActive();
         let excluded = false;
         if (read) {
-          const windowSince = state.windowSince.getTime();
-          const windowUntil = state.windowUntil.getTime();
-          const recent = read.evidence.messages.some((m) => {
-            const at = Date.parse(m.receivedAt);
-            return at >= windowSince && at < windowUntil;
-          });
-          excluded =
-            !read.evidence.messages.length ||
-            read.observation.messages.some((m) =>
-              m.labels.some((l) => l === "SPAM" || l === "TRASH"),
-            ) ||
-            (!item.fromHistory && state.phase !== "recovery-required" && !recent);
+          excluded = !eligibleThread(
+            read,
+            !item.fromHistory && state.phase !== "recovery-required"
+              ? { since: state.windowSince.getTime(), until: state.windowUntil.getTime() }
+              : undefined,
+          );
           if (!excluded && !completeBodies(read.evidence)) {
             failure = "partial-body";
             report.partialThreads++;

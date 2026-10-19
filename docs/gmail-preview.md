@@ -10,7 +10,7 @@ npm run mail:preview -- --days 30 --max-threads 20
 
 The npm command explicitly loads ignored `.env`; direct invocation is `node --env-file=.env dist/cli.js mail:preview --days 30 --max-threads 20`. It requires only `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_REFRESH_TOKEN` with `gmail.readonly`. See [Google setup](connections.md). Database, Jev, Todoist, and Drive configuration are not consumed. Help remains offline.
 
-The fixed recent window includes read, archived, incoming and sent mail; Spam/Trash discovery is excluded. Selected conversations retain older context. Drafts are excluded; a recent draft alone does not make an old conversation eligible. A concurrent new reply can appear in retrieved context, so this is an observation, not a point-in-time snapshot.
+The fixed recent window includes read, archived, incoming and sent mail; Spam/Trash discovery is excluded. Retrieved conversations containing any non-draft Spam/Trash message are also excluded, even when another message matched discovery. This conservative whole-thread rule is shared with incremental sync. Selected conversations retain older context. Drafts are excluded; a recent draft alone does not make an old conversation eligible. A concurrent new reply can appear in retrieved context, so this is an observation, not a point-in-time snapshot.
 
 ## Bounds and outcomes
 
@@ -25,7 +25,7 @@ The JSON report contains time-window bounds, selected/retrieved/eligible/skipped
 - Prefer plain text within MIME alternatives; otherwise convert supported HTML, preserving text, paragraphs and links. Preserve quotes and signatures. HTML is parsed without rendering, remote asset loading or script execution.
 - Decode Gmail base64url with strict syntax and supported WHATWG TextDecoder charsets using fatal decoding. Unsupported encodings/malformed text remain explicit partial coverage. Normalize CRLF/CR to LF.
 - Fetch primary text parts stored behind attachment-body IDs. Never fetch PDF/image/document contents; preserve part ID, filename, MIME type and size only. Complete text coverage still says attachment contents `not-read`.
-- Distinguish complete text, genuinely empty, unavailable, unsupported and too-large bodies. Oversized/deep/malformed conversations never become complete evidence.
+- Distinguish complete text, genuinely empty, unavailable, unsupported and too-large bodies. Oversized/deep/malformed conversations never become complete evidence. Nested encrypted body containers make coverage partial even alongside readable text or document attachments; a readable MIME alternative can still supply the body.
 - Use `email-addresses` 5.0.0 for RFC-style lists/groups/quoted names, preserving local-part case and lowering domains. Use `html-to-text` 10.0.1 for inert conversion; detect its limit markers rather than accepting truncated output. Both are pinned runtime dependencies, independent of viewer development packages. Primary references: [address parser](https://github.com/jackbearheart/email-addresses), [HTML converter](https://github.com/html-to-text/node-html-to-text).
 - Direction is a hint from `SENT` and mailbox-address relationships, not authentication proof. Uncertain aliases remain unknown. No new OAuth scope or send-as discovery is required.
 
@@ -33,7 +33,7 @@ See [the evidence contract](../src/domain/mail-evidence.md) and [OpenSpec design
 
 ## Subsequent ingestion
 
-Preview does not call Jev, infer obligations or deadlines, write labels/tasks/files, advance a checkpoint or report worker sync freshness. It completes the retrieval portion of the broader plan. Before durable ingestion, add immutable normalized evidence versions and make queued jobs reference the exact version classified, with retention protecting unfinished jobs. Continue with paginated history, checkpoint safety and expired-cursor recovery separately.
+Preview does not call Jev, infer obligations or deadlines, write labels/tasks/files, advance a checkpoint or report worker sync freshness. The separate [durable ingestion](mail-ingestion.md) command stores immutable normalized evidence versions and exact-bound jobs, with retention protecting referenced versions. [Incremental sync](mail-sync.md) adds paginated history, checkpoint safety and bounded expired-cursor recovery. Classification remains planned.
 
 ## Verification
 

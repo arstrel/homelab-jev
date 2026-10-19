@@ -31,7 +31,7 @@ x_jev_sources:
   - path: docs/connections.md
     sha256: f887016114368f775e58c0c7945b8117f9ee016483a4e730842c8a06bdb196c8
   - path: docs/mail-ingestion.md
-    sha256: fb0d10754aff3141d59374902664640b5fe4472a6f4ddb952fa50b01ae7ac4a9
+    sha256: 5fb67c4759c404bc599c53b606fa5c94bec7c2cb20e0e06ffb1719b8898defb6
 ---
 
 # Configuration and private-data boundaries
