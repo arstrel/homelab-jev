@@ -7,7 +7,7 @@ import { status } from "./application/status.js";
 import { databaseUrl, diagnostic } from "./config.js";
 
 const help =
-  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:status\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev mail:sync [--days 30] [--max-pages 5] [--max-threads 20]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
+  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:status\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev mail:sync [--days 30] [--max-pages 5] [--max-threads 20]\n       jev mail:classify [--max-jobs 5] [--model jev-1.13.0]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
 async function main() {
   const [command, ...extra] = process.argv.slice(2);
   if (command === "mail:status") {
@@ -17,7 +17,12 @@ async function main() {
     process.exitCode = report.exitCode;
     return;
   }
-  if (command === "mail:preview" || command === "mail:ingest" || command === "mail:sync") {
+  if (
+    command === "mail:preview" ||
+    command === "mail:ingest" ||
+    command === "mail:sync" ||
+    command === "mail:classify"
+  ) {
     const { runMailPreview, runMailIngest } = await import("./cli-mail.js");
     const controller = new AbortController();
     let signalExit: number | undefined;
@@ -33,13 +38,17 @@ async function main() {
     process.once("SIGTERM", terminate);
     try {
       const report =
-        command === "mail:sync"
-          ? await (await import("./cli-mail-sync.js")).runMailSync(extra, process.env, {
+        command === "mail:classify"
+          ? await (await import("./cli-mail-triage.js")).runMailTriage(extra, process.env, {
               signal: controller.signal,
             })
-          : command === "mail:ingest"
-            ? await runMailIngest(extra, process.env, { signal: controller.signal })
-            : (await runMailPreview(extra, process.env, { signal: controller.signal })).report;
+          : command === "mail:sync"
+            ? await (await import("./cli-mail-sync.js")).runMailSync(extra, process.env, {
+                signal: controller.signal,
+              })
+            : command === "mail:ingest"
+              ? await runMailIngest(extra, process.env, { signal: controller.signal })
+              : (await runMailPreview(extra, process.env, { signal: controller.signal })).report;
       console.log(JSON.stringify(report, null, 2));
       process.exitCode = signalExit ?? report.exitCode;
     } finally {

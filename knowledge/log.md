@@ -2,6 +2,10 @@
 
 ## 2026-10-19
 
+Resumed the authorized collection observation after Google reauthorization: discovery caught up, 115 complete versions/jobs were stored and 769 retrievals remained when the session stopped at provider failures. No complete/no-change acceptance was claimed. Added read-only bounded Jev triage preview over exact evidence, with finite independent judgments, runtime schemas, numeric model revision, cancellation and synthetic/disposable tests. Reviewed changed delivery/layering/provider/test/privacy claims and source snapshots; existing review deadlines and draft/unverified status are preserved. One explicitly approved real-conversation smoke check passed with stored jobs/classifications/sync unchanged; this is not a classifier-quality evaluation.
+
+Recorded the first authorized operational observation: verified target, private readable backup, reviewed migrations through 0004 and ready/uninitialized storage. The initial sync failed at Google token refresh before retrieving mail; the report retains incomplete status and the acceptance tasks remain open. No live catch-up, no-change result, recovery or classification quality is claimed.
+
 Reviewed mail retrieval and ingestion using Ponytail. Repaired shared Spam/Trash eligibility and nested encrypted-body coverage with reproducing synthetic tests, and corrected stale recovery implementation status. Reviewed the affected layering, checkpoint, recovery, sync and private-data claims before updating source snapshots; preserved unchanged generation timestamps, review deadlines and draft/unverified state. No operational mailbox or database writes were performed.
 
 GitHub CI exposed an observation-fixture lock teardown race. Seeded typed state directly so the held-lock/snapshot test no longer races its own setup session closing; production ownership behavior is unchanged. Updated the test-isolation claim and source snapshot while preserving the review deadline and draft state.

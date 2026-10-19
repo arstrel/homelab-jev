@@ -13,6 +13,25 @@ export interface Ledger {
 export interface MailStatusReader {
   read(now: Date): Promise<import("../domain/mail-status.js").MailStatusSnapshot>;
 }
+export interface TriageEvidenceReader {
+  pending(limit: number): Promise<
+    Array<
+      | { status: "missing-evidence" | "invalid-evidence" }
+      | {
+          status: "ready";
+          evidence: import("../domain/mail-evidence.js").ThreadEvidence;
+          directions: import("../domain/mail-triage.js").Direction[];
+        }
+    >
+  >;
+}
+export interface MailTriage {
+  judge(
+    state: import("../domain/mail-triage.js").TriageState,
+    model: import("../domain/mail-triage.js").TriageModel,
+    signal: AbortSignal,
+  ): Promise<unknown>;
+}
 
 export interface PersistenceCounts {
   newVersions: number;

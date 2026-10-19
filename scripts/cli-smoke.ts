@@ -21,6 +21,8 @@ for (const args of [
   ["mail:sync"],
   ["mail:status", "private-option-marker"],
   ["mail:status"],
+  ["mail:classify", "--max-jobs", "private-option-marker"],
+  ["mail:classify"],
   ["status", "unexpected"],
 ]) {
   const result = spawnSync(

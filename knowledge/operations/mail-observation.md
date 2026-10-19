@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-19T02:37:00Z"
+  at: 2026-10-19T03:33:58.004826Z
 stale_after: "2026-11-18T02:37:00Z"
 x_jev_delivery: mixed
 sources:
@@ -26,7 +26,7 @@ x_jev_sources:
   - path: docs/mail-observation.md
     sha256: d47113783b0e478ef67109635cb3f442abdde9f0612b74e8691a252dff8c88fe
   - path: docs/mail-observation-evidence.md
-    sha256: 02710da7a7885a2a7cc68dfeb74410dde57172d02c02e525d83411b3e623d9aa
+    sha256: c34263fc39e05b33873cf2632860192e481b5385c7d225573edb2604b6f4d43e
 ---
 
 # Manual mail observation
@@ -36,5 +36,7 @@ The implemented `mail:status` diagnostic needs database configuration only. A re
 Retrieval pending/due/retry counts and future retry time describe the collection backlog. Pending and unbound processing jobs are separate future-classifier inputs. Status preserves stored discovery/evidence timestamps and the sticky expired-history gap; it never advances either frontier. Report validation and SQL failure categories prevent arbitrary data from leaking into output.
 
 The manual pilot uses existing bounded sync calls, at most 20 runs or 60 minutes per deliberate session. Preserve partial work and identities. Real catch-up followed by a strict no-change observation is required to complete parent 2.4. The evidence report records actual observations and limitations; tooling or synthetic tests alone do not complete live acceptance. Do not manufacture expired cursors, drop retries or infer scheduled availability from a manual session.
+
+The first authorized session backed up the configured database and applied reviewed migrations through 0004. The initial token-refresh failure was resolved by browser reauthorization. Eight bounded invocations reached discovery catch-up and stored 115 complete versions/jobs; 769 retrievals remain, including 17 partial-body and 8 provider-error retries. The session stopped at the provider-failure boundary. Evidence freshness remains null and strict no-change acceptance remains open. This establishes collection progress and honest gaps, not a completed pilot.
 
 See [sync](/architecture/mail-sync.md), [migration preparation](database-migrations.md), [secret boundaries](secret-handling.md) and [test isolation](test-isolation.md). The operator runbook and evidence report are the reviewed repository snapshots above. Classification, downstream provider writes and scheduling remain later work.
