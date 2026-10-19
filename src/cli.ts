@@ -7,9 +7,16 @@ import { status } from "./application/status.js";
 import { databaseUrl, diagnostic } from "./config.js";
 
 const help =
-  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev mail:sync [--days 30] [--max-pages 5] [--max-threads 20]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
+  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:status\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev mail:sync [--days 30] [--max-pages 5] [--max-threads 20]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
 async function main() {
   const [command, ...extra] = process.argv.slice(2);
+  if (command === "mail:status") {
+    const { runMailStatus } = await import("./cli-mail-status.js");
+    const report = await runMailStatus(extra, process.env);
+    console.log(JSON.stringify(report, null, 2));
+    process.exitCode = report.exitCode;
+    return;
+  }
   if (command === "mail:preview" || command === "mail:ingest" || command === "mail:sync") {
     const { runMailPreview, runMailIngest } = await import("./cli-mail.js");
     const controller = new AbortController();

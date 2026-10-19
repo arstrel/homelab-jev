@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:15:25.569480Z
+  at: 2026-10-19T02:37:45.637625Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -53,3 +53,5 @@ Schema changes use [reviewed migrations](/operations/database-migrations.md), no
 The separate [manual sync path](mail-sync.md) stores discovery phase/anchor/continuation and retrieval generations/backoff. Page queueing and discovery progress commit together; exact evidence/job writes and retrieval acknowledgement share the extracted evidence transaction. One dedicated lock-owning connection runs all sync commits. Legacy checkpoints/status counts remain separate.
 
 [Recovery](mail-recovery.md) adds durable mapped-target snapshots and recovery/gap metadata. Initialization atomically snapshots local mappings, promotes pending retrieval eligibility and advances state; stale revisions roll everything back. Final mapped-page queueing and target cleanup commit together. Recovery never clears immutable evidence, task identity or suppressions.
+
+DB-only [diagnostics](/operations/mail-observation.md) compare managed migration history and required structures without applying migrations, then read one read-only repeatable snapshot. Retrieval gaps and pending/unbound classification jobs are separate aggregates. No new schema or evidence store is added.

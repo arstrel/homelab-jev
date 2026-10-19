@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:15:25.563821Z
+  at: 2026-10-19T02:37:45.638672Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -27,6 +27,8 @@ sources:
     resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/migrations/0001_ambiguous_squadron_sinister.sql
     title: migrations/0001_ambiguous_squadron_sinister.sql
 x_jev_sources:
+  - path: src/adapters/postgres/mail-status.ts
+    sha256: 9b1727c55fc209fb80796d1a35d8af51f89ddbe17345d92057970b551634ff7b
   - path: docs/migrations.md
     sha256: 6f3ba78d1c7947636f3e5dfb0b0caa4abae30f3864383b446338f92699660ef2
   - path: src/adapters/postgres/migrate.ts
@@ -54,3 +56,5 @@ Restore/rollback procedures must be rehearsed in isolation and compatible with t
 Migration 0003 adds sync state and a retrieval backlog without changing the legacy checkpoint/evidence contracts. The populated 0002-to-0003 failed/repaired upgrade and prior 0002 upgrade both remain tested. No operational migration or automatic startup migration is claimed.
 
 Migration 0004 adds recovery metadata, expands phases and creates mapped-target snapshots. Existing expired states receive the history-gap flag. A populated 0003-to-0004 failure/repair test preserves anchors, retry state, exact evidence and task links. Stop sync before rollback: the prior synchronizer cannot interpret active recovery phases. Finish recovery to compatible history state before invoking its sync command, or keep sync stopped until restoring recovery-capable code. Preserve the additive schema and pending work. See [recovery](/architecture/mail-recovery.md).
+
+`mail:status` now diagnoses missing, compatible older, conflicting/newer or structurally incomplete managed storage without setup or repair. Unknown measurements remain null. A ready journal/column check is not a complete corruption audit or proof of provider freshness. See [manual observation](mail-observation.md).

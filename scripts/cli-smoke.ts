@@ -19,6 +19,8 @@ for (const args of [
   ["mail:ingest"],
   ["mail:sync", "--days", "private-option-marker"],
   ["mail:sync"],
+  ["mail:status", "private-option-marker"],
+  ["mail:status"],
   ["status", "unexpected"],
 ]) {
   const result = spawnSync(
@@ -35,3 +37,34 @@ for (const args of [
     throw new Error("Compiled CLI invalid/configuration handling failed.");
 }
 console.log("Compiled CLI preview options and configuration failures: OK");
+
+// Exercise compiled dispatch with DB-only configuration and a failing fake driver.
+const status = spawnSync(
+  process.execPath,
+  [
+    "--import",
+    "./scripts/no-network.mjs",
+    "--input-type=module",
+    "--eval",
+    `import pg from "pg";
+   pg.Pool.prototype.connect = async () => { throw new Error("private-driver-marker"); };
+   process.argv = [process.execPath, "dist/cli.js", "mail:status"];
+   await import("./dist/cli.js");`,
+  ],
+  {
+    env: { ...offlineEnvironment(process.env), DB_URL: "postgresql://fake:fake@127.0.0.1:1/fake" },
+    encoding: "utf8",
+  },
+);
+const report = JSON.parse(status.stdout);
+if (
+  status.status !== 1 ||
+  status.stderr ||
+  report.schemaState !== "unavailable" ||
+  report.reason !== "database-unavailable" ||
+  report.retrievals !== null ||
+  report.providerCalls !== 0 ||
+  status.stdout.includes("private-driver-marker")
+)
+  throw new Error("Compiled mail status failure handling failed.");
+console.log("Compiled CLI DB-only mail status: OK");

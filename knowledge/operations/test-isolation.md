@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:15:25.564918Z
+  at: 2026-10-19T02:37:45.640197Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -29,6 +29,12 @@ sources:
     resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/vitest.config.ts
     title: vitest.config.ts
 x_jev_sources:
+  - path: tests/integration/mail-status.test.ts
+    sha256: 17f0825fc8b55efa913fa0d34a3e68c4fb5ef200168cd74fcb630a83851b7a9c
+  - path: tests/unit/mail-status.test.ts
+    sha256: 94fcb2b4a492fe368522e6ae4a0ce95b28450a9884d28a6dec6b22b54d1a51c3
+  - path: scripts/cli-smoke.ts
+    sha256: f6f277d7fbd64596ed948a05d95bc98f7647f27a18882a0c0031ba8949035b9f
   - path: tests/setup.ts
     sha256: 848618590ddc9c3f5f53c84b13b41537b040c7f0c62ad0c6ba3cd41caab706b3
   - path: scripts/environment.ts
@@ -64,3 +70,5 @@ See [development gates](development-gates.md) and [classification evaluation](cl
 Sync fixtures now exercise resumable discovery, bootstrap overlap, partial retries with no new mail, checkpoint/evidence rollback, classification transaction failure, stale generations, and dedicated ownership loss via terminating only a disposable PostgreSQL backend. Provider contracts remain MSW-only; no live sync is performed by tests.
 
 Recovery fixtures cover stage-by-stage restarts, a 101-thread mapped snapshot, older/missing/partial mail, history catch-up, repeated expiry caps, preserved backoff, stale initialization/final-page rollback and populated 0004 failure/repair. Read-state replay preserves evidence/job identity. These results establish synthetic recovery behavior only.
+
+Observation tests verify read-only transaction enforcement, schema readiness without setup, coherent aggregates across concurrent commits, observation during held sync ownership, and sanitized connection loss. Disposable schema resets and backend termination remain confined to the validated test database. The compiled DB-only diagnostic uses a fake failing driver with network access denied; live pilot acceptance is never a Git gate.

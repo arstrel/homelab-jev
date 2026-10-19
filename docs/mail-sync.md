@@ -35,6 +35,8 @@ Defaults: five discovery steps per run (`--max-pages`, 1–20), 20 retrieval att
 
 ## Report and freshness
 
+Use DB-only `npm run mail:status` to inspect stored progress and retry timing between invocations, including while sync owns its lock. See the [observation procedure](mail-observation.md) for schema-readiness semantics and the bounded manual pilot. Legacy `status` retains its ledger-count contract.
+
 Only fixed counts, reasons and timestamps are printed. Never print IDs, page tokens, anchors, subjects, addresses, fingerprints, bodies or raw exceptions. `queuedReferences` counts deduplicated references per committed page, not unique conversations across the whole run.
 
 | Field | Meaning |
