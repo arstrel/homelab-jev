@@ -101,20 +101,28 @@ function addresses(input: string): Address[] {
 function attachment(part: Part): boolean {
   return !!part.filename || /^attachment(?:\s*;|$)/i.test(value(part, "content-disposition"));
 }
-function select(part: Part): Part[] {
+function select(part: Part): Part[] | null {
   if (attachment(part)) return [];
   const mime = part.mimeType.toLowerCase();
   if (mime === "text/plain" || mime === "text/html") return [part];
   if (mime === "multipart/alternative") {
     const choices = part.parts.map(select);
     return (
-      choices.find((choice) => choice.some((p) => p.mimeType.toLowerCase() === "text/plain")) ??
-      choices.find((choice) => choice.length > 0) ??
-      []
+      choices.find((choice) => choice?.some((p) => p.mimeType.toLowerCase() === "text/plain")) ??
+      choices.find((choice) => choice && choice.length > 0) ??
+      (choices.includes(null) ? null : [])
     );
   }
-  if (mime.startsWith("multipart/") && mime !== "multipart/encrypted")
-    return part.parts.flatMap(select);
+  if (mime === "multipart/encrypted") return null;
+  if (mime.startsWith("multipart/")) {
+    const selected: Part[] = [];
+    for (const child of part.parts) {
+      const choice = select(child);
+      if (choice === null) return null;
+      selected.push(...choice);
+    }
+    return selected;
+  }
   return [];
 }
 function attachments(part: Part): AttachmentMetadata[] {
@@ -147,6 +155,7 @@ export async function normalizeBody(
 ): Promise<MailBody> {
   try {
     const selected = select(payload);
+    if (selected === null) return { status: "unsupported" };
     if (!selected.length) {
       return metadata.length &&
         (attachment(payload) || payload.mimeType.toLowerCase() === "multipart/mixed")

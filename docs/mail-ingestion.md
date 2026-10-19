@@ -15,7 +15,7 @@ Configuration requires `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRE
 
 ## Persistence and reruns
 
-Ingestion reuses [preview retrieval](gmail-preview.md): fixed recent window, read/archived/incoming/sent discovery, full older context, no drafts, metadata-only document attachments, and explicit partial bodies. Defaults and limits are unchanged. It retrieves before opening a persistence transaction. Complete eligible conversations are saved atomically with jobs under queue policy `obligation-triage/v1`; this is an initial queue identity, not a selected/measured classifier model.
+Ingestion reuses [preview retrieval](gmail-preview.md): fixed recent window, read/archived/incoming/sent discovery, full older context, no drafts, metadata-only document attachments, and explicit partial bodies. Any non-draft Spam/Trash message excludes the whole conversation, matching incremental sync. Nested encrypted bodies remain partial and cannot create a complete version or job. Defaults and limits are unchanged. It retrieves before opening a persistence transaction. Complete eligible conversations are saved atomically with jobs under queue policy `obligation-triage/v1`; this is an initial queue identity, not a selected/measured classifier model.
 
 `jev.mail_evidence_versions` holds immutable normalized JSONB payloads keyed by mailbox/thread/fingerprint. Jobs reference the exact version through a composite foreign key and equality constraint. New replies preserve old versions; read/label/observation changes do not create new versions or jobs. The latest observation is separate on the source row; older observations cannot replace newer timestamps. That timestamp is not a Gmail revision order guarantee.
 

@@ -69,6 +69,22 @@ export function completeBodies(evidence: ThreadEvidence): boolean {
     )
   );
 }
+export function eligibleThread(
+  read: ThreadRead,
+  window?: { since: number; until: number },
+): boolean {
+  return (
+    read.evidence.messages.length > 0 &&
+    !read.observation.messages.some((message) =>
+      message.labels.some((label) => label === "SPAM" || label === "TRASH"),
+    ) &&
+    (!window ||
+      read.evidence.messages.some((message) => {
+        const at = Date.parse(message.receivedAt);
+        return at >= window.since && at < window.until;
+      }))
+  );
+}
 const ordered = <T>(values: readonly T[]): T[] =>
   [...values].sort((a, b) => {
     const left = JSON.stringify(a);

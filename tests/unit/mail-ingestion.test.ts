@@ -69,6 +69,21 @@ it("persists only complete eligible evidence and reports mixed coverage honestly
   expect(batch?.[0]?.evidence.source.threadId).toBe("complete");
   expect(batch?.[0]?.policyVersion).toBe(ingestionPolicyVersion);
 });
+it.each(["SPAM", "TRASH"])("excludes mixed %s conversations before persistence", async (label) => {
+  const mail = reader();
+  const read = threadRead();
+  read.observation.messages[0]?.labels.push(label);
+  vi.mocked(mail.readThreadEvidence).mockResolvedValue(read);
+  const ledger = store();
+  const report = await ingestMail(options, { mail, store: ledger, clock, budget: budget() });
+  expect(report).toMatchObject({
+    exitCode: 0,
+    eligibleThreads: 0,
+    skippedThreads: 1,
+    persistence: { status: "not-needed", newVersions: 0, newJobs: 0 },
+  });
+  expect(ledger.persistEvidence).not.toHaveBeenCalled();
+});
 it("saves a limited sample without claiming discovery completeness", async () => {
   const report = await ingestMail(
     { days: 30, maxThreads: 1 },

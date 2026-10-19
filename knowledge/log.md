@@ -2,6 +2,8 @@
 
 ## 2026-10-19
 
+Reviewed mail retrieval and ingestion using Ponytail. Repaired shared Spam/Trash eligibility and nested encrypted-body coverage with reproducing synthetic tests, and corrected stale recovery implementation status. Reviewed the affected layering, checkpoint, recovery, sync and private-data claims before updating source snapshots; preserved unchanged generation timestamps, review deadlines and draft/unverified state. No operational mailbox or database writes were performed.
+
 Added read-only mail diagnostics and the bounded manual observation procedure. Reviewed the new port/SQL/report boundary, migration-readiness semantics, test isolation and pending live-evidence claims. Source snapshots follow reviewed code/docs; unchanged review deadlines and draft/unverified labels are preserved. Live synchronization acceptance remains an evidence-report result, not an implication of tooling delivery.
 
 Added bounded expired-cursor recovery, durable mapped-target coverage and explicit unreplayed-history reporting. Reviewed changed sync, checkpoint, ledger, migration, test and delivery claims against implementation and synthetic tests. Reviewed unchanged classification, routing, manual-edit, Retro, planner, ownership, layering and release policies against the narrow product/design/schema changes before updating their snapshots. Meaningful-change timestamps advance only for changed claims; existing review deadlines and draft/unverified state remain intact. No operational migration, live recovery, scheduler or classifier quality is claimed.
