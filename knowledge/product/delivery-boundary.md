@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:33:58.007659Z
+  at: 2026-10-19T04:00:25Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -30,7 +30,7 @@ x_jev_sources:
   - path: docs/foundation-evidence.md
     sha256: 0631d15b29a84b3bd873d14a3e76f86be6081ba85281aaaef6e4173a4e9b6270
   - path: docs/mail-observation-evidence.md
-    sha256: 286714186f451b65d08fb5f91f30a205e66fe8395e443a9c156ee5787a9a3fdd
+    sha256: 1b6936e02395950d68f7225f764db9d70f2753c2005439de658f426f1a6c35af
   - path: docs/mail-triage.md
     sha256: 2a9a384419b55a6f6c1c71511759ea7e1ef960e2ef01cf57ca025155ca396057
 ---
@@ -47,4 +47,4 @@ DB-only [mail diagnostics](/operations/mail-observation.md) and a bounded manual
 
 Follow [development gates](/operations/development-gates.md) and [release operations](/operations/native-releases.md). Consult the current OpenSpec checklist before changing this summary.
 
-The authorized manual collection report now records applied migrations, discovery catch-up and 115 complete versions/jobs, with 769 retrievals still pending. Parent 2.4 remains incomplete. A read-only [Jev triage preview](/architecture/classification-policy.md) implements kind/attention/lifecycle judgments on exact complete evidence; matching, routing, persistence/corrections, calibrated capture and scheduled rollout remain planned. No task is created or job consumed by preview.
+The authorized manual collection report now records applied migrations, discovery catch-up and 165 complete versions/jobs, with 735 retrievals still pending after a resumed session stopped at provider errors. Follow-up diagnosis observed Gmail rate limiting; evidence freshness remains null. Parent 2.4 remains incomplete. A read-only [Jev triage preview](/architecture/classification-policy.md) implements kind/attention/lifecycle judgments on exact complete evidence; matching, routing, persistence/corrections, calibrated capture and scheduled rollout remain planned. No task is created or job consumed by preview.
