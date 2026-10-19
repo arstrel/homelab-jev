@@ -7,6 +7,7 @@ import { afterAll, beforeAll, beforeEach, expect, it, vi } from "vitest";
 import { testDatabaseUrl } from "../../scripts/test-database.js";
 import { connect } from "../../src/adapters/postgres/client.js";
 import { mailEvidenceStore } from "../../src/adapters/postgres/mail-evidence.js";
+import { mailStatusReader } from "../../src/adapters/postgres/mail-status.js";
 import { mailSyncStore } from "../../src/adapters/postgres/mail-sync.js";
 import { applyMigrations } from "../../src/adapters/postgres/migrate.js";
 import { classifications, pendingJobs } from "../../src/adapters/postgres/schema.js";
@@ -378,4 +379,61 @@ it("upgrades populated 0002 through failed/repaired 0003 without losing evidence
   } finally {
     rmSync(folder, { recursive: true, force: true });
   }
+});
+
+it("retains committed evidence and untouched work across throttle backoff and a later successful retry", async () => {
+  await sessionTest(async (session) => {
+    await session.initialize(syncState());
+  });
+  const mail = reader();
+  vi.mocked(mail.listHistory)
+    .mockResolvedValueOnce({ ids: ["a-complete", "b-throttled", "c-untouched"], historyId: "20" })
+    .mockResolvedValue({ ids: [], historyId: "20" });
+  vi.mocked(mail.readThreadEvidence).mockImplementation(async (id) => {
+    if (id === "b-throttled") throw new MailReadError("rate-limited");
+    return threadRead(id);
+  });
+  expect(await run(mail)).toMatchObject({
+    newVersions: 1,
+    newJobs: 1,
+    retrievalsAttempted: 2,
+    pendingRetrievals: 2,
+    retryingRetrievals: 1,
+    evidenceSyncedAt: null,
+    reasons: ["rate-limited", "retry-pending"],
+  });
+  const work = (
+    await client.pool.query(
+      "select thread_id, attempts, failure, available_at from jev.mail_retrievals order by thread_id",
+    )
+  ).rows;
+  expect(work).toEqual([
+    {
+      thread_id: "b-throttled",
+      attempts: 1,
+      failure: "rate-limited",
+      available_at: new Date(mailInstant.getTime() + 300_000),
+    },
+    { thread_id: "c-untouched", attempts: 0, failure: null, available_at: mailInstant },
+  ]);
+  const diagnostics = await mailStatusReader(client).read(mailInstant);
+  expect(diagnostics.retrievals?.failures).toEqual({ "rate-limited": 1 });
+  // A fresh invocation can process untouched work before the failed item's retry is due.
+  vi.mocked(mail.readThreadEvidence).mockImplementation(async (id) => threadRead(id));
+  expect(await run(mail, new Date(mailInstant.getTime() + 60_000))).toMatchObject({
+    retrievalsAttempted: 1,
+    newJobs: 1,
+    pendingRetrievals: 1,
+    evidenceSyncedAt: null,
+  });
+  expect(await run(mail, new Date(mailInstant.getTime() + 300_000))).toMatchObject({
+    retrievalsAttempted: 1,
+    newJobs: 1,
+    pendingRetrievals: 0,
+    evidenceComplete: true,
+    exitCode: 0,
+  });
+  expect(
+    (await client.pool.query("select count(*)::int as n from jev.pending_jobs")).rows[0]?.n,
+  ).toBe(3);
 });

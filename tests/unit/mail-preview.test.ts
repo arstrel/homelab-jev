@@ -302,3 +302,45 @@ it("an in-flight deadline stops subsequent conversation reads", async () => {
     exitCode: 1,
   });
 });
+
+it("does not retrieve selected conversations after discovery is rate-limited", async () => {
+  const mail = reader();
+  vi.mocked(mail.listThreads)
+    .mockResolvedValueOnce({ ids: ["selected"], nextToken: "more" })
+    .mockRejectedValueOnce(new MailReadError("rate-limited"));
+  const result = await previewMail(options, { mail, clock, budget: makeBudget() });
+  expect(mail.readThreadEvidence).not.toHaveBeenCalled();
+  expect(result.records).toEqual([]);
+  expect(result.report).toMatchObject({
+    discoveredThreads: 1,
+    retrievedThreads: 0,
+    failedThreads: 0,
+    discoveryComplete: false,
+    bodyCoverageComplete: false,
+    reasons: ["rate-limited"],
+    exitCode: 1,
+  });
+});
+
+it("stops selecting on throttling and retains already-started successful evidence in order", async () => {
+  const mail = reader([{ ids: ["slow-success", "throttled", "fast-success", "untouched"] }]);
+  vi.mocked(mail.readThreadEvidence).mockImplementation(async (id) => {
+    if (id === "throttled") throw new MailReadError("rate-limited");
+    if (id === "slow-success") await new Promise<void>((resolve) => setImmediate(resolve));
+    return threadRead(id);
+  });
+  const result = await previewMail(options, { mail, clock, budget: makeBudget() });
+  expect(mail.readThreadEvidence).toHaveBeenCalledTimes(3);
+  expect(result.records.map((r) => r.evidence.source.threadId)).toEqual([
+    "slow-success",
+    "fast-success",
+  ]);
+  expect(result.report).toMatchObject({
+    discoveredThreads: 4,
+    retrievedThreads: 2,
+    failedThreads: 1,
+    bodyCoverageComplete: false,
+    reasons: ["rate-limited"],
+    exitCode: 1,
+  });
+});

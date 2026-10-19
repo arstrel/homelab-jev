@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const retrievalFailureNames = [
   "provider-error",
+  "rate-limited",
   "history-expired",
   "missing-thread",
   "invalid-data",

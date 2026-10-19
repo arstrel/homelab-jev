@@ -306,3 +306,59 @@ it("keeps old queued bootstrap work eligible when expiry consumes the last step"
     await syncMail({ ...options, maxPages: 1 }, { ...h, clock, budget: budget() }),
   ).toMatchObject({ phase: "recovery-required", newJobs: 1, excludedThreads: 0, exitCode: 2 });
 });
+
+it("does not drain the durable backlog after discovery is rate-limited", async () => {
+  const h = syncHarness(syncState());
+  h.queue.set("queued", {
+    mailbox: "primary",
+    threadId: "queued",
+    generation: 1,
+    fromHistory: true,
+    attempts: 0,
+    availableAt: mailInstant,
+  });
+  vi.mocked(h.mail.listHistory).mockRejectedValue(new MailReadError("rate-limited"));
+  const report = await syncMail(options, { ...h, clock, budget: budget() });
+  expect(h.session.due).not.toHaveBeenCalled();
+  expect(h.mail.readThreadEvidence).not.toHaveBeenCalled();
+  expect(report).toMatchObject({
+    discoveryCaughtUp: false,
+    pendingRetrievals: 1,
+    retrievalsAttempted: 0,
+    evidenceSyncedAt: null,
+    exitCode: 1,
+  });
+  expect(report.reasons).toContain("rate-limited");
+});
+
+it("backs off the throttled retrieval once and leaves later work untouched", async () => {
+  const h = syncHarness(syncState());
+  vi.mocked(h.mail.listHistory).mockResolvedValue({
+    ids: ["first", "throttled", "untouched"],
+    historyId: "20",
+  });
+  vi.mocked(h.mail.readThreadEvidence).mockImplementation(async (id) => {
+    if (id === "throttled") throw new MailReadError("rate-limited");
+    return threadRead(id);
+  });
+  const report = await syncMail(options, { ...h, clock, budget: budget() });
+  expect(report).toMatchObject({
+    retrievalsAttempted: 2,
+    acknowledgedThreads: 1,
+    newJobs: 1,
+    pendingRetrievals: 2,
+    retryingRetrievals: 1,
+    evidenceComplete: false,
+    evidenceSyncedAt: null,
+    exitCode: 1,
+    reasons: ["rate-limited", "retry-pending"],
+  });
+  expect(h.session.retry).toHaveBeenCalledTimes(1);
+  expect(h.session.retry).toHaveBeenCalledWith(
+    expect.objectContaining({ threadId: "throttled" }),
+    "rate-limited",
+    new Date(mailInstant.getTime() + 300_000),
+  );
+  expect(h.queue.get("untouched")).toMatchObject({ attempts: 0, availableAt: mailInstant });
+  expect(h.mail.readThreadEvidence).toHaveBeenCalledTimes(2);
+});

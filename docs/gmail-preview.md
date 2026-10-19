@@ -16,6 +16,10 @@ The fixed recent window includes read, archived, incoming and sent mail; Spam/Tr
 
 Defaults: 30 days (1–365), 20 selected threads (1–500), three concurrent reads, a 120-second overall deadline, 10-second request timeouts, 200 Gmail requests, 200 messages per conversation, 20 MIME nesting levels, 2,000 MIME parts per conversation, 4 MiB transport responses, 1 MiB selected body bytes per message and 10 MiB aggregate evidence bytes. Request retries are disabled. Authentication shares cancellation/time/payload limits. Hitting a limit is reported; no silent truncation is fingerprinted.
 
+Every Gmail request start is paced by at least 1.5 seconds within the reader, including discovery, profile and separately stored primary text. The first request can start immediately. Pacing shares the 120-second deadline and cancellation; large requested samples can therefore stop at the deadline before reaching their thread cap. Separate commands/clients do not share a quota meter.
+
+Recognized throttling (HTTP 429, or HTTP 403 with `rateLimitExceeded` / `userRateLimitExceeded`) reports `rate-limited` and stops new selections/requests, including when discovery fails. Already-started reads can finish and earlier complete evidence remains available to ingestion. Permission-related 403 responses remain ordinary failures. No raw Google error text is printed or retried by the SDK.
+
 Exit `0` means exhausted discovery with complete eligible text evidence, including a genuinely empty result. Exit `2` means the thread sampling cap prevented complete discovery without another failure. Exit `1` means invalid options/configuration, provider/coverage failures, or an operational limit. SIGINT/SIGTERM abort outstanding reads and exit nonzero. Re-running rereads evidence; this command saves no state.
 
 The JSON report contains time-window bounds, selected/retrieved/eligible/skipped counts, normalized message and excluded-draft counts, partial/failed counts, body-status counts across retrieved conversations, separate discovery/body coverage, fixed reasons and zero downstream writes. Bodies, addresses, subjects, source IDs, arbitrary errors and credentials are never printed. Internal evidence and fingerprints remain in memory. There is no evidence-export switch or automatic report file.
@@ -57,3 +61,4 @@ This verifies actual Gmail retrieval and honest degraded reporting, not complete
 | Stable substantive identity | `tests/unit/mail-evidence.test.ts` and adapter label/history/order replay test |
 | Bounded cancellable reads | Concurrency/request-cap tests, SDK/OAuth timeouts, transport byte cap, MIME limits and in-flight cancellation tests |
 | Independent private preview | Google-only command test, invalid-option/sensitive-output tests and compiled no-network smoke checks |
+| Paced Gmail admission and terminal throttling | `tests/adapters/gmail-pacing.test.ts` checks concurrent starts, slow OAuth refresh, body-part propagation, deadline/cancellation and no later dispatch; application tests check stopped selection and retained results |

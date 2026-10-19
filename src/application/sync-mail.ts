@@ -252,6 +252,7 @@ export async function syncMail(
     state &&
     !budget.signal.aborted &&
     !reasons.has("persistence-error") &&
+    !reasons.has("rate-limited") &&
     !reasons.has("invalid-data")
   ) {
     try {
@@ -289,6 +290,7 @@ export async function syncMail(
             const minutes = Math.min(60, 5 * 2 ** Math.min(item.attempts, 4));
             await session.retry(item, failure, new Date(clock.now().getTime() + minutes * 60_000));
             reasons.add(failure);
+            if (failure === "rate-limited") break;
           } else {
             const submission =
               read && !excluded

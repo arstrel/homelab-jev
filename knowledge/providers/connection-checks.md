@@ -35,7 +35,7 @@ x_jev_sources:
   - path: src/adapters/jev.ts
     sha256: 9018768dc73a9852ea92a2c208b29441bfb2573a7b34d24290a09b6d6573642b
   - path: src/adapters/gmail.ts
-    sha256: 68d953c97b4a72d3d635679d3764e1212272a6ccab899997a8c427c576618da4
+    sha256: 87224a07d772828108d8ce67b295a22a1656802327116f63a750c280bafca0ae
   - path: src/adapters/drive.ts
     sha256: d76eb0f4a07f5d9a3da155eea00de0c3792b5023a6f167486ab90b68ba1b6c02
   - path: src/adapters/todoist.ts

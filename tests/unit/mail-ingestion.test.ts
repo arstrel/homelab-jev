@@ -3,6 +3,7 @@ import { ingestionPolicyVersion, ingestMail } from "../../src/application/ingest
 import { MailBudget } from "../../src/application/mail-budget.js";
 import type { EvidenceStore, MailReader } from "../../src/application/ports.js";
 import { runMailIngest } from "../../src/cli-mail.js";
+import { MailReadError } from "../../src/domain/mail-evidence.js";
 import { mailInstant, threadRead } from "../fixtures/mail.js";
 
 const clock = {
@@ -203,4 +204,26 @@ it("closes the pool if reader initialization fails and opens nothing for an alre
     "cancelled",
   );
   expect(database).not.toHaveBeenCalled();
+});
+
+it("persists completed evidence when throttling stops later conversation selection", async () => {
+  const mail = reader(["complete", "throttled", "untouched"]);
+  vi.mocked(mail.readThreadEvidence).mockImplementation(async (id) => {
+    if (id === "throttled") throw new MailReadError("rate-limited");
+    return threadRead(id);
+  });
+  const ledger = store();
+  const b = new MailBudget({ concurrency: 1 });
+  budgets.push(b);
+  const report = await ingestMail(options, { mail, store: ledger, clock, budget: b });
+  expect(mail.readThreadEvidence).toHaveBeenCalledTimes(2);
+  expect(report).toMatchObject({
+    reasons: ["rate-limited"],
+    bodyCoverageComplete: false,
+    exitCode: 1,
+    persistence: { status: "committed", newVersions: 1, newJobs: 1 },
+  });
+  expect(
+    vi.mocked(ledger.persistEvidence).mock.calls[0]?.[0].map((r) => r.evidence.source.threadId),
+  ).toEqual(["complete"]);
 });
