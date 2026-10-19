@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:33:58.004826Z
+  at: 2026-10-19T03:47:14.127011Z
 stale_after: "2026-11-18T02:37:00Z"
 x_jev_delivery: mixed
 sources:
@@ -26,7 +26,7 @@ x_jev_sources:
   - path: docs/mail-observation.md
     sha256: d47113783b0e478ef67109635cb3f442abdde9f0612b74e8691a252dff8c88fe
   - path: docs/mail-observation-evidence.md
-    sha256: c34263fc39e05b33873cf2632860192e481b5385c7d225573edb2604b6f4d43e
+    sha256: 286714186f451b65d08fb5f91f30a205e66fe8395e443a9c156ee5787a9a3fdd
 ---
 
 # Manual mail observation
@@ -38,5 +38,7 @@ Retrieval pending/due/retry counts and future retry time describe the collection
 The manual pilot uses existing bounded sync calls, at most 20 runs or 60 minutes per deliberate session. Preserve partial work and identities. Real catch-up followed by a strict no-change observation is required to complete parent 2.4. The evidence report records actual observations and limitations; tooling or synthetic tests alone do not complete live acceptance. Do not manufacture expired cursors, drop retries or infer scheduled availability from a manual session.
 
 The first authorized session backed up the configured database and applied reviewed migrations through 0004. The initial token-refresh failure was resolved by browser reauthorization. Eight bounded invocations reached discovery catch-up and stored 115 complete versions/jobs; 769 retrievals remain, including 17 partial-body and 8 provider-error retries. The session stopped at the provider-failure boundary. Evidence freshness remains null and strict no-change acceptance remains open. This establishes collection progress and honest gaps, not a completed pilot.
+
+Follow-up read-only diagnosis found three sampled provider failures recoverable and identified exact-size equality as the cause of two unsupported-text samples. Corrected parsing accepts understated size metadata under unchanged actual-byte limits; both affected conversations then read completely while an oversized control remained partial. Stored work and freshness were unchanged. The evidence report distinguishes this diagnosis from operational backlog drainage and successful pilot acceptance.
 
 See [sync](/architecture/mail-sync.md), [migration preparation](database-migrations.md), [secret boundaries](secret-handling.md) and [test isolation](test-isolation.md). The operator runbook and evidence report are the reviewed repository snapshots above. Classification, downstream provider writes and scheduling remain later work.
