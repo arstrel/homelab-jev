@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:10:40.938Z
+  at: 2026-10-22T04:37:01.216Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -26,35 +26,45 @@ x_jev_sources:
   - path: docs/product-requirements.md
     sha256: 8aee3e08be20666e36dffa7a46b8a80acd682b76f6413ececc431fd63f9c46e7
   - path: src/domain/email-brief.ts
-    sha256: dd30c6ba2d7615bc2977f0b9d725fabee5da681c558dd7efb35f6abd03ace95b
+    sha256: c4706e39b9f50b0537e7759d93a5f22f30bea7dfc39b24c5f5ca44ae1f3447d2
   - path: src/application/email-brief.ts
-    sha256: a651539dbbc06c8c10a8fef0635f3a53770a12a24e4a0ee9bda78af4bfdd1e30
+    sha256: bde5b54bfffba9163f93cf1eefeb41f44bfe4b23f08d589230118c148c6ccb07
   - path: src/adapters/postgres/email-brief.ts
     sha256: 21166686962ee9a41f1c7dcc9e240072887895023ef34e5d5869786a6be615ce
   - path: src/adapters/drive-brief.ts
     sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
   - path: docs/email-brief.md
-    sha256: 84a41f112457719b8c35427c994ccb9880305bf6275dd8fd589348ce6b5ad7d6
+    sha256: c40b3cd8e7bb03361dfd5c35205ca8d51671d077b86dad2699a715b761725354
   - path: openspec/changes/add-drive-email-brief/specs/email-brief-publication/spec.md
     sha256: 67e95288abd3f441c34dc5d5b821a0487855018b833d71ec9e25e20b2b482478
   - path: docs/email-brief-evidence.md
     sha256: bf7d371c90e3028e05719dd8f793e3522b48b5c0bb3d59f10f6b391a6abcce94
+  - path: src/domain/todoist-brief.ts
+    sha256: 4516ae5f375c3c5211c0b57a948391ad34bb40127aaa8744a1f585753fdb12b0
+  - path: src/adapters/todoist-brief.ts
+    sha256: f60bf9703a34d30580fce1c1569a705e0cd98b5a3c12d8146666c81f4586412e
+  - path: src/domain/brief-text.ts
+    sha256: 18b4b488bbcc7624c840e9d43503c61c47fe801438c9d3e99e143f29b75a08b2
+  - path: docs/todoist-brief-evidence.md
+    sha256: a5a4c60b65336f51012956db6fa2ec942a1b8467fedd042a4235dd9ee06b643f
 ---
 
 # Drive snapshot and planner freshness
 
-## Implemented email-only publication
+## Implemented email and Todoist context publication
 
 The manual brief:publish command creates one private app-owned jev-current.md in Drive, reusing the existing classifications and write-intent tables. It selects current complete stored conversations by latest message time, applies owner exclusions before Jev and saves validated typed decisions by evidence/directions/model/policy identity. Unchanged replay reuses decisions; failed cases remain visible and retryable. No migration or collector redeployment is required.
 
-The templated artifact has Action, FYI, Noise, Waiting, Uncertain/review and owner-exclusion sections. Escaped subjects and Gmail links preserve inspectability without publishing message bodies or address lists. It records generation, sample/window/eligible counts, source observations, pending retrievals and gaps. Model judgments are uncalibrated. Todoist, Retro and Calendar context are explicitly absent in this slice.
+The templated artifact has Action, FYI, Noise, Waiting, Uncertain/review and owner-exclusion sections. Escaped subjects and Gmail links preserve inspectability without publishing message bodies or address lists. It records generation, sample/window/eligible counts, source observations, pending retrievals and gaps. Model judgments are uncalibrated. Current Todoist context is included as described below; Retro feedback and Calendar context remain absent.
 
 Reserve a Drive-generated file ID durably before creation. Every explicit retry resolves that same ID; expected name/type/app ownership and generation/content read-back are required before success. A failed update preserves prior confirmed publication metadata in storage, although remote bytes may already have changed. Never replace a confirmed missing file or search by name automatically. A separate publisher lock leaves collection independent; no providers run inside SQL transactions. See [ledger](ledger.md) and [Jev boundary](/providers/jev-boundary.md).
 
 ## Remaining full planner handoff
 
-The complete planner artifact still needs current Todoist inventory/freshness, Retro context, automatic publication and verified retrieval by real scheduled tasks. Preserve Daily Life Plan, Daily Inbox Digest and user retrospectives. Generation time never advances source freshness.
+The complete planner handoff still needs Retro context, automatic publication and verified retrieval by real scheduled tasks with current Todoist state. Preserve Daily Life Plan, Daily Inbox Digest and user retrospectives. Generation time never advances source freshness.
 
 A configurable 15-minute stale-input cutoff remains a proposed default for the full planner contract. Actual scheduled retrieval must select the latest generation and current Todoist inventory, disclose stale/unavailable input and follow an explicit fallback. Calendar blocks help choose actions; they do not authorize writes or prove completion. Verify retrieval before changing prompts. See [personal brief loop](/product/personal-brief-loop.md), [uncertainty](uncertainty.md), and [Retro](retro-feedback.md).
 
 The authorized live sample published ten conversations (six Jev judgments, four owner exclusions), then replayed all ten cached decisions with zero new requests against the same private file. Independent read-back checked identity, generation and private sharing. The source snapshot still had retrieval gaps and null complete freshness; this proves publication/reuse only, not planner integration or classifier quality.
+
+The same manual brief now fetches current Todoist projects and open tasks on every publication. It groups escaped source titles, task links and existing due values, excluding Retro by configured identity or normalized name. Exact supported primary-account Gmail links on displayed open task descriptions add already-tracked annotations to email Action items; similar wording and absent links establish nothing. Descriptions remain local. Read interval, page caps, missing-project and display-size gaps are explicit; failed reads discard partial contents and publish unavailable context with exit 1. There is no separate database task inventory or new hosted judgment.

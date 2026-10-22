@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:10:40.938Z
+  at: 2026-10-22T04:37:01.222Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -49,15 +49,21 @@ x_jev_sources:
   - path: src/cli-email-tasks.ts
     sha256: 03d03bcd3477bab151136626c8801c25267d15727583299a547fe616242f33e1
   - path: src/application/email-brief.ts
-    sha256: a651539dbbc06c8c10a8fef0635f3a53770a12a24e4a0ee9bda78af4bfdd1e30
+    sha256: bde5b54bfffba9163f93cf1eefeb41f44bfe4b23f08d589230118c148c6ccb07
   - path: src/domain/email-brief.ts
-    sha256: dd30c6ba2d7615bc2977f0b9d725fabee5da681c558dd7efb35f6abd03ace95b
+    sha256: c4706e39b9f50b0537e7759d93a5f22f30bea7dfc39b24c5f5ca44ae1f3447d2
   - path: src/cli-email-brief.ts
-    sha256: 5543e0b5f17020ac17a8fe314a04827ca33cd5d5a6b2c9b0add93695394a8300
+    sha256: c7374612107f1c2e2e513dc4243fa1730b07bb8b5ef297967d017027b869ffef
   - path: src/adapters/drive-brief.ts
     sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
   - path: src/adapters/postgres/email-brief.ts
     sha256: 21166686962ee9a41f1c7dcc9e240072887895023ef34e5d5869786a6be615ce
+  - path: src/adapters/todoist-brief.ts
+    sha256: f60bf9703a34d30580fce1c1569a705e0cd98b5a3c12d8146666c81f4586412e
+  - path: src/domain/todoist-brief.ts
+    sha256: 4516ae5f375c3c5211c0b57a948391ad34bb40127aaa8744a1f585753fdb12b0
+  - path: src/domain/brief-text.ts
+    sha256: 18b4b488bbcc7624c840e9d43503c61c47fe801438c9d3e99e143f29b75a08b2
 ---
 
 # Application boundaries and composition
@@ -81,3 +87,5 @@ Manual [triage](classification-policy.md) reads bounded exact job evidence throu
 Gmail admission policy stays inside its existing adapter module: monotonic pacing, abortable waits and structured throttle interpretation share the reader interface. The generic `MailBudget` remains usable by Jev. Collection orchestration owns selection stop/backoff; MIME parsing propagates terminal throttling instead of replacing it with a body-coverage status. The architecture review retained existing ports, transactions and recovery structure.
 
 The manual [Drive brief](planner-handoff.md) has one small use case with SDK-free database/publication ports. Domain code owns cache identity and the Markdown template; the existing Jev adapter supplies finite triage. PostgreSQL owns selection/atomic persistence/reserved identity, and Drive owns metadata/content verification. The CLI binds credentials and a bounded command budget. It adds no framework, dependency, migration or background cycle.
+
+The brief also has one SDK-free Todoist read port. Its adapter bounds current pages and extracts explicit Gmail links locally; pure domain code renders project tasks and associations using the shared text escaper. Todoist never enters triage questions/cache identity, and no task inventory table or remote write port is added. Provider failures are rendered as unavailable context; cancellation still stops publication.

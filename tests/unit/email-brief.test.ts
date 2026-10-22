@@ -18,6 +18,7 @@ import {
   briefRecord,
   briefStatus,
   briefTime,
+  todoistInventory,
 } from "../fixtures/email-brief.js";
 import { triageResponse } from "../fixtures/triage.js";
 
@@ -36,6 +37,7 @@ function setup(records: BriefRecord[] = [briefRecord()]) {
   const judge = vi.fn(async () => triageResponse());
   const write = vi.fn<BriefDrive["write"]>(async () => {});
   const allocate = vi.fn(async () => briefFile);
+  const read = vi.fn(async () => todoistInventory());
   const signal = new AbortController();
   const deps = {
     database: {
@@ -45,11 +47,82 @@ function setup(records: BriefRecord[] = [briefRecord()]) {
     status: { read: async () => briefStatus() },
     triage: { judge },
     drive: () => ({ write, allocate }),
+    todoist: () => ({ read }),
     clock: { now: () => new Date(briefTime), id: () => briefGeneration },
     signal: signal.signal,
   };
-  return { session, judge, write, allocate, signal, deps };
+  return { session, judge, write, allocate, read, signal, deps };
 }
+it("refreshes renamed/moved/removed tasks on cached-only replay without altering saved email decisions", async () => {
+  const s = setup();
+  await publishEmailBrief(options, s.deps);
+  expect(s.write.mock.calls[0]?.[2]).toContain("Already tracked (explicit source link)");
+  const next = todoistInventory();
+  next.projects = [{ id: "personal", name: "Personal Projects" }];
+  const task = next.tasks[0];
+  if (!task) throw new Error("fixture");
+  task.projectId = "personal";
+  task.content = "Book the inspection";
+  task.due = null;
+  s.read.mockResolvedValueOnce(next);
+  expect(await publishEmailBrief({ ...options, maxNew: 0 }, s.deps)).toMatchObject({
+    newRequests: 0,
+    cached: 1,
+    todoist: { complete: true, tasks: 1 },
+    exitCode: 0,
+  });
+  expect(s.write.mock.calls[1]?.[2]).toContain("### Personal Projects");
+  expect(s.write.mock.calls[1]?.[2]).toContain("Book the inspection");
+  expect(s.write.mock.calls[1]?.[2]).not.toContain("Arrange boiler inspection");
+  s.read.mockResolvedValueOnce({ ...next, tasks: [] });
+  await publishEmailBrief({ ...options, maxNew: 0 }, s.deps);
+  expect(s.write.mock.calls[2]?.[2]).not.toContain("Already tracked (explicit source link)");
+  expect(s.read).toHaveBeenCalledTimes(3);
+  expect(s.judge).toHaveBeenCalledTimes(1);
+  expect(s.session.save).toHaveBeenCalledTimes(1);
+});
+it("publishes explicit Todoist failure without stale contents or private diagnostics", async () => {
+  const s = setup([]);
+  s.read.mockRejectedValueOnce(new Error("private-project-name email@example.com"));
+  const result = await publishEmailBrief(options, s.deps);
+  expect(result).toMatchObject({
+    published: true,
+    exitCode: 1,
+    todoist: { state: "unavailable", complete: false, tasks: 0 },
+  });
+  expect(s.write.mock.calls[0]?.[2]).toContain("Todoist context unavailable: read-failed");
+  expect(JSON.stringify(result)).not.toMatch(/private|@|Home|task-1/);
+  expect(s.write.mock.calls[0]?.[2]).not.toContain("Arrange boiler inspection");
+});
+it("reports missing Todoist configuration and partial pages as degraded publications", async () => {
+  const s = setup([]);
+  const { todoist: _todoist, ...without } = s.deps;
+  expect(await publishEmailBrief(options, without)).toMatchObject({
+    published: true,
+    exitCode: 1,
+    todoist: { state: "unavailable" },
+  });
+  expect(s.write.mock.calls[0]?.[2]).toContain("missing-token");
+  s.read.mockResolvedValueOnce({ ...todoistInventory(), tasksComplete: false });
+  expect(await publishEmailBrief(options, s.deps)).toMatchObject({
+    published: true,
+    exitCode: 1,
+    todoist: { state: "available", complete: false },
+  });
+  expect(s.write.mock.calls[1]?.[2]).toContain("Todoist coverage: INCOMPLETE");
+});
+it("does not publish a late Todoist read after cancellation", async () => {
+  const s = setup([]);
+  s.read.mockImplementationOnce(async () => {
+    s.signal.abort();
+    return todoistInventory();
+  });
+  expect(await publishEmailBrief(options, s.deps)).toMatchObject({
+    published: false,
+    failure: "cancelled",
+  });
+  expect(s.write).not.toHaveBeenCalled();
+});
 it("saves new decisions then republishes unchanged inputs without another inference", async () => {
   const s = setup();
   expect(await publishEmailBrief(options, s.deps)).toMatchObject({

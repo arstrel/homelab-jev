@@ -1,8 +1,10 @@
 import { createHash } from "node:crypto";
 import { z } from "zod";
+import { briefText } from "./brief-text.js";
 import { gmailLink, type TaskConversation } from "./email-task.js";
 import type { MailStatusSnapshot } from "./mail-status.js";
 import { triagePolicy, triageResultSchema } from "./mail-triage.js";
+import { type renderTodoistContext, todoistTaskLink } from "./todoist-brief.js";
 
 export const briefPolicy = `email-brief/v1:${triagePolicy}:owner-rules/v1`;
 export const briefModel = "jev-1.13.0";
@@ -88,15 +90,6 @@ export function briefGroup(entry: BriefEntry) {
     attention.choice
   ];
 }
-function plain(value: string) {
-  return value
-    .replace(/\p{C}/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 300)
-    .replace(/&/g, "&amp;")
-    .replace(/[\\`*_{}[\]()#+.!|<>~-]/g, "\\$&");
-}
 export interface BriefDocument {
   generation: string;
   generatedAt: string;
@@ -105,6 +98,7 @@ export interface BriefDocument {
   eligible: number;
   status: MailStatusSnapshot;
   entries: BriefEntry[];
+  todoist?: ReturnType<typeof renderTodoistContext>;
 }
 export function renderEmailBrief(doc: BriefDocument) {
   const s = doc.status;
@@ -129,7 +123,7 @@ export function renderEmailBrief(doc: BriefDocument) {
     }.`,
     `- Unreplayed history gap: ${s.recovery?.historyGap ? "yes" : "no recorded gap"}.`,
     `- Source observation captured: ${doc.until}. Generation time does not advance source freshness.`,
-    "- Todoist, Retro and Calendar context: not included. No tasks were created or completed.",
+    "- Todoist context: see the task section below. Retro feedback and Calendar context: not included. No tasks were created or completed.",
     "",
     "Read source conversations before acting. Sections are typed triage over this sample, not a complete obligation inventory.",
     "",
@@ -155,11 +149,27 @@ export function renderEmailBrief(doc: BriefDocument) {
           .map(([key, a]) => `${key}: ${a.choice} (${Math.round(a.confidence * 100)}% confidence)`)
           .join("; ");
       else detail = "unclassified";
+      const tracked =
+        group === "Action"
+          ? (doc.todoist?.tasks.filter((t) => t.sourceIds.includes(entry.sourceId)) ?? [])
+          : [];
+      const association = tracked.length
+        ? ` Already tracked (explicit source link): ${tracked
+            .slice(0, 3)
+            .map((t) => `[Todoist task](${todoistTaskLink(t.id)})`)
+            .join(
+              ", ",
+            )}${tracked.length > 3 ? `; ${tracked.length - 3} additional linked tasks in the task section` : ""}.`
+        : "";
       lines.push(
-        `- [${plain(entry.subject)}](${gmailLink(entry.sourceId)}) — ${entry.receivedAt ?? "time unknown"}; ${detail}.`,
+        `- [${briefText(entry.subject)}](${gmailLink(entry.sourceId)}) — ${entry.receivedAt ?? "time unknown"}; ${detail}.${association}`,
         "",
       );
     }
   }
+  lines.push(
+    doc.todoist?.markdown ??
+      "## Todoist tasks by project\n\nTodoist context unavailable: not requested.\n",
+  );
   return lines.join("\n");
 }

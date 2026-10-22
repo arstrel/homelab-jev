@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:10:40.938Z
+  at: 2026-10-22T04:37:01.239Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -42,11 +42,17 @@ x_jev_sources:
   - path: docs/mail-worker-evidence.md
     sha256: e7c1c9a9dcb0b8d7bc10c289ac6a28960a5255b113343279c620b70943cb76ca
   - path: docs/email-brief.md
-    sha256: 84a41f112457719b8c35427c994ccb9880305bf6275dd8fd589348ce6b5ad7d6
+    sha256: c40b3cd8e7bb03361dfd5c35205ca8d51671d077b86dad2699a715b761725354
   - path: src/application/email-brief.ts
-    sha256: a651539dbbc06c8c10a8fef0635f3a53770a12a24e4a0ee9bda78af4bfdd1e30
+    sha256: bde5b54bfffba9163f93cf1eefeb41f44bfe4b23f08d589230118c148c6ccb07
   - path: docs/email-brief-evidence.md
     sha256: bf7d371c90e3028e05719dd8f793e3522b48b5c0bb3d59f10f6b391a6abcce94
+  - path: src/adapters/todoist-brief.ts
+    sha256: f60bf9703a34d30580fce1c1569a705e0cd98b5a3c12d8146666c81f4586412e
+  - path: src/domain/todoist-brief.ts
+    sha256: 4516ae5f375c3c5211c0b57a948391ad34bb40127aaa8744a1f585753fdb12b0
+  - path: docs/todoist-brief-evidence.md
+    sha256: a5a4c60b65336f51012956db6fa2ec942a1b8467fedd042a4235dd9ee06b643f
 ---
 
 # Implemented foundation and planned release
@@ -72,3 +78,5 @@ The owner rejected both proposals and supplied no-task preferences for routine G
 The [collector installer](/operations/native-releases.md) now packages reviewed compiled releases and controls a collection-only five-minute launchd job. The merged collector was activated on October 21 Pacific; two automatic invocations and an overlapping manual skip were observed. The repository report `docs/mail-worker-evidence.md` records the timestamped activation, preserved backlog and null evidence freshness. Full processing-cycle and catch-up acceptance remain open. Parent deployment and rollout milestones remain open until their broader verification succeeds.
 
 The manual [Drive brief](/architecture/planner-handoff.md) adds the first downstream email-only artifact: saved/reused typed triage, owner exclusions and one private source-linked Markdown file with honest sample/freshness/gap metadata. No tasks, Gmail changes or scheduled prompt edits follow. Full Todoist/Retro/planner handoff, automatic capture, calibration and scheduled inference remain unfinished.
+
+The manual brief now includes current read-only Todoist context by project, existing due values and exact source-link already-tracked annotations. Read/page/display gaps remain visible and Todoist stays authoritative. Retro feedback, semantic task matching, automatic capture and scheduled planner consumption remain unfinished. This partial task-read slice does not complete the full parent reconciliation or handoff milestones.

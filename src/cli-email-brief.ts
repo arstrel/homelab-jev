@@ -5,6 +5,7 @@ import { jevTriage } from "./adapters/jev-triage.js";
 import { connect } from "./adapters/postgres/client.js";
 import { briefDatabase } from "./adapters/postgres/email-brief.js";
 import { mailStatusReader } from "./adapters/postgres/mail-status.js";
+import { todoistBrief } from "./adapters/todoist-brief.js";
 import {
   type BriefOptions,
   publishEmailBrief,
@@ -47,6 +48,7 @@ export async function runEmailBrief(
   const url = databaseUrl(env);
   const auth = googleAuth(env);
   const key = env.JEV_API_KEY?.trim();
+  const todoistToken = env.TODOIST_API_TOKEN?.trim();
   if (options.maxNew && !key) throw new ConfigurationError(["JEV_API_KEY"]);
   const client = connect(url);
   try {
@@ -55,6 +57,12 @@ export async function runEmailBrief(
       status: mailStatusReader(client),
       triage: jevTriage(key ?? "unused-cached-only"),
       drive: (budget) => driveBrief(auth, budget),
+      ...(todoistToken
+        ? {
+            todoist: (budget) =>
+              todoistBrief(todoistToken, budget, env.TODOIST_RETRO_PROJECT_ID?.trim()),
+          }
+        : {}),
       clock: { now: () => new Date(), id: randomUUID },
       signal,
     });

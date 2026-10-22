@@ -13,6 +13,11 @@ import {
 import type { TaskConversation } from "../domain/email-task.js";
 import { taskExclusion } from "../domain/email-task.js";
 import { TriageError, triageResult, triageState } from "../domain/mail-triage.js";
+import {
+  renderTodoistContext,
+  type TodoistBriefContext,
+  type TodoistBriefInventory,
+} from "../domain/todoist-brief.js";
 import { MailBudget } from "./mail-budget.js";
 import type { MailStatusReader, MailTriage, Runtime } from "./ports.js";
 
@@ -70,6 +75,7 @@ export async function publishEmailBrief(
     status: MailStatusReader;
     triage: MailTriage;
     drive: (budget: MailBudget) => BriefDrive;
+    todoist?: (budget: MailBudget) => { read(): Promise<TodoistBriefInventory> };
     clock: Runtime;
     signal?: AbortSignal;
   },
@@ -86,6 +92,14 @@ export async function publishEmailBrief(
     capped: 0,
     inputTokens: 0,
     outputTokens: 0,
+    todoist: {
+      state: "not-read" as "not-read" | "available" | "unavailable",
+      projects: 0,
+      tasks: 0,
+      shown: 0,
+      displayOmitted: 0,
+      complete: false,
+    },
   };
   let phase = "selection";
   try {
@@ -93,7 +107,7 @@ export async function publishEmailBrief(
       const signal = deps.signal
         ? AbortSignal.any([deps.signal, ownershipSignal])
         : ownershipSignal;
-      const budget = new MailBudget({ maxRequests: 30 }, signal);
+      const budget = new MailBudget({ maxRequests: 40 }, signal);
       try {
         budget.assertActive();
         const now = deps.clock.now();
@@ -182,6 +196,35 @@ export async function publishEmailBrief(
           if (entry.failure && entry.failure !== "new-call-cap") counts.failed++;
           entries.push(entry);
         }
+        phase = "todoist";
+        budget.assertActive();
+        const startedAt = deps.clock.now().toISOString();
+        let context: TodoistBriefContext;
+        try {
+          if (deps.todoist) {
+            const inventory = await deps.todoist(budget).read();
+            budget.assertActive();
+            context = {
+              ...inventory,
+              state: "available",
+              startedAt,
+              readAt: deps.clock.now().toISOString(),
+            };
+          } else
+            context = { state: "unavailable", startedAt, readAt: null, reason: "missing-token" };
+        } catch {
+          budget.assertActive();
+          context = { state: "unavailable", startedAt, readAt: null, reason: "read-failed" };
+        }
+        const todoist = renderTodoistContext(context);
+        counts.todoist = {
+          state: context.state,
+          projects: context.state === "available" ? context.projects.length : 0,
+          tasks: context.state === "available" ? context.tasks.length : 0,
+          shown: todoist.tasks.length,
+          displayOmitted: todoist.omitted,
+          complete: todoist.complete,
+        };
         phase = "publication";
         budget.assertActive();
         const drive = deps.drive(budget);
@@ -197,6 +240,7 @@ export async function publishEmailBrief(
           eligible: sample.eligible,
           status,
           entries,
+          todoist,
         });
         await session.publishing();
         await drive.write(destination, generation, markdown);
@@ -209,7 +253,7 @@ export async function publishEmailBrief(
           generation,
           url: `https://drive.google.com/file/d/${destination.fileId}/view`,
           overlapping: false,
-          exitCode: counts.failed || counts.capped ? 1 : 0,
+          exitCode: counts.failed || counts.capped || !todoist.complete ? 1 : 0,
         };
       } finally {
         budget.close();

@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:11:02.803Z
+  at: 2026-10-22T04:37:01.242Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -73,6 +73,10 @@ x_jev_sources:
     sha256: 442ded653b33a0e662b371599feaff3869a3fdfabb2f6e1d7cf6cc5210581fdb
   - path: tests/integration/email-tasks.test.ts
     sha256: 17311efcd698ac34909bc1128fb1f5ec26974f525c8e6a2617537fa6748dc54a
+  - path: tests/unit/todoist-brief.test.ts
+    sha256: 0fc3a577b5fc653deeb775573efda07b99c72fcf590ab006718fa4cc387b517c
+  - path: tests/adapters/todoist-brief.test.ts
+    sha256: af477f385465e1563fc34fd4d0999f1a9562eded2c4d8f1ced5741fcada39094
 ---
 
 # Offline and database test isolation
@@ -102,3 +106,5 @@ Reviewed task tests use synthetic source sentences, projects and remote response
 V2 tests add independent eligibility rejection, contextual review-title validation, old review-file rejection with stable write identity, complete request bounds and message-recency ordering. Synthetic gateway tests validate code behavior under supplied judgments, not semantic model accuracy. Live synthetic/fresh-mail checks remain separate from deterministic gates.
 
 Brief publication tests use synthetic evidence, fixed judgments and MSW Drive responses. Disposable PostgreSQL verifies atomic exact-job completion and classification rollback, selection, reserved identity and prior-publication metadata. No operational credentials, real private content or live Drive publication are used in gates. Cached-only publication is also tested without an inference request.
+
+Read-only Todoist context uses synthetic SDK HTTP fixtures and controlled application reads to verify changed/moved/removed tasks without mutating live tasks. Tests cover exact-link associations, filtering, incomplete/failed reads and cached-only refresh without extra inference. Live verification separately publishes the private artifact; no private task data enters committed fixtures.
