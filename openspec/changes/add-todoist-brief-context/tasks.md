@@ -10,4 +10,4 @@
 
 ## 3. Integration evidence
 
-- [ ] 3.1 Pass offline and disposable PostgreSQL gates, publish/read back the same private Drive file with cached-only inference and record sanitized Todoist coverage evidence. Verify exact-link/change behavior with controlled provider reads without mutating live tasks, and deliver a PR while leaving the collector and scheduled prompts intact.
+- [x] 3.1 Pass offline and disposable PostgreSQL gates, publish/read back the same private Drive file with cached-only inference and record sanitized Todoist coverage evidence. Verify exact-link/change behavior with controlled provider reads without mutating live tasks, and deliver a PR while leaving the collector and scheduled prompts intact.
