@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T03:19:37.076Z
+  at: 2026-10-22T04:10:40.938Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -24,7 +24,7 @@ sources:
     title: docs/foundation-evidence.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: f04858560cf99f3fbee4a4fcd8e5fc73bf8e4d7d93cd2d54f5be66bc2a9c416a
+    sha256: a88e88277fc39a82d34caaa525fabd9eb1607d540f84695cfe38afa1e5e85a06
   - path: openspec/changes/add-personal-brief-preprocessing/tasks.md
     sha256: 306bfcf09d7a0e01b3cee6969a4606a6045ba4fc89f504d658bc2c75bd7f3a2e
   - path: docs/foundation-evidence.md
@@ -40,14 +40,20 @@ x_jev_sources:
   - path: deploy/README.md
     sha256: 3761f092a650433670f0cf0edb6afc364e1c9af753d4e3a337a750465366c6b5
   - path: docs/mail-worker-evidence.md
-    sha256: 734183d64bea15535b162e5d4f01f25c972e46c6eaae49b36a8f25b7cff5813b
+    sha256: e7c1c9a9dcb0b8d7bc10c289ac6a28960a5255b113343279c620b70943cb76ca
+  - path: docs/email-brief.md
+    sha256: 84a41f112457719b8c35427c994ccb9880305bf6275dd8fd589348ce6b5ad7d6
+  - path: src/application/email-brief.ts
+    sha256: a651539dbbc06c8c10a8fef0635f3a53770a12a24e4a0ee9bda78af4bfdd1e30
+  - path: docs/email-brief-evidence.md
+    sha256: bf7d371c90e3028e05719dd8f793e3522b48b5c0bb3d59f10f6b391a6abcce94
 ---
 
 # Implemented foundation and planned release
 
 Section 1 is complete: pinned Node/TypeScript tooling, configuration validation, bounded provider checks, structured logging, Drizzle/pg ledger schema and repositories, migrations, deterministic Git gates, PostgreSQL regression tests and required CI. The CLI can report ledger status and perform explicit connection/database commands. Google authorization tooling supports repeat grants.
 
-The isolated [Gmail evidence slice](/architecture/gmail-evidence.md) implements parent task 2.1 and pure fingerprints: bounded manual retrieval, normalized conversation text and private coverage reporting. Its live sample includes explicit partial bodies. Manual [durable ingestion](/architecture/mail-ingestion.md) preserves complete evidence versions and exact-bound pending jobs. Consult the observation report for operational results. Manual [incremental sync](/architecture/mail-sync.md) resumes bootstrap/history and durable retries with separate evidence freshness. [Bounded expired-cursor recovery](/architecture/mail-recovery.md) implements parent task 2.3, retaining mapped coverage and an explicit history gap. Remaining release behavior includes complete collection acceptance, persisted/evaluated classification, Todoist reconciliation, Retro interpretation, Drive handoff and launchd deployment. `status` counts ledger rows; it does not prove provider freshness. `cycle` is not a working scheduler or processing loop.
+The isolated [Gmail evidence slice](/architecture/gmail-evidence.md) implements parent task 2.1 and pure fingerprints: bounded manual retrieval, normalized conversation text and private coverage reporting. Its live sample includes explicit partial bodies. Manual [durable ingestion](/architecture/mail-ingestion.md) preserves complete evidence versions and exact-bound pending jobs. Consult the observation report for operational results. Manual [incremental sync](/architecture/mail-sync.md) resumes bootstrap/history and durable retries with separate evidence freshness. [Bounded expired-cursor recovery](/architecture/mail-recovery.md) implements parent task 2.3, retaining mapped coverage and an explicit history gap. Remaining release behavior includes complete collection acceptance, evaluated classification, Todoist reconciliation, Retro interpretation and full planner handoff. `status` counts ledger rows; it does not prove provider freshness. `cycle` is not a working scheduler or processing loop.
 
 The initial release includes obligation capture and routing. Inferred resolution remains a review suggestion. Gmail label writes, automatic completion from model inference, Calendar writes and whole-inbox cleanup require later changes.
 
@@ -57,10 +63,12 @@ Follow [development gates](/operations/development-gates.md) and [release operat
 
 The [reviewed email task flow](/product/todoist-projects.md) now samples up to ten stored conversations and creates only explicitly approved source-sentence/project proposals. It reuses existing intents/links for duplicate and uncertain-response protection. This manual slice does not complete parent Sections 3/4: matching, automatic capture, evaluation, full reconciliation and live capture evidence remain pending.
 
-The authorized manual collection report now records applied migrations, discovery catch-up and 516 complete versions/jobs, with 409 retrievals still pending after the latest paced session reached its 20-run cap. Its 400 retrieval attempts reported no new provider error or throttling; partial coverage and older queued failures remain. Evidence freshness is still null. Parent 2.4 remains incomplete. A read-only [Jev triage preview](/architecture/classification-policy.md) implements kind/attention/lifecycle judgments on exact complete evidence; general matching, automatic routing, persistence/corrections, calibrated capture and scheduled rollout remain planned. Neither preview command creates tasks or consumes jobs.
+The authorized manual collection report now records applied migrations, discovery catch-up and 516 complete versions/jobs, with 409 retrievals still pending after the latest paced session reached its 20-run cap. Its 400 retrieval attempts reported no new provider error or throttling; partial coverage and older queued failures remain. Evidence freshness is still null. Parent 2.4 remains incomplete. A read-only [Jev triage preview](/architecture/classification-policy.md) implements kind/attention/lifecycle judgments on exact complete evidence; general matching, automatic routing, corrections, calibrated capture and scheduled rollout remain planned. Neither preview command creates tasks or consumes jobs.
 
 On October 21 (Pacific), the approved fresh pilot read ten complete recent conversations and added ten exact-bound jobs, bringing the diagnostic count to 526. The improved preview returned two review proposals and eight no-clear-action results without task creation or intent changes. The 409 retrieval backlog and null evidence freshness remain. This is bounded pilot evidence; usefulness still needs human confirmation, and full catch-up, capture validation and deployment stay open.
 
 The owner rejected both proposals and supplied no-task preferences for routine GitHub PR mail and Google Cloud terms updates; the fix enforces these exclusions. A separately authorized connected-Gmail cleanup marked 37 routine PR messages read and left two CI failures unread. Continuous worker read-state changes are not implemented under the current read-only grant. No useful live Todoist capture has been accepted yet.
 
-The [collector installer](/operations/native-releases.md) now packages reviewed compiled releases and controls a collection-only five-minute launchd job. This provides deployment tooling, not evidence of active scheduling or the full processing cycle. The repository report `docs/mail-worker-evidence.md` records manual observations and pending recurring acceptance. Parent deployment and rollout milestones remain open until their broader verification succeeds.
+The [collector installer](/operations/native-releases.md) now packages reviewed compiled releases and controls a collection-only five-minute launchd job. The merged collector was activated on October 21 Pacific; two automatic invocations and an overlapping manual skip were observed. The repository report `docs/mail-worker-evidence.md` records the timestamped activation, preserved backlog and null evidence freshness. Full processing-cycle and catch-up acceptance remain open. Parent deployment and rollout milestones remain open until their broader verification succeeds.
+
+The manual [Drive brief](/architecture/planner-handoff.md) adds the first downstream email-only artifact: saved/reused typed triage, owner exclusions and one private source-linked Markdown file with honest sample/freshness/gap metadata. No tasks, Gmail changes or scheduled prompt edits follow. Full Todoist/Retro/planner handoff, automatic capture, calibration and scheduled inference remain unfinished.

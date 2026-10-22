@@ -50,6 +50,7 @@
     "mail:status": "node --env-file=.env dist/cli.js mail:status",
     "mail:tasks": "node --env-file=.env dist/cli.js mail:tasks",
     "mail:classify": "node --env-file=.env dist/cli.js mail:classify",
+    "brief:publish": "node --env-file=.env dist/cli.js brief:publish",
     "google:authorize": "node --import tsx scripts/google-authorize.ts",
     "verify:foundation": "node --import tsx scripts/verify-foundation.ts",
     "okf:check": "node --import tsx scripts/okf-check.ts",

@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T01:53:00Z
+  at: 2026-10-22T04:10:40.938Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -40,6 +40,12 @@ x_jev_sources:
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: docs/email-task-pilot.md
     sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
+  - path: src/domain/email-brief.ts
+    sha256: dd30c6ba2d7615bc2977f0b9d725fabee5da681c558dd7efb35f6abd03ace95b
+  - path: src/application/email-brief.ts
+    sha256: a651539dbbc06c8c10a8fef0635f3a53770a12a24e4a0ee9bda78af4bfdd1e30
+  - path: docs/email-brief.md
+    sha256: 84a41f112457719b8c35427c994ccb9880305bf6275dd8fd589348ce6b5ad7d6
 ---
 
 # Typed classification and evidence policy
@@ -57,3 +63,5 @@ The initial model setting is uncalibrated. Evaluate a sanitized held-out set of 
 Explicit owner rules precede semantic judgment: ordinary GitHub PR notifications and Google Cloud terms-update notices are excluded before Jev and during apply. Sender/subject matching excludes neither security/CI notifications nor mixed direct correspondence. The fresh pilot's two proposals were rejected by the owner; source-supported wording alone does not establish personal usefulness. No task was created.
 
 See [Jev adapter](/providers/jev-boundary.md), [evaluation](/operations/classification-evaluation.md), and [Gmail evidence](gmail-checkpoints.md).
+
+The manual [Drive brief](planner-handoff.md) now saves successful typed triage and deterministic owner exclusions using exact evidence/direction/model/policy identity. Saving a judgment and completing its exact-bound job is atomic. Unchanged publication reuses saved decisions; invalid/provider failures do not complete jobs. Waiting has priority over attention; unknowns and resolution suggestions appear as review cases. This bounded email artifact does not complete parent classification/corrections/evaluation or authorize automatic capture.

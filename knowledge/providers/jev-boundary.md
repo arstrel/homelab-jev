@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T01:53:00Z
+  at: 2026-10-22T04:10:40.938Z
 stale_after: "2026-11-10T02:21:58Z"
 x_jev_delivery: mixed
 sources:
@@ -32,6 +32,12 @@ x_jev_sources:
     sha256: becaf504e775f5fc0e98cbb711246db2ac6e2346e2ac682be60855821dfe5ee4
   - path: docs/email-task-pilot.md
     sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
+  - path: src/application/email-brief.ts
+    sha256: a651539dbbc06c8c10a8fef0635f3a53770a12a24e4a0ee9bda78af4bfdd1e30
+  - path: docs/email-brief.md
+    sha256: 84a41f112457719b8c35427c994ccb9880305bf6275dd8fd589348ce6b5ad7d6
+  - path: docs/email-brief-evidence.md
+    sha256: bf7d371c90e3028e05719dd8f793e3522b48b5c0bb3d59f10f6b391a6abcce94
 ---
 
 # Jev adapter and judgment boundary
@@ -43,3 +49,5 @@ The explicit `mail:classify` preview asks independent kind, attention and lifecy
 Only necessary subject/body/timestamp/direction state is sent, capped at 32 KiB without truncation; address lists, dedicated source IDs and attachment contents are omitted. Body text can contain private information. Calls have five-second timeouts, disabled retries/logging and shared cancellation/deadline bounds. Use [evaluation](/operations/classification-evaluation.md) to choose later thresholds, and follow [classification policy](/architecture/classification-policy.md).
 
 The v2 reviewed-task adapter asks eligibility separately from sentence/project selection in one request and checks the complete serialized request against the 32 KiB bound. Literal criteria quote source/project data; finite validated output cannot grant new destinations or actions. A tiny six-case live synthetic check and an explicitly approved ten-conversation fresh preview are development/pilot evidence, not a classifier-accuracy benchmark or permission for unattended capture.
+
+The manual [Drive brief](/architecture/planner-handoff.md) now reuses these triage choices and persists validated decisions with exact input identity. A separate new-attempt cap permits cached-only publication; unchanged replay makes no Jev call. Owner exclusions run first. This saves email triage only, without task effects, correction handling, calibration or unattended inference. Provider errors and invalid results remain retryable and visible; saved unknowns remain review cases.

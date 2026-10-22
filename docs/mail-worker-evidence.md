@@ -28,10 +28,19 @@ Dates below are UTC on October 22 (October 21 Pacific). The operational schema w
 
 The first discovery queued 209 references (deduplicated/overlapping), including newer mail received while collection was idle; net pending work therefore rose despite nineteen successful retrievals. The second discovered no changes and reduced the backlog by twenty. Earlier unresolved partial/provider work remains; neither run completed evidence catch-up or the strict no-change freshness pair. These are bounded session observations, not a current-state promise or independent account-wide write audit. Both reports returned zero downstream provider writes.
 
-The current user's GUI launchd domain is available. The native worker status command reported `configured: false, loaded: false`; activation remains pending merge. No useful Todoist capture or classifier-quality result follows from these collection reads.
+At the manual-run observation, the current user's GUI launchd domain was available and the worker reported `configured: false, loaded: false`. Subsequent activation is recorded below. No useful Todoist capture or classifier-quality result follows from these collection reads.
 
 ## Recurring-operation acceptance
 
-Pending merge and installation. No new active agent or production release is claimed. After activation, record at least two recurring runs, backlog progress, preserved error gaps and an eventual complete/no-change freshness pair. Until that pair is observed, parent task 2.4 and overall rollout remain incomplete. Follow [deployment](../deploy/README.md) and [observation](mail-observation.md).
+After PR #18 merged, reviewed release `ae4477994fa7558717e451c31d2f01a0c2f6f349` was installed under the private user Application Support root using Node 24.21.0. The enabled LaunchAgent runs at load and every 300 seconds. A startup invocation and the next automatic invocation were observed, without manually triggering the second.
+
+| Discovery observation (UTC, Oct 22) | Retrieval attempts | Complete versions/jobs | Partial bodies | Pending retrievals |
+| --- | --- | --- | --- | --- |
+| 03:35:59.254Z | 20 | 17 / 17 | 3 | 506 |
+| 03:41:36.561Z | 20 | 18 / 18 | 2 | 488 |
+
+A concurrent manual invocation skipped with zero retrieval attempts and exit 0. Both automatic runs retained partial-body/retry-pending gaps and null evidence freshness; neither reported a new provider error or recognized throttle. The job was idle between invocations without a crash-restart loop and remained loaded at the 03:42:42Z check. Configuration/plist/logs were mode 600 under a mode-700 root. These are timestamped observations, not current health guarantees.
+
+The collector is active independently of the editable checkout. Full catch-up/no-change acceptance and the broader classification/reconciliation/publication cycle remain unfinished. Parent task 2.4 and overall rollout stay open. Follow [deployment](../deploy/README.md) and [observation](mail-observation.md).
 
 Jev calls/spend for this collection deliverable: zero.
