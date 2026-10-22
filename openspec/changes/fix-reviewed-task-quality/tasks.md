@@ -7,4 +7,4 @@
 
 ## 2. Verification and delivery
 
-- [ ] 2.1 Run offline/PostgreSQL gates and the approved bounded fresh-mail preview; record aggregate findings and leave task creation pending specific human approval. Deliver the fix through normal Git gates and a PR.
+- [x] 2.1 Run offline/PostgreSQL gates and the approved bounded fresh-mail preview; record aggregate findings and leave task creation pending specific human approval. Deliver the fix through normal Git gates and a PR.
