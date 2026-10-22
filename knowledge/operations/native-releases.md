@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T03:19:37.073Z
+  at: 2026-10-22T04:10:40.938Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -35,7 +35,7 @@ x_jev_sources:
   - path: scripts/mail-worker-cli.ts
     sha256: efd8f407d3f8c656d9e2f22ac1dec4a9fd2b8dc67ab806e5115bec3c62454b75
   - path: docs/mail-worker-evidence.md
-    sha256: 734183d64bea15535b162e5d4f01f25c972e46c6eaae49b36a8f25b7cff5813b
+    sha256: e7c1c9a9dcb0b8d7bc10c289ac6a28960a5255b113343279c620b70943cb76ca
 ---
 
 # Native Node releases and scheduling
@@ -48,4 +48,6 @@ Apply reviewed compatible migrations explicitly. Capture health, duration, last 
 
 Rollback should select a compatible previous release while preserving ledger records and user tasks. Do not assume SQL reversal is safe. Rehearse the migration/release rollback procedure before production capture.
 
-Full classification/reconciliation/publication scheduling and recurring acceptance remain planned. See [processing cycle](/architecture/processing-cycle.md), [migrations](database-migrations.md), and [delivery boundary](/product/delivery-boundary.md).
+Full classification/reconciliation/publication scheduling and catch-up/no-change acceptance remain planned. See [processing cycle](/architecture/processing-cycle.md), [migrations](database-migrations.md), and [delivery boundary](/product/delivery-boundary.md).
+
+On October 21 Pacific, merged collector release ae4477994fa7558717e451c31d2f01a0c2f6f349 was activated. Two automatic invocations added 35 complete versions/jobs, and an overlapping manual invocation skipped with no provider work. The recorded snapshot retained 488 retrievals and null evidence freshness; full catch-up/no-change acceptance remains open. This is timestamped operational evidence, not a continuing health guarantee. The manual brief feature does not redeploy this collector or schedule inference/publication.

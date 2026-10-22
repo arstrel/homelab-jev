@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T14:41:33Z
+  at: 2026-10-22T04:10:40.938Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -27,7 +27,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/design.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: f04858560cf99f3fbee4a4fcd8e5fc73bf8e4d7d93cd2d54f5be66bc2a9c416a
+    sha256: a88e88277fc39a82d34caaa525fabd9eb1607d540f84695cfe38afa1e5e85a06
   - path: src/application/ports.ts
     sha256: 1a490007fcc489ecc38d1118a20d3f7ec0dce1f10957a17a8ad5b1fc70fffd71
   - path: src/domain/README.md
@@ -48,6 +48,16 @@ x_jev_sources:
     sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
   - path: src/cli-email-tasks.ts
     sha256: 03d03bcd3477bab151136626c8801c25267d15727583299a547fe616242f33e1
+  - path: src/application/email-brief.ts
+    sha256: a651539dbbc06c8c10a8fef0635f3a53770a12a24e4a0ee9bda78af4bfdd1e30
+  - path: src/domain/email-brief.ts
+    sha256: dd30c6ba2d7615bc2977f0b9d725fabee5da681c558dd7efb35f6abd03ace95b
+  - path: src/cli-email-brief.ts
+    sha256: 5543e0b5f17020ac17a8fe314a04827ca33cd5d5a6b2c9b0add93695394a8300
+  - path: src/adapters/drive-brief.ts
+    sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
+  - path: src/adapters/postgres/email-brief.ts
+    sha256: 21166686962ee9a41f1c7dcc9e240072887895023ef34e5d5869786a6be615ce
 ---
 
 # Application boundaries and composition
@@ -69,3 +79,5 @@ DB-only [mail observation](/operations/mail-observation.md) has its own SDK-free
 Manual [triage](classification-policy.md) reads bounded exact job evidence through a separate SDK-free port. The read-only transaction closes before Jev requests. Domain code supplies finite criteria and validates answers; a shared budget bounds/cancels sequential calls. Reports exclude input content/identifiers and the preview has no persistence or task-write port.
 
 Gmail admission policy stays inside its existing adapter module: monotonic pacing, abortable waits and structured throttle interpretation share the reader interface. The generic `MailBudget` remains usable by Jev. Collection orchestration owns selection stop/backoff; MIME parsing propagates terminal throttling instead of replacing it with a body-coverage status. The architecture review retained existing ports, transactions and recovery structure.
+
+The manual [Drive brief](planner-handoff.md) has one small use case with SDK-free database/publication ports. Domain code owns cache identity and the Markdown template; the existing Jev adapter supplies finite triage. PostgreSQL owns selection/atomic persistence/reserved identity, and Drive owns metadata/content verification. The CLI binds credentials and a bounded command budget. It adds no framework, dependency, migration or background cycle.

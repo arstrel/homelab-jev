@@ -11,13 +11,23 @@ Personal email preprocessing with TypeSafe AI's Jev: synchronize Gmail every fiv
 - [Implementation checklist](openspec/changes/add-personal-brief-preprocessing/tasks.md): eight milestones with verifiable tasks.
 - [Capability specifications](openspec/changes/add-personal-brief-preprocessing/specs/): six behavior contracts with acceptance scenarios.
 
-Section 1 foundation, [Gmail evidence retrieval](docs/gmail-preview.md), [manual durable ingestion](docs/mail-ingestion.md), and [manual incremental sync with expired-cursor recovery](docs/mail-sync.md) are implemented, along with [read-only diagnostics and a bounded observation procedure](docs/mail-observation.md). The [live observation](docs/mail-observation-evidence.md) reached discovery catch-up and retained explicit evidence gaps. A [manual Jev triage preview](docs/mail-triage.md) now inspects complete stored evidence using pinned model `jev-1.13.0`, without consuming jobs or creating tasks. Complete collection acceptance, calibrated classification, reconciliation, scheduled deployment and the remaining release work remain planned. Use the checklist as the implementation progress record; completing planning artifacts does not mean the product is implemented.
+Section 1 foundation, [Gmail evidence retrieval](docs/gmail-preview.md), [manual durable ingestion](docs/mail-ingestion.md), and [incremental sync with expired-cursor recovery](docs/mail-sync.md) are implemented, along with [read-only diagnostics and a bounded observation procedure](docs/mail-observation.md). The [live observation](docs/mail-observation-evidence.md) reached discovery catch-up and retained explicit evidence gaps. A [manual Jev triage preview](docs/mail-triage.md) inspects complete stored evidence without consuming jobs. The [manual Drive brief](docs/email-brief.md) saves and reuses typed judgments and publishes one source-linked private Markdown file. Complete collection acceptance, calibrated classification, reconciliation and the remaining release work remain planned. Use the checklist as the implementation progress record.
 
-Foundation: Node 24.21.0/TypeScript, Drizzle with pg, npm, Biome, Vitest/MSW, and Husky. Full offline checks run before commit, with fully staged validation inputs; PostgreSQL checks run before push and in PR CI. Required remote enforcement is tracked separately in the checklist. Native launchd scheduling comes in Section 7. Bun is deferred to another project.
+Foundation: Node 24.21.0/TypeScript, Drizzle with pg, npm, Biome, Vitest/MSW, and Husky. Full offline checks run before commit, with fully staged validation inputs; PostgreSQL checks run before push and in PR CI. Required remote enforcement is tracked separately in the checklist. Bun is deferred to another project.
 
 The small [reviewed email task flow](docs/email-tasks.md) now proposes source-based titles and existing Todoist projects from up to ten stored conversations, and creates only explicitly approved candidates. Automatic capture and full reconciliation remain later milestones.
 
 [Five-minute collection tooling](deploy/README.md) installs the existing Gmail sync as a native launchd agent using an isolated compiled release. Use `npm run worker -- --help` for install/start/stop/status commands. Activation requires a merged release; [operational evidence](docs/mail-worker-evidence.md) distinguishes tooling from live scheduled acceptance.
+
+Publish a bounded email-only brief after building:
+
+```sh
+npm run brief:publish -- --max-conversations 10 --days 7 --max-new 10
+# Reuse saved judgments without new Jev calls:
+npm run brief:publish -- --max-new 0
+```
+
+This prints the confirmed Drive link. It does not change tasks, Gmail read state, or scheduled prompts. See [brief publication and recovery](docs/email-brief.md) for configuration, caps and coverage limits.
 
 Start with [development setup](docs/development.md), [independent connections](docs/connections.md), [Gmail preview](docs/gmail-preview.md), [migration operations](docs/migrations.md) and [foundation evidence](docs/foundation-evidence.md).
 

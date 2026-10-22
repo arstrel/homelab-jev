@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T01:53:00Z
+  at: 2026-10-22T04:11:02.803Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -34,7 +34,7 @@ x_jev_sources:
   - path: tests/unit/mail-status.test.ts
     sha256: 94fcb2b4a492fe368522e6ae4a0ce95b28450a9884d28a6dec6b22b54d1a51c3
   - path: scripts/cli-smoke.ts
-    sha256: 0961ba43ea14db0593ce2741344a933ee061884f7b1d17d27b542d30fdcb88d3
+    sha256: 398fff4132993872bd2529d60279609936c8dee41a9f9a18259a30ac27742b51
   - path: tests/setup.ts
     sha256: 848618590ddc9c3f5f53c84b13b41537b040c7f0c62ad0c6ba3cd41caab706b3
   - path: scripts/environment.ts
@@ -100,3 +100,5 @@ Gmail admission tests cross the reader interface using synthetic transport respo
 Reviewed task tests use synthetic source sentences, projects and remote responses. Offline tests cover selected creation and a network error without SDK replay; disposable PostgreSQL verifies persisted uncertainty, repeated/overlapping apply and transactional settlement rollback. Compiled command checks remain network-denied. No real mail transfer or Todoist write is performed.
 
 V2 tests add independent eligibility rejection, contextual review-title validation, old review-file rejection with stable write identity, complete request bounds and message-recency ordering. Synthetic gateway tests validate code behavior under supplied judgments, not semantic model accuracy. Live synthetic/fresh-mail checks remain separate from deterministic gates.
+
+Brief publication tests use synthetic evidence, fixed judgments and MSW Drive responses. Disposable PostgreSQL verifies atomic exact-job completion and classification rollback, selection, reserved identity and prior-publication metadata. No operational credentials, real private content or live Drive publication are used in gates. Cached-only publication is also tested without an inference request.

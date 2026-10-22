@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:37:45.637625Z
+  at: 2026-10-22T04:10:40.938Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -36,6 +36,8 @@ x_jev_sources:
     sha256: 96c85e35b79c141cf7ec8f1c186aad252275d42a4595f4e75ba77b9422630d11
   - path: src/adapters/postgres/mail-sync.ts
     sha256: da9949dd1e99d00b259c27dbfe9b6b1f73522b2a2aa8bb45273d987cd4e24b77
+  - path: src/adapters/postgres/email-brief.ts
+    sha256: 21166686962ee9a41f1c7dcc9e240072887895023ef34e5d5869786a6be615ce
 ---
 
 # PostgreSQL processing ledger
@@ -55,3 +57,5 @@ The separate [manual sync path](mail-sync.md) stores discovery phase/anchor/cont
 [Recovery](mail-recovery.md) adds durable mapped-target snapshots and recovery/gap metadata. Initialization atomically snapshots local mappings, promotes pending retrieval eligibility and advances state; stale revisions roll everything back. Final mapped-page queueing and target cleanup commit together. Recovery never clears immutable evidence, task identity or suppressions.
 
 DB-only [diagnostics](/operations/mail-observation.md) compare managed migration history and required structures without applying migrations, then read one read-only repeatable snapshot. Retrieval gaps and pending/unbound classification jobs are separate aggregates. No new schema or evidence store is added.
+
+Manual [brief publication](planner-handoff.md) reuses existing classifications and write intents without a migration. Its dedicated session lock is distinct from collection. Each saved exact-input judgment and bound-job completion share one transaction; remote calls occur outside transactions. One unique drive intent reserves the destination ID before creation and retains the prior successful generation/time through ambiguous updates. This is application-specific recovery, not a cross-service transaction or general reconciliation engine.
