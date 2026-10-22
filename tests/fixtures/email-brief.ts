@@ -23,6 +23,7 @@ export function todoistInventory(): TodoistBriefInventory {
     tasksComplete: true,
     unknownProjects: 0,
     retroExcluded: 1,
+    retroProjectIds: ["retro"],
   };
 }
 export function briefRecord(): BriefRecord {

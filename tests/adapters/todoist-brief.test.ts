@@ -77,6 +77,7 @@ it("reads paginated projects/tasks, preserves due values and omits Retro, closed
     tasksComplete: true,
     unknownProjects: 1,
     retroExcluded: 2,
+    retroProjectIds: ["renamed-retro"],
   });
   expect(budget.requests).toBe(4);
 });

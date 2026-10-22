@@ -6,6 +6,7 @@ export interface TodoistBriefTask {
   content: string;
   due: { date: string; datetime?: string | null; timezone?: string | null } | null;
   sourceIds: string[];
+  recurring?: boolean;
 }
 export interface TodoistBriefInventory {
   projects: { id: string; name: string }[];
@@ -14,6 +15,7 @@ export interface TodoistBriefInventory {
   tasksComplete: boolean;
   unknownProjects: number;
   retroExcluded: number;
+  retroProjectIds?: string[];
 }
 export type TodoistBriefContext =
   | ({ state: "available"; startedAt: string; readAt: string } & TodoistBriefInventory)
@@ -67,7 +69,7 @@ export function renderTodoistContext(context: TodoistBriefContext) {
     `Read completed: ${context.readAt}. These pages are a live read interval, not an atomic snapshot.`,
     `Returned: ${context.tasks.length} included open tasks in ${context.projects.length} active non-Retro projects; Retro tasks excluded: ${context.retroExcluded}; tasks with unavailable projects omitted: ${context.unknownProjects}.`,
     `Project pages complete: ${context.projectsComplete}; task pages complete: ${context.tasksComplete}. Limits: 500 projects / 200 returned tasks.`,
-    "Todoist is authoritative. Task titles and due values are copied source data; optional activities are not inferred obligations. Retro feedback and Calendar context are not included.",
+    "Todoist is authoritative. Task titles and due values are copied source data; optional activities are not inferred obligations. Retro feedback is shown separately below; Calendar context is not included.",
     "Already-tracked annotations use only explicit supported Gmail links on displayed open tasks. An association does not prove completion; absent links or omitted tasks do not prove that work is untracked.",
     "",
   );

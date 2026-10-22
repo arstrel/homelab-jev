@@ -1,7 +1,8 @@
 ---
 type: Contract
 title: Todoist identity and adapter contract
-description: Current SDK reads and request IDs support a planned authoritative-task synchronization loop.
+description: Current SDK reads and request IDs support a planned
+  authoritative-task synchronization loop.
 tags:
   - providers
   - jev
@@ -9,8 +10,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:37:01.220Z
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-22T13:58:41.717Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
   - id: s1
@@ -34,13 +35,15 @@ x_jev_sources:
   - path: docs/email-tasks.md
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: src/adapters/todoist-brief.ts
-    sha256: f60bf9703a34d30580fce1c1569a705e0cd98b5a3c12d8146666c81f4586412e
+    sha256: 175e6f795d3f62cef8009803e1f974f1bc96655624ce85f0eabf0dba90d45be7
   - path: src/domain/todoist-brief.ts
-    sha256: 4516ae5f375c3c5211c0b57a948391ad34bb40127aaa8744a1f585753fdb12b0
+    sha256: 97e80af779dba85133ded6ac4e92c5b7095da7b32297f6bb1997561e6b660e5e
   - path: docs/email-brief.md
-    sha256: c40b3cd8e7bb03361dfd5c35205ca8d51671d077b86dad2699a715b761725354
+    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
   - path: docs/todoist-brief-evidence.md
     sha256: a5a4c60b65336f51012956db6fa2ec942a1b8467fedd042a4235dd9ee06b643f
+  - path: src/adapters/todoist-retro.ts
+    sha256: e4f8df66104ea1740daa923cf4ca61bc607df35a3de6792518eb5a065a3d1cbe
 ---
 
 # Todoist identity and adapter contract
@@ -52,3 +55,5 @@ Project names and descriptions can change. Runtime discovery constrains reviewed
 The implemented [reviewed task flow](/product/todoist-projects.md) paginates active project discovery and creates explicitly selected tasks using a saved caller `X-Request-Id`, Gmail source link and stable source marker. Transport failures do not trigger SDK replay. Ambiguous creates block subsequent creation and require manual inspection; full task synchronization and automated reconciliation remain planned. Follow [remote write safety](/architecture/remote-write-safety.md), [manual edits](/architecture/manual-edits.md), and [project routing](/product/todoist-projects.md).
 
 The manual [Drive brief](/architecture/planner-handoff.md) adds bounded read-only task context: at most five 100-project pages and two 100-task pages using the existing SDK/transport and shared cancellation budget. It excludes inactive projects, closed/deleted items and Retro, deduplicates IDs and reports omitted unknown-project tasks. API/schema/cursor failures become unavailable context, not an empty successful list. Partial page coverage remains explicit. This read path never creates or completes tasks and never treats a source-link association as completion.
+
+The publisher also resolves one current active Retro identity and reads bounded open/completed tasks plus comments using the existing read-only transport. It selects a seven-day provider-date window and ten newest source records; caps, skipped comment parents, unread attachments, ambiguous identity and read failures are visible. Other/unknown authors cannot support owner accomplishment. Retro stays outside actionable inventory and is never changed. See [Retro](/architecture/retro-feedback.md).

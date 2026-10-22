@@ -4,6 +4,7 @@ import { briefText } from "./brief-text.js";
 import { gmailLink, type TaskConversation } from "./email-task.js";
 import type { MailStatusSnapshot } from "./mail-status.js";
 import { triagePolicy, triageResultSchema } from "./mail-triage.js";
+import type { renderRetroContext } from "./retro.js";
 import { type renderTodoistContext, todoistTaskLink } from "./todoist-brief.js";
 
 export const briefPolicy = `email-brief/v1:${triagePolicy}:owner-rules/v1`;
@@ -99,6 +100,8 @@ export interface BriefDocument {
   status: MailStatusSnapshot;
   entries: BriefEntry[];
   todoist?: ReturnType<typeof renderTodoistContext>;
+  retro?: ReturnType<typeof renderRetroContext>;
+  retroReview?: string;
 }
 export function renderEmailBrief(doc: BriefDocument) {
   const s = doc.status;
@@ -123,7 +126,7 @@ export function renderEmailBrief(doc: BriefDocument) {
     }.`,
     `- Unreplayed history gap: ${s.recovery?.historyGap ? "yes" : "no recorded gap"}.`,
     `- Source observation captured: ${doc.until}. Generation time does not advance source freshness.`,
-    "- Todoist context: see the task section below. Retro feedback and Calendar context: not included. No tasks were created or completed.",
+    "- Todoist and Retro context: see the sections below. Calendar context: not included. No tasks were created or completed.",
     "",
     "Read source conversations before acting. Sections are typed triage over this sample, not a complete obligation inventory.",
     "",
@@ -171,5 +174,7 @@ export function renderEmailBrief(doc: BriefDocument) {
     doc.todoist?.markdown ??
       "## Todoist tasks by project\n\nTodoist context unavailable: not requested.\n",
   );
+  if (doc.retro) lines.push(doc.retro.markdown);
+  if (doc.retroReview) lines.push(doc.retroReview);
   return lines.join("\n");
 }

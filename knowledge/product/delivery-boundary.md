@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:37:01.239Z
+  at: 2026-10-22T13:58:41.721Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -24,7 +24,7 @@ sources:
     title: docs/foundation-evidence.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: a88e88277fc39a82d34caaa525fabd9eb1607d540f84695cfe38afa1e5e85a06
+    sha256: 202b9101e7fbd5caf158d98985648dd13eeb26ca12b821e84c0c6eb13679d73a
   - path: openspec/changes/add-personal-brief-preprocessing/tasks.md
     sha256: 306bfcf09d7a0e01b3cee6969a4606a6045ba4fc89f504d658bc2c75bd7f3a2e
   - path: docs/foundation-evidence.md
@@ -42,15 +42,15 @@ x_jev_sources:
   - path: docs/mail-worker-evidence.md
     sha256: e7c1c9a9dcb0b8d7bc10c289ac6a28960a5255b113343279c620b70943cb76ca
   - path: docs/email-brief.md
-    sha256: c40b3cd8e7bb03361dfd5c35205ca8d51671d077b86dad2699a715b761725354
+    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
   - path: src/application/email-brief.ts
-    sha256: bde5b54bfffba9163f93cf1eefeb41f44bfe4b23f08d589230118c148c6ccb07
+    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
   - path: docs/email-brief-evidence.md
     sha256: bf7d371c90e3028e05719dd8f793e3522b48b5c0bb3d59f10f6b391a6abcce94
   - path: src/adapters/todoist-brief.ts
-    sha256: f60bf9703a34d30580fce1c1569a705e0cd98b5a3c12d8146666c81f4586412e
+    sha256: 175e6f795d3f62cef8009803e1f974f1bc96655624ce85f0eabf0dba90d45be7
   - path: src/domain/todoist-brief.ts
-    sha256: 4516ae5f375c3c5211c0b57a948391ad34bb40127aaa8744a1f585753fdb12b0
+    sha256: 97e80af779dba85133ded6ac4e92c5b7095da7b32297f6bb1997561e6b660e5e
   - path: docs/todoist-brief-evidence.md
     sha256: a5a4c60b65336f51012956db6fa2ec942a1b8467fedd042a4235dd9ee06b643f
 ---
@@ -59,7 +59,7 @@ x_jev_sources:
 
 Section 1 is complete: pinned Node/TypeScript tooling, configuration validation, bounded provider checks, structured logging, Drizzle/pg ledger schema and repositories, migrations, deterministic Git gates, PostgreSQL regression tests and required CI. The CLI can report ledger status and perform explicit connection/database commands. Google authorization tooling supports repeat grants.
 
-The isolated [Gmail evidence slice](/architecture/gmail-evidence.md) implements parent task 2.1 and pure fingerprints: bounded manual retrieval, normalized conversation text and private coverage reporting. Its live sample includes explicit partial bodies. Manual [durable ingestion](/architecture/mail-ingestion.md) preserves complete evidence versions and exact-bound pending jobs. Consult the observation report for operational results. Manual [incremental sync](/architecture/mail-sync.md) resumes bootstrap/history and durable retries with separate evidence freshness. [Bounded expired-cursor recovery](/architecture/mail-recovery.md) implements parent task 2.3, retaining mapped coverage and an explicit history gap. Remaining release behavior includes complete collection acceptance, evaluated classification, Todoist reconciliation, Retro interpretation and full planner handoff. `status` counts ledger rows; it does not prove provider freshness. `cycle` is not a working scheduler or processing loop.
+The isolated [Gmail evidence slice](/architecture/gmail-evidence.md) implements parent task 2.1 and pure fingerprints: bounded manual retrieval, normalized conversation text and private coverage reporting. Its live sample includes explicit partial bodies. Manual [durable ingestion](/architecture/mail-ingestion.md) preserves complete evidence versions and exact-bound pending jobs. Consult the observation report for operational results. Manual [incremental sync](/architecture/mail-sync.md) resumes bootstrap/history and durable retries with separate evidence freshness. [Bounded expired-cursor recovery](/architecture/mail-recovery.md) implements parent task 2.3, retaining mapped coverage and an explicit history gap. Remaining release behavior includes complete collection acceptance, evaluated classification, Todoist reconciliation, full Retro reconciliation and full planner handoff. `status` counts ledger rows; it does not prove provider freshness. `cycle` is not a working scheduler or processing loop.
 
 The initial release includes obligation capture and routing. Inferred resolution remains a review suggestion. Gmail label writes, automatic completion from model inference, Calendar writes and whole-inbox cleanup require later changes.
 
@@ -77,6 +77,8 @@ The owner rejected both proposals and supplied no-task preferences for routine G
 
 The [collector installer](/operations/native-releases.md) now packages reviewed compiled releases and controls a collection-only five-minute launchd job. The merged collector was activated on October 21 Pacific; two automatic invocations and an overlapping manual skip were observed. The repository report `docs/mail-worker-evidence.md` records the timestamped activation, preserved backlog and null evidence freshness. Full processing-cycle and catch-up acceptance remain open. Parent deployment and rollout milestones remain open until their broader verification succeeds.
 
-The manual [Drive brief](/architecture/planner-handoff.md) adds the first downstream email-only artifact: saved/reused typed triage, owner exclusions and one private source-linked Markdown file with honest sample/freshness/gap metadata. No tasks, Gmail changes or scheduled prompt edits follow. Full Todoist/Retro/planner handoff, automatic capture, calibration and scheduled inference remain unfinished.
+The manual [Drive brief](/architecture/planner-handoff.md) initially delivered the first downstream email artifact: saved/reused typed triage, owner exclusions and one private source-linked Markdown file with honest sample/freshness/gap metadata. No tasks, Gmail changes or scheduled prompt edits follow. Full reconciliation/planner handoff, automatic capture, calibration and scheduled inference remain unfinished.
 
-The manual brief now includes current read-only Todoist context by project, existing due values and exact source-link already-tracked annotations. Read/page/display gaps remain visible and Todoist stays authoritative. Retro feedback, semantic task matching, automatic capture and scheduled planner consumption remain unfinished. This partial task-read slice does not complete the full parent reconciliation or handoff milestones.
+The manual brief now includes current read-only Todoist context by project, existing due values and exact source-link already-tracked annotations. Read/page/display gaps remain visible and Todoist stays authoritative. Full semantic reconciliation, automatic capture and scheduled planner consumption remain unfinished; bounded Retro context/review is described below. This partial task-read slice does not complete the full parent reconciliation or handoff milestones.
+
+The manual brief now includes recent Retro task/comment context and optional typed review, sharing its existing artifact and inference allowance. Completed feedback is read, not interpreted as automatic task closure. This narrows the remaining Retro work to full reconciliation, calibrated evaluation and actual scheduled planner use; it does not complete those parent requirements.

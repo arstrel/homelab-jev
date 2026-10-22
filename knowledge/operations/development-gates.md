@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:37:01.241Z
+  at: 2026-10-22T13:58:41.725Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -35,7 +35,7 @@ x_jev_sources:
   - path: docs/development.md
     sha256: 8fb74e564a1b84d188dd79909103426efe1e04d191f0069e86bebcd3b2f522b0
   - path: scripts/cli-smoke.ts
-    sha256: 398fff4132993872bd2529d60279609936c8dee41a9f9a18259a30ac27742b51
+    sha256: fbb9104380a5cc53a3d3d161777f2aa61be56c3db5df28a5f10e039037e9d3f4
   - path: tests/unit/email-tasks.test.ts
     sha256: fbfa59b4d5dcc2e1ef9dd89867e1ea7178990d45fb39957034731a2b92726b0a
   - path: tests/integration/email-tasks.test.ts
@@ -47,7 +47,7 @@ x_jev_sources:
   - path: tests/unit/mail-worker.test.ts
     sha256: 0518c100be01d18dbf638dd3875a0ee6d05f350ef2972648484b7a9bca15f0a5
   - path: tests/unit/email-brief.test.ts
-    sha256: 6311a2698060b312e555250f82fc11937a8e0fa486786ea19768d79ade13220a
+    sha256: 038696ede8b555a1b13afaab0b308997c24bedaac72720afce9f8f8ed0cdd20e
   - path: tests/adapters/drive-brief.test.ts
     sha256: 237288c05bf0e8138f88e7819a0f58fac03ac0945eccfbe8aa0929abe93de7d8
   - path: tests/integration/email-brief.test.ts
@@ -55,7 +55,11 @@ x_jev_sources:
   - path: tests/unit/todoist-brief.test.ts
     sha256: 0fc3a577b5fc653deeb775573efda07b99c72fcf590ab006718fa4cc387b517c
   - path: tests/adapters/todoist-brief.test.ts
-    sha256: af477f385465e1563fc34fd4d0999f1a9562eded2c4d8f1ced5741fcada39094
+    sha256: 5d549dad277889e55be04a102eafb802191512ff3a4c6694f41484f8a59e89be
+  - path: tests/unit/retro-review.test.ts
+    sha256: 4440613731c443784f92ed29d569af7eb74207efbaa83ada6ecb99c55021fadf
+  - path: tests/adapters/todoist-retro.test.ts
+    sha256: cf0159e31f571bf09e0f1af893787af53926f8309e254b74dd73f784ead06225
 ---
 
 # Node development and Git gates
@@ -83,3 +87,5 @@ Native collector deployment tests use real archive extraction and a tiny compile
 The manual [Drive brief](/architecture/planner-handoff.md) adds offline cache/cap/uncertainty/cancellation/template and HTTP ownership/create/update/read-back cases, compiled option/configuration checks and disposable PostgreSQL selection/atomicity/recovery/overlap tests. Gates never publish live Drive files or spend the owner's Jev allowance; live evidence remains a separate explicit operation.
 
 Todoist-aware brief tests use synthetic paginated project/task responses, changed/removed task state, due fields, Retro filtering, exact-link boundaries, display limits and degraded/cancelled publication. Existing compiled CLI and disposable database regression gates remain required. Live task contents and Drive writes stay outside hooks/CI.
+
+Retro gates add synthetic SDK completed-task/comment pagination, source-window/author/cap cases, exact typed choices, conservative completion rules, shared-budget/cancellation and bounded rendering checks. Compiled CLI checks include --retro-review. Live synthetic model evaluation and private source publication remain explicit operations outside hooks/CI.
