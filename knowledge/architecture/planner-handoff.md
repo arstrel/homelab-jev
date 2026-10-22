@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T14:53:12.380Z
+  at: 2026-10-22T16:14:17.896Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -34,7 +34,7 @@ x_jev_sources:
   - path: src/adapters/drive-brief.ts
     sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
   - path: docs/email-brief.md
-    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
+    sha256: 10d6613da7824e6d996e8aee904c0cf66eab2f664e49a7cdb491aea4924a1089
   - path: openspec/changes/add-drive-email-brief/specs/email-brief-publication/spec.md
     sha256: 67e95288abd3f441c34dc5d5b821a0487855018b833d71ec9e25e20b2b482478
   - path: docs/email-brief-evidence.md
@@ -61,11 +61,11 @@ The templated artifact has Action, FYI, Noise, Waiting, Uncertain/review and own
 
 Reserve a Drive-generated file ID durably before creation. Every explicit retry resolves that same ID; expected name/type/app ownership and generation/content read-back are required before success. A failed update preserves prior confirmed publication metadata in storage, although remote bytes may already have changed. Never replace a confirmed missing file or search by name automatically. A separate publisher lock leaves collection independent; no providers run inside SQL transactions. See [ledger](ledger.md) and [Jev boundary](/providers/jev-boundary.md).
 
-## Remaining full planner handoff
+## Scheduled handoff and remaining acceptance
 
-The complete planner handoff still needs automatic publication and verified retrieval by real scheduled tasks with current Todoist state. Preserve Daily Life Plan, Daily Inbox Digest and user retrospectives. Generation time never advances source freshness.
+A separate cached-only LaunchAgent refreshes the existing owned file every five minutes. Both existing daily prompts receive the versioned freshness/fallback handoff after exact-file/live-source probes and private backups. Actual clock-triggered consumer acceptance remains pending until observed. Preserve Daily Life Plan, Daily Inbox Digest and user retrospectives. Generation time never advances source freshness.
 
-A configurable 15-minute stale-input cutoff remains a proposed default for the full planner contract. Actual scheduled retrieval must select the latest generation and current Todoist inventory, disclose stale/unavailable input and follow an explicit fallback. Calendar blocks help choose actions; they do not authorize writes or prove completion. Verify retrieval before changing prompts. See [personal brief loop](/product/personal-brief-loop.md), [uncertainty](uncertainty.md), and [Retro](retro-feedback.md).
+The installed prompt appendix uses a 15-minute publication cutoff and checks source freshness independently. Actual scheduled retrieval must select the latest generation and current Todoist inventory, disclose stale/unavailable input and follow an explicit fallback. Calendar blocks help choose actions; they do not authorize writes or prove completion. Verify retrieval before changing prompts. See [personal brief loop](/product/personal-brief-loop.md), [uncertainty](uncertainty.md), and [Retro](retro-feedback.md).
 
 The authorized live sample published ten conversations (six Jev judgments, four owner exclusions), then replayed all ten cached decisions with zero new requests against the same private file. Independent read-back checked identity, generation and private sharing. The source snapshot still had retrieval gaps and null complete freshness; this proves publication/reuse only, not planner integration or classifier quality.
 
@@ -73,6 +73,8 @@ The same manual brief now fetches current Todoist projects and open tasks on eve
 
 ## Retro in the same manual artifact
 
-Recent read-only Retro feedback and optional typed review now appear in the same owned Drive file. A fixed seven-day source window includes completed tasks and bounded comments; timestamps describe provider records, not inferred activity dates. Source/candidate/display gaps remain explicit. --retro-review shares email's new-call allowance and publishes ephemeral finite task-kind/candidate/relation/excerpt choices, subject to conservative review rules. No task is completed or edited. Context-only replay refreshes sources with no new Retro inference and removes prior interpretations. Automatic publication and actual scheduled planner retrieval remain unimplemented. See [Retro](retro-feedback.md).
+Recent read-only Retro feedback and optional typed review now appear in the same owned Drive file. A fixed seven-day source window includes completed tasks and bounded comments; timestamps describe provider records, not inferred activity dates. Source/candidate/display gaps remain explicit. --retro-review shares email's new-call allowance and publishes ephemeral finite task-kind/candidate/relation/excerpt choices, subject to conservative review rules. No task is completed or edited. Context-only replay refreshes sources with no new Retro inference and removes prior interpretations. Cached-only automatic publication is active; actual timer-triggered planner retrieval remains a separate acceptance check. See [Retro](retro-feedback.md).
 
 Approved live Retro verification confirmed the same private owned file, generation/content read-back and owner-only sharing. Ten records were reviewed against 43 current task titles; all remained uncertain and source coverage stayed explicitly incomplete. A zero-call source refresh preceded the final Retro-focused artifact, whose labelled verification scope deliberately omits new email selection/inference. This is publication evidence, not scheduled planner or semantic matching acceptance. See docs/retro-brief-evidence.md.
+
+The October 22 scheduled-handoff rollout activates cached-only five-minute publication and appends the same freshness/source-authority contract to the existing prompts after private backups. The email scheduler test retained actual generation provenance. The first planner test did not; a repeat with clarified reporting returned the current publisher generation, while retaining a null exact fetch time and direct-source fallback. The existing planner could not save its updated daily artifact through the connected Drive operation and reported that gap. Actual clock-triggered daily acceptance remains pending. The repository report docs/scheduled-brief-evidence.md distinguishes these surfaces.
