@@ -35,7 +35,7 @@ x_jev_sources:
   - path: scripts/mail-worker-cli.ts
     sha256: efd8f407d3f8c656d9e2f22ac1dec4a9fd2b8dc67ab806e5115bec3c62454b75
   - path: docs/mail-worker-evidence.md
-    sha256: 1875a31d839675331c1ccc4b7fcfba0926e5c70bab5e94a8ce4173eb1d369028
+    sha256: 734183d64bea15535b162e5d4f01f25c972e46c6eaae49b36a8f25b7cff5813b
 ---
 
 # Native Node releases and scheduling

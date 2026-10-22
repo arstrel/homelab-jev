@@ -40,7 +40,7 @@ x_jev_sources:
   - path: deploy/README.md
     sha256: 3761f092a650433670f0cf0edb6afc364e1c9af753d4e3a337a750465366c6b5
   - path: docs/mail-worker-evidence.md
-    sha256: 1875a31d839675331c1ccc4b7fcfba0926e5c70bab5e94a8ce4173eb1d369028
+    sha256: 734183d64bea15535b162e5d4f01f25c972e46c6eaae49b36a8f25b7cff5813b
 ---
 
 # Implemented foundation and planned release
