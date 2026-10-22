@@ -4,13 +4,20 @@ import { join } from "node:path";
 import { afterEach, expect, it, vi } from "vitest";
 import {
   applyEmailTasks,
+  type EmailTaskRemote,
   type EmailTaskWriter,
   previewEmailTasks,
   type TaskJudge,
 } from "../../src/application/email-tasks.js";
 import { MailBudget } from "../../src/application/mail-budget.js";
 import { emailTaskOptions, runEmailTasks } from "../../src/cli-email-tasks.js";
-import { actionSentences } from "../../src/domain/email-task.js";
+import {
+  actionSentences,
+  emailTaskKey,
+  taskExclusion,
+  taskReviewSchema,
+  taskTitles,
+} from "../../src/domain/email-task.js";
 import {
   taskConversation,
   taskProjects,
@@ -111,6 +118,137 @@ it("rejects invented choices and oversized input without a proposal or partial t
       ?.status,
   ).toBe("not-proposed");
   expect(judge).not.toHaveBeenCalled();
+});
+it.each([
+  ["none", "Newsletter", "View this post on the web. Optional reading is available."],
+  ["none", "Optional reward", "Trade to claim your bonus. This is an optional promotion."],
+  ["conditional", "Account linked", "If you do not recognize this activity, contact support."],
+  ["resolved", "Appointment", "Thank you, this is handled. No reply needed."],
+  ["unknown", "Unclear request", "Please see the attachment for details."],
+])(
+  "blocks %s eligibility even when another answer selects a sentence",
+  async (eligibility, subject, text) => {
+    const conversation = taskConversation();
+    const message = conversation.evidence.messages[0];
+    if (!message) throw new Error("fixture");
+    message.subject = subject;
+    message.body = { status: "complete", text };
+    const result = await previewEmailTasks(
+      [conversation],
+      taskProjects,
+      async () => taskResponse("a0", "p1", eligibility),
+      budget(),
+      new Date(),
+    );
+    expect(result.review.candidates).toEqual([]);
+    expect(result.outcomes).toEqual([{ sample: 1, status: "no-clear-action" }]);
+  },
+);
+it("uses the originating subject for an approved generic review link and revalidates that title on apply", async () => {
+  const conversation = taskConversation();
+  const message = conversation.evidence.messages[0];
+  if (!message) throw new Error("fixture");
+  message.subject = "New service letter";
+  message.body = { status: "complete", text: "Click or tap below to review." };
+  const { review } = await previewEmailTasks(
+    [conversation],
+    taskProjects,
+    async () => taskResponse(),
+    budget(),
+    new Date(),
+  );
+  expect(review.candidates[0]?.title).toBe("Review: New service letter");
+  const db = writer();
+  db.current = async () => conversation;
+  const create = vi.fn<EmailTaskRemote["create"]>(async () => "review-task");
+  expect(
+    await applyEmailTasks(
+      review,
+      [1],
+      taskProjects,
+      db,
+      { projects: async () => taskProjects, create },
+      budget(),
+    ),
+  ).toMatchObject([{ status: "created" }]);
+  expect(create.mock.calls[0]?.[0]).toMatchObject({ title: "Review: New service letter" });
+  message.subject = "Settings page improvements (PR #42)";
+  message.body = {
+    status: "complete",
+    text: "You are receiving this because your review was requested.",
+  };
+  expect(taskTitles(conversation)[0]?.title).toBe("Review: Settings page improvements (PR #42)");
+  message.subject = "";
+  expect(taskTitles(conversation)).toEqual([]);
+  message.body = { status: "complete", text: "Click here to continue." };
+  expect(taskTitles(conversation)).toEqual([]);
+});
+it("rejects old review policy files while preserving the v1 remote-write identity", () => {
+  expect(
+    taskReviewSchema.safeParse({ ...taskReview(), version: "reviewed-email-tasks/v1" }).success,
+  ).toBe(false);
+  expect(emailTaskKey("t-boiler")).toMatch(/^reviewed-email-tasks\/v1:[a-f0-9]{64}$/);
+});
+it.each([
+  [
+    "notifications@github.com",
+    "[example/repo] Improve settings (PR #42)",
+    "ignored-routine-github",
+  ],
+  [
+    "CloudPlatform-noreply@google.com",
+    "[Legal Notice] Updates to Google Cloud Terms of Service",
+    "ignored-google-cloud-terms",
+  ],
+])(
+  "applies the owner's %s exclusion before Jev and blocks old proposals on apply",
+  async (sender, subject, reason) => {
+    const conversation = taskConversation();
+    const message = conversation.evidence.messages[0];
+    if (!message) throw new Error("fixture");
+    message.from = [{ address: sender }];
+    message.subject = subject;
+    const judge = vi.fn();
+    const result = await previewEmailTasks(
+      [conversation],
+      taskProjects,
+      judge,
+      budget(),
+      new Date(),
+    );
+    expect(result.review.candidates).toEqual([]);
+    expect(result.outcomes).toEqual([{ sample: 1, status: reason }]);
+    expect(judge).not.toHaveBeenCalled();
+    const db = writer();
+    db.current = async () => conversation;
+    const create = vi.fn();
+    expect(
+      await applyEmailTasks(
+        taskReview(),
+        [1],
+        taskProjects,
+        db,
+        { projects: async () => taskProjects, create },
+        budget(),
+      ),
+    ).toEqual([{ candidate: 1, status: "excluded-by-policy" }]);
+    expect(db.reserve).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+  },
+);
+it("keeps GitHub security/CI notices and direct human requests outside routine-notification exclusions", () => {
+  const conversation = taskConversation();
+  const message = conversation.evidence.messages[0];
+  if (!message) throw new Error("fixture");
+  message.from = [{ address: "notifications@github.com" }];
+  message.subject = "PR run failed: build";
+  expect(taskExclusion(conversation)).toBeUndefined();
+  message.from = [{ address: "noreply@github.com" }];
+  message.subject = "Security alert";
+  expect(taskExclusion(conversation)).toBeUndefined();
+  message.from = [{ address: "person@example.com" }];
+  message.subject = "Please review (PR #42)";
+  expect(taskExclusion(conversation)).toBeUndefined();
 });
 it("creates only selected proposals and settles each confirmed response", async () => {
   const review = taskReview(["first", "second"]);

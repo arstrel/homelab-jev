@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T14:41:33Z
+  at: 2026-10-22T01:53:00Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -34,7 +34,9 @@ x_jev_sources:
   - path: docs/mail-triage.md
     sha256: 2a9a384419b55a6f6c1c71511759ea7e1ef960e2ef01cf57ca025155ca396057
   - path: docs/email-tasks.md
-    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
+    sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
+  - path: docs/email-task-pilot.md
+    sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
 ---
 
 # Implemented foundation and planned release
@@ -52,3 +54,7 @@ Follow [development gates](/operations/development-gates.md) and [release operat
 The [reviewed email task flow](/product/todoist-projects.md) now samples up to ten stored conversations and creates only explicitly approved source-sentence/project proposals. It reuses existing intents/links for duplicate and uncertain-response protection. This manual slice does not complete parent Sections 3/4: matching, automatic capture, evaluation, full reconciliation and live capture evidence remain pending.
 
 The authorized manual collection report now records applied migrations, discovery catch-up and 516 complete versions/jobs, with 409 retrievals still pending after the latest paced session reached its 20-run cap. Its 400 retrieval attempts reported no new provider error or throttling; partial coverage and older queued failures remain. Evidence freshness is still null. Parent 2.4 remains incomplete. A read-only [Jev triage preview](/architecture/classification-policy.md) implements kind/attention/lifecycle judgments on exact complete evidence; general matching, automatic routing, persistence/corrections, calibrated capture and scheduled rollout remain planned. Neither preview command creates tasks or consumes jobs.
+
+On October 21 (Pacific), the approved fresh pilot read ten complete recent conversations and added ten exact-bound jobs, bringing the diagnostic count to 526. The improved preview returned two review proposals and eight no-clear-action results without task creation or intent changes. The 409 retrieval backlog and null evidence freshness remain. This is bounded pilot evidence; usefulness still needs human confirmation, and full catch-up, capture validation and deployment stay open.
+
+The owner rejected both proposals and supplied no-task preferences for routine GitHub PR mail and Google Cloud terms updates; the fix enforces these exclusions. A separately authorized connected-Gmail cleanup marked 37 routine PR messages read and left two CI failures unread. Continuous worker read-state changes are not implemented under the current read-only grant. No useful live Todoist capture has been accepted yet.

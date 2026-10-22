@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T14:41:33Z
+  at: 2026-10-22T01:53:00Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -36,11 +36,13 @@ x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
     sha256: d6bef852b7c90292aacb8707eb6b911c1203f710a127aae5d5fbe2c356532373
   - path: src/adapters/postgres/email-tasks.ts
-    sha256: 02feb44d46680587b9851e5c1035728237dc7b05ace21b9b5477beccbc4ca450
+    sha256: db821ef4f6d482c7b593f42f32836c7a14da54be2e404f54065d01cc908b6e76
   - path: src/application/email-tasks.ts
-    sha256: fdf398f242f481cb2a40d124b72705d60d83c6f07150c1b9e70209fddbda57e7
+    sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
   - path: docs/email-tasks.md
-    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
+    sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
+  - path: src/domain/email-task.ts
+    sha256: 0d3f27d05e8b330b028e79fa526f20b9c5b1370df2098cc8478b4b7ad95bcdc2
 ---
 
 # Replay-safe remote writes
@@ -54,3 +56,5 @@ The broader planned processor should derive an immutable obligation key from sou
 One thread may contain several obligations; one obligation may span threads. Match known mappings first, then deterministic references, then bounded model judgments. Distinct actions must not collapse merely because they share a conversation.
 
 Completion/deletion suppressions prevent replay from resurrecting user-resolved work. See [manual edits](manual-edits.md), [uncertainty](uncertainty.md), and [ledger](ledger.md).
+
+Review policy v2 rejects old v1 review files, while source-scoped creation identities deliberately retain the v1 key. A new prompt or title policy must not bypass an existing ambiguous intent or task link. The October 21 fresh preview made no task-intent/link changes; no live capture or automated reconciliation is established by that result.

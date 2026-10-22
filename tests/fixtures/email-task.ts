@@ -14,10 +14,16 @@ export function taskConversation(id = "t-boiler"): TaskConversation {
   read.evidence.messages.splice(1);
   return { evidence: read.evidence, directions: ["incoming"] };
 }
-export function taskResponse(action = "a0", project = "p1") {
+export function taskResponse(action = "a0", project = "p1", eligibility = "required") {
   return {
     model: "jev-1.13.0",
     answers: {
+      eligibility: {
+        type: "choice",
+        choice: eligibility,
+        confidence: 1,
+        probabilities: { [eligibility]: 1 },
+      },
       action: { type: "choice", choice: action, confidence: 1, probabilities: { [action]: 1 } },
       project: { type: "choice", choice: project, confidence: 1, probabilities: { [project]: 1 } },
     },

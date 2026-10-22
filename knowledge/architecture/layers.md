@@ -45,7 +45,7 @@ x_jev_sources:
   - path: src/adapters/postgres/mail-triage.ts
     sha256: b05c6fc375b98f2b81964291761c7c2733565ebc2e0db59f77336389ffb2bf7f
   - path: src/application/email-tasks.ts
-    sha256: fdf398f242f481cb2a40d124b72705d60d83c6f07150c1b9e70209fddbda57e7
+    sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
   - path: src/cli-email-tasks.ts
     sha256: 03d03bcd3477bab151136626c8801c25267d15727583299a547fe616242f33e1
 ---
