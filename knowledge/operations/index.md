@@ -5,7 +5,7 @@
 - [Explicit database migrations](database-migrations.md): Apply reviewed migrations only to the worker-owned schemas with rollback preparation. (implemented).
 - [Manual mail observation](mail-observation.md): Read stored collection diagnostics and record bounded live evidence separately from synthetic coverage. (mixed).
 - [Configuration and private-data boundaries](secret-handling.md): Keep credentials and private message data outside logs, tests and knowledge documents. (implemented).
-- [Native Node releases and scheduling](native-releases.md): Deploy reviewed compiled releases with explicit migrations and bounded launchd cycles. (planned).
+- [Native Node releases and scheduling](native-releases.md): Install/control isolated collection releases; full processing-cycle rollout remains planned. (mixed).
 - [Classification quality and rollout evidence](classification-evaluation.md): Select model and thresholds from representative evidence before automatic task capture. (planned).
 - [OKF selection and maintenance policy](okf-maintenance.md): Use index-first discovery and review provenance without inventing trust or auto-refreshing dates. (implemented).
 

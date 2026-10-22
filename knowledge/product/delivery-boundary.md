@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T01:53:00Z
+  at: 2026-10-22T03:19:37.076Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -37,6 +37,10 @@ x_jev_sources:
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: docs/email-task-pilot.md
     sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
+  - path: deploy/README.md
+    sha256: 3761f092a650433670f0cf0edb6afc364e1c9af753d4e3a337a750465366c6b5
+  - path: docs/mail-worker-evidence.md
+    sha256: 734183d64bea15535b162e5d4f01f25c972e46c6eaae49b36a8f25b7cff5813b
 ---
 
 # Implemented foundation and planned release
@@ -58,3 +62,5 @@ The authorized manual collection report now records applied migrations, discover
 On October 21 (Pacific), the approved fresh pilot read ten complete recent conversations and added ten exact-bound jobs, bringing the diagnostic count to 526. The improved preview returned two review proposals and eight no-clear-action results without task creation or intent changes. The 409 retrieval backlog and null evidence freshness remain. This is bounded pilot evidence; usefulness still needs human confirmation, and full catch-up, capture validation and deployment stay open.
 
 The owner rejected both proposals and supplied no-task preferences for routine GitHub PR mail and Google Cloud terms updates; the fix enforces these exclusions. A separately authorized connected-Gmail cleanup marked 37 routine PR messages read and left two CI failures unread. Continuous worker read-state changes are not implemented under the current read-only grant. No useful live Todoist capture has been accepted yet.
+
+The [collector installer](/operations/native-releases.md) now packages reviewed compiled releases and controls a collection-only five-minute launchd job. This provides deployment tooling, not evidence of active scheduling or the full processing cycle. The repository report `docs/mail-worker-evidence.md` records manual observations and pending recurring acceptance. Parent deployment and rollout milestones remain open until their broader verification succeeds.

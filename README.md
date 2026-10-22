@@ -4,6 +4,7 @@ Personal email preprocessing with TypeSafe AI's Jev: synchronize Gmail every fiv
 
 ## Planning documents
 
+- [Interactive flow and implementation status](https://www.tldraw.com/f/SdlFMrvVCtATHw1TUCpW3): the tldraw board covers the end-to-end flow, Gmail collection and ledger, reviewed task capture, and planned Drive/planner handoff. Boxes distinguish implemented capabilities (green), pending validation (orange), planned work (grey), existing systems (blue), and human decisions (purple). The diagram reflects merged PR #17; implemented manual commands do not imply unattended operation.
 - [Product requirements](docs/product-requirements.md): agreed outcomes, scope, system ownership, Todoist destinations, and acceptance criteria.
 - [OpenSpec proposal](openspec/changes/add-personal-brief-preprocessing/proposal.md): the initial release change.
 - [Architecture and design](openspec/changes/add-personal-brief-preprocessing/design.md): approved TypeScript structure and packages, runtime commands, testing/Git gates, synchronization, reconciliation, and deployment.
@@ -15,6 +16,8 @@ Section 1 foundation, [Gmail evidence retrieval](docs/gmail-preview.md), [manual
 Foundation: Node 24.21.0/TypeScript, Drizzle with pg, npm, Biome, Vitest/MSW, and Husky. Full offline checks run before commit, with fully staged validation inputs; PostgreSQL checks run before push and in PR CI. Required remote enforcement is tracked separately in the checklist. Native launchd scheduling comes in Section 7. Bun is deferred to another project.
 
 The small [reviewed email task flow](docs/email-tasks.md) now proposes source-based titles and existing Todoist projects from up to ten stored conversations, and creates only explicitly approved candidates. Automatic capture and full reconciliation remain later milestones.
+
+[Five-minute collection tooling](deploy/README.md) installs the existing Gmail sync as a native launchd agent using an isolated compiled release. Use `npm run worker -- --help` for install/start/stop/status commands. Activation requires a merged release; [operational evidence](docs/mail-worker-evidence.md) distinguishes tooling from live scheduled acceptance.
 
 Start with [development setup](docs/development.md), [independent connections](docs/connections.md), [Gmail preview](docs/gmail-preview.md), [migration operations](docs/migrations.md) and [foundation evidence](docs/foundation-evidence.md).
 
