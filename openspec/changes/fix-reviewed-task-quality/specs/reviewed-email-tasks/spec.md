@@ -6,6 +6,13 @@ Make reviewed email task proposals represent concrete outstanding work with usef
 
 ## ADDED Requirements
 
+### Requirement: Owner task exclusions
+Routine PR notifications from notifications@github.com and routine Google Cloud terms-update notices from CloudPlatform-noreply@google.com SHALL be excluded before Jev requests and during apply. These exclusions SHALL NOT treat GitHub security/billing or CI-failure messages as routine PR notifications. Gmail read-state changes are a separately authorized operation.
+
+#### Scenario: Review requested in GitHub
+- **WHEN** all incoming messages in a conversation are standard GitHub PR notifications
+- **THEN** no Jev request or Todoist task is made, even if an earlier preview selected an action
+
 ### Requirement: Independent obligation eligibility
 Preview SHALL require an explicit outstanding-action judgment in addition to a selected sentence. FYI, promotions, optional reading, unconfirmed conditional notices and resolved/waiting work SHALL NOT produce proposals when classified as such. Semantic output SHALL NOT authorize creation.
 

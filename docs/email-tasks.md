@@ -38,6 +38,8 @@ Apply does not call Jev or need its key. It rechecks stored evidence, recomputed
 
 ## Deliberate limits
 
+- Owner rules run before Jev and again during apply: routine PR notifications from `notifications@github.com` and routine Google Cloud terms-update notices from `CloudPlatform-noreply@google.com` do not become tasks. The GitHub rule requires a standard `(PR #number)` subject; security/billing and CI-failure notices are outside that rule. Mixed conversations with direct human correspondence are not blanket-excluded. These are this personal project's explicit preferences, not general claims that such mail is unimportant.
+
 - One task per conversation. Existing task links suppress later creates even if the remote task was completed or deleted. Other clients' tasks and cross-thread duplicates are not matched.
 - Jev separately judges whether a concrete obligation exists and selects a supporting source sentence/project in one request. Only `required` eligibility can yield a proposal; FYI/newsletters/promotions, unconfirmed conditional notices, resolved/waiting and unknown judgments cannot. An action-like sentence alone is insufficient. This is still an uncalibrated judgment, not a classifier-quality guarantee.
 - Jev chooses from at most twelve normalized source sentences, each 8–180 characters, rather than inventing task prose. Sent messages and quoted `>` lines cannot supply titles; all replies remain available as context. A generic review link or review-request notification becomes `Review: <originating subject>` (at most 180 characters). Other generic click prompts without supported review meaning/subject are omitted. Human review remains necessary.
@@ -52,3 +54,5 @@ Exit 0 means the bounded preview succeeded (possibly with no proposals), or sele
 Synthetic application/MSW and disposable PostgreSQL tests cover preview without writes, selected task creation, destination/evidence checks, request IDs, network uncertainty, atomic settlement and replay/overlap protection. They do not establish live routing quality or a successful real capture.
 
 The [October 21 pilot](email-task-pilot.md) records the approved fresh preview and its limits.
+
+The worker's current Google grant is read-only. An authorized connected-Gmail cleanup marked routine PR mail read during the pilot; this command does not automate future read-state changes. A future worker implementation needs an explicitly configured write-capable grant and its own bounded rule, or a native Gmail filter.

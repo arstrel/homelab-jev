@@ -32,7 +32,7 @@ x_jev_sources:
   - path: src/adapters/todoist-email-tasks.ts
     sha256: 991923e7038efc1870c2e9c795e9639d4366619dccd4fe00fb59e80ea1d1d212
   - path: docs/email-tasks.md
-    sha256: 17f197c991ba5101312db27c84e2e145c4c3d181e319a73f764ae67dbf075a69
+    sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
 ---
 
 # Todoist identity and adapter contract

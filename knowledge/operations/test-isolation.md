@@ -68,7 +68,7 @@ x_jev_sources:
   - path: tests/unit/mail-ingestion.test.ts
     sha256: cff8f13effa4351a59b05e923cc76f01e4232fcf18db0475cbb58cb9bcf4c5d9
   - path: tests/unit/email-tasks.test.ts
-    sha256: 3dffbee7e65fc986c06b83fb8a930eee44656b6ed6cc906e66f70033689c9b73
+    sha256: fbfa59b4d5dcc2e1ef9dd89867e1ea7178990d45fb39957034731a2b92726b0a
   - path: tests/adapters/email-tasks.test.ts
     sha256: 442ded653b33a0e662b371599feaff3869a3fdfabb2f6e1d7cf6cc5210581fdb
   - path: tests/integration/email-tasks.test.ts

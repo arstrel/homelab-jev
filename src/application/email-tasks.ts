@@ -7,6 +7,7 @@ import {
   type TaskQuestion,
   type TaskReview,
   taskAnswer,
+  taskExclusion,
   taskQuestion,
   taskTitles,
 } from "../domain/email-task.js";
@@ -63,6 +64,11 @@ export async function previewEmailTasks(
   for (const [i, conversation] of conversations.entries()) {
     try {
       budget.assertActive();
+      const exclusion = taskExclusion(conversation);
+      if (exclusion) {
+        outcomes.push({ sample: i + 1, status: exclusion });
+        continue;
+      }
       const question = taskQuestion(conversation, allowed);
       if (!question.candidates.length) {
         outcomes.push({ sample: i + 1, status: "no-short-source-sentence" });
@@ -102,6 +108,10 @@ export async function applyEmailTasks(
     try {
       budget.assertActive();
       const current = await writer.current(candidate.sourceId);
+      if (current && taskExclusion(current)) {
+        results.push({ candidate: index, status: "excluded-by-policy" });
+        continue;
+      }
       const project = allowed.find(
         (p) => p.id === candidate.projectId && p.name === candidate.projectName,
       );

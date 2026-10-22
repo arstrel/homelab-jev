@@ -15,6 +15,7 @@ Improve the existing manual preview without adding a model, dependency, migratio
 - A small deterministic source-title function replaces generic review-link text with `Review: <originating subject>`. Other generic clicks without supported review meaning/subject are omitted. Apply recomputes the same allowed titles against exact current evidence.
 - Review policy becomes v2 and rejects v1 review files. The v1 source-scoped creation key remains unchanged so old ambiguous intents cannot be bypassed by a policy upgrade.
 - Order stored samples by newest message timestamp, independent of retrieval order. No schema change. Fresh live checking uses a bounded recent Gmail read, stores only complete evidence with the existing ingestion adapter and previews only that selected sample.
+- Explicit owner exclusions use sender and subject metadata before Jev and again on apply. A conversation is excluded only when every non-sent message matches the same narrow routine category; mixed direct correspondence remains eligible for judgment. A connected-Gmail one-off read-state cleanup uses the owner's authorization; the read-only worker does not silently acquire a write capability.
 
 ## Risks / Trade-offs
 

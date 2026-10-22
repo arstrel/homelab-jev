@@ -31,7 +31,7 @@ x_jev_sources:
   - path: src/adapters/jev-email-tasks.ts
     sha256: becaf504e775f5fc0e98cbb711246db2ac6e2346e2ac682be60855821dfe5ee4
   - path: docs/email-task-pilot.md
-    sha256: 85b61890174102ebcce5d61a51a6a542cd1961237288daa1a907ca2f380b6d2b
+    sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
 ---
 
 # Jev adapter and judgment boundary

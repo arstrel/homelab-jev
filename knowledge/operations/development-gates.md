@@ -37,7 +37,7 @@ x_jev_sources:
   - path: scripts/cli-smoke.ts
     sha256: 0961ba43ea14db0593ce2741344a933ee061884f7b1d17d27b542d30fdcb88d3
   - path: tests/unit/email-tasks.test.ts
-    sha256: 3dffbee7e65fc986c06b83fb8a930eee44656b6ed6cc906e66f70033689c9b73
+    sha256: fbfa59b4d5dcc2e1ef9dd89867e1ea7178990d45fb39957034731a2b92726b0a
   - path: tests/integration/email-tasks.test.ts
     sha256: 17311efcd698ac34909bc1128fb1f5ec26974f525c8e6a2617537fa6748dc54a
 ---

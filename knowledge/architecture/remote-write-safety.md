@@ -38,11 +38,11 @@ x_jev_sources:
   - path: src/adapters/postgres/email-tasks.ts
     sha256: db821ef4f6d482c7b593f42f32836c7a14da54be2e404f54065d01cc908b6e76
   - path: src/application/email-tasks.ts
-    sha256: 62c76aa18efc14e013816b152a1189716d3b085216ac063173565c8117d20962
+    sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
   - path: docs/email-tasks.md
-    sha256: 17f197c991ba5101312db27c84e2e145c4c3d181e319a73f764ae67dbf075a69
+    sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: src/domain/email-task.ts
-    sha256: ae0b058b9b3670e6140193059a306bd7e5cdf923649b70f5df4db5fdf1d6ec6c
+    sha256: 0d3f27d05e8b330b028e79fa526f20b9c5b1370df2098cc8478b4b7ad95bcdc2
 ---
 
 # Replay-safe remote writes

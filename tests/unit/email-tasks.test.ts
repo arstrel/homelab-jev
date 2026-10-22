@@ -14,6 +14,7 @@ import { emailTaskOptions, runEmailTasks } from "../../src/cli-email-tasks.js";
 import {
   actionSentences,
   emailTaskKey,
+  taskExclusion,
   taskReviewSchema,
   taskTitles,
 } from "../../src/domain/email-task.js";
@@ -187,6 +188,67 @@ it("rejects old review policy files while preserving the v1 remote-write identit
     taskReviewSchema.safeParse({ ...taskReview(), version: "reviewed-email-tasks/v1" }).success,
   ).toBe(false);
   expect(emailTaskKey("t-boiler")).toMatch(/^reviewed-email-tasks\/v1:[a-f0-9]{64}$/);
+});
+it.each([
+  [
+    "notifications@github.com",
+    "[example/repo] Improve settings (PR #42)",
+    "ignored-routine-github",
+  ],
+  [
+    "CloudPlatform-noreply@google.com",
+    "[Legal Notice] Updates to Google Cloud Terms of Service",
+    "ignored-google-cloud-terms",
+  ],
+])(
+  "applies the owner's %s exclusion before Jev and blocks old proposals on apply",
+  async (sender, subject, reason) => {
+    const conversation = taskConversation();
+    const message = conversation.evidence.messages[0];
+    if (!message) throw new Error("fixture");
+    message.from = [{ address: sender }];
+    message.subject = subject;
+    const judge = vi.fn();
+    const result = await previewEmailTasks(
+      [conversation],
+      taskProjects,
+      judge,
+      budget(),
+      new Date(),
+    );
+    expect(result.review.candidates).toEqual([]);
+    expect(result.outcomes).toEqual([{ sample: 1, status: reason }]);
+    expect(judge).not.toHaveBeenCalled();
+    const db = writer();
+    db.current = async () => conversation;
+    const create = vi.fn();
+    expect(
+      await applyEmailTasks(
+        taskReview(),
+        [1],
+        taskProjects,
+        db,
+        { projects: async () => taskProjects, create },
+        budget(),
+      ),
+    ).toEqual([{ candidate: 1, status: "excluded-by-policy" }]);
+    expect(db.reserve).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+  },
+);
+it("keeps GitHub security/CI notices and direct human requests outside routine-notification exclusions", () => {
+  const conversation = taskConversation();
+  const message = conversation.evidence.messages[0];
+  if (!message) throw new Error("fixture");
+  message.from = [{ address: "notifications@github.com" }];
+  message.subject = "PR run failed: build";
+  expect(taskExclusion(conversation)).toBeUndefined();
+  message.from = [{ address: "noreply@github.com" }];
+  message.subject = "Security alert";
+  expect(taskExclusion(conversation)).toBeUndefined();
+  message.from = [{ address: "person@example.com" }];
+  message.subject = "Please review (PR #42)";
+  expect(taskExclusion(conversation)).toBeUndefined();
 });
 it("creates only selected proposals and settles each confirmed response", async () => {
   const review = taskReview(["first", "second"]);

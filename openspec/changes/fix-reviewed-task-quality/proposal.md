@@ -10,6 +10,7 @@ The first live preview confused promotional/conditional calls to action with obl
 - Give choices direct quoted source/project descriptions instead of opaque reference-only criteria.
 - Use the originating subject to turn generic review links into meaningful source-based titles; reject other context-free link prompts.
 - Sample stored conversations by message recency rather than retrieval time.
+- Apply the owner's subsequent feedback: routine GitHub PR notifications and Google Cloud terms updates are no-task categories. Perform the explicitly authorized current GitHub read-state cleanup via the connected app; worker read-state automation remains separate.
 - **BREAKING**: require new v2 review files; preserve the existing stable creation identity and task links.
 
 ## Capabilities

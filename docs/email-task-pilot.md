@@ -26,10 +26,16 @@ The user explicitly approved up to ten recent conversations sent to hosted Jev, 
 | Database row counts during Jev preview | Unchanged after the deliberate evidence-ingestion step |
 | Review artifact permissions | Owner-only; the locally formatted replacement title requires no further model request |
 
-Source inspection identified one selected review-notification footer that needed the same subject-backed title treatment as generic review links. The final formatter and regression test cover that case; the saved proposal was reformatted locally without another private-mail transfer. Both proposals remain unapproved. This report does not establish that either is still outstanding or prove classification quality across all ten conversations.
+Source inspection identified one selected review-notification footer that needed the same subject-backed title treatment as generic review links. The final formatter and regression test cover that case; the saved proposal was reformatted locally without another private-mail transfer. The owner then rejected both proposals. This report does not prove classification quality across all ten conversations.
+
+## Owner feedback and action
+
+The owner handles ordinary GitHub work continuously in GitHub and wants routine PR mail marked read instead of copied to Todoist. Google Cloud terms-update correspondence is also unwanted task inventory. These explicit preferences now run as deterministic exclusions before preview and during apply; even the previously saved proposals cannot create tasks under the updated policy. Sender/subject boundaries preserve GitHub security/billing, CI alerts and direct human requests as separate cases. No further private-mail transfer was needed to apply this feedback.
+
+Using the connected Gmail app under the owner's explicit instruction, 37 standard PR-notification messages had only their UNREAD label removed. A follow-up search found zero remaining unread standard PR messages and two unrelated CI-failure notifications, which stayed unread. This was a one-off authorized Gmail change, not a worker capability: the worker's existing OAuth grant remains read-only and continuous mark-as-read automation is not enabled. No Todoist task was created.
 
 ## Remaining work
 
 Read-only diagnostics after the run showed 526 pending exact-bound classification jobs, 409 pending retrievals and null evidence freshness. Discovery was last checked October 19; the bounded fresh read is not whole-mailbox catch-up. Persistent partial-body/provider-error entries remain. Five-minute deployment, persistent classification/reconciliation, Drive handoff and planner integration remain pending.
 
-Next: obtain approval for a useful specific proposal, create only that task and verify replay through the existing apply command. Full reconciliation and unattended capture remain separate deliverables. See [commands](email-tasks.md) and [the main plan](../openspec/changes/add-personal-brief-preprocessing/tasks.md).
+Next: find a genuinely useful obligation under the owner's preferences before attempting one approved task/replay check. The two rejected proposals must not be used to satisfy capture acceptance. Full reconciliation, continuous GitHub read-state handling and unattended capture remain separate deliverables. See [commands](email-tasks.md) and [the main plan](../openspec/changes/add-personal-brief-preprocessing/tasks.md).

@@ -47,6 +47,28 @@ function normalized(text: string) {
     .replace(/\s+/g, " ")
     .trim();
 }
+export function taskExclusion(conversation: TaskConversation) {
+  const incoming = conversation.evidence.messages.filter(
+    (_, i) => conversation.directions[i] !== "sent",
+  );
+  const from = (message: ThreadEvidence["messages"][number], sender: string) =>
+    message.from.length === 1 && message.from[0]?.address.toLowerCase() === sender;
+  if (
+    incoming.length &&
+    incoming.every((m) => from(m, "notifications@github.com") && /\(PR #\d+\)/i.test(m.subject))
+  )
+    return "ignored-routine-github";
+  if (
+    incoming.length &&
+    incoming.every(
+      (m) =>
+        from(m, "cloudplatform-noreply@google.com") &&
+        /\bupdates? to google cloud terms\b/i.test(normalized(m.subject)),
+    )
+  )
+    return "ignored-google-cloud-terms";
+  return undefined;
+}
 export function actionSentences(conversation: TaskConversation): string[] {
   const sentences: string[] = [];
   for (const [i, message] of [...conversation.evidence.messages.entries()].reverse()) {
