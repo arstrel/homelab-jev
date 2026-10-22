@@ -139,3 +139,26 @@ it("rejects evidence changed since review and rolls back settlement when the sav
     budget.close();
   }
 });
+it("samples by message recency even if older mail was retrieved later", async () => {
+  for (const [id, receivedAt, observedAt] of [
+    ["recent", "2026-10-20T12:00:00.000Z", "2026-10-20T13:00:00.000Z"],
+    ["old-retrieved-later", "2026-10-01T12:00:00.000Z", "2026-10-21T13:00:00.000Z"],
+  ]) {
+    const input = submission();
+    input.jobId = randomUUID();
+    input.evidence.source.threadId = id ?? "";
+    input.evidence.messages.splice(1);
+    const message = input.evidence.messages[0];
+    if (!message || !receivedAt || !observedAt) throw new Error("fixture");
+    message.receivedAt = receivedAt;
+    input.observation.messages.splice(1);
+    input.observation.observedAt = observedAt;
+    await store.persistEvidence([input]);
+  }
+  expect((await db.sample(0)).map((c) => c.evidence.source.threadId)).toEqual([
+    "recent",
+    "old-retrieved-later",
+    "t-boiler",
+  ]);
+  expect((await db.sample(1))[0]?.evidence.source.threadId).toBe("old-retrieved-later");
+});

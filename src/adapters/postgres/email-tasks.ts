@@ -79,7 +79,9 @@ async function sample(pool: Pool, offset: number) {
   const { rows } = await pool.query<Row>(
     `${sourceQuery}
    and not exists (select 1 from jev.task_links l where l.mailbox=s.mailbox and l.source_id=s.source_id)
-   order by s.observed_at desc,s.source_id limit 10 offset $1`,
+   order by (select max((m->>'receivedAt')::timestamptz)
+     from jsonb_array_elements(v.evidence->'messages') m) desc nulls last,
+     s.source_id limit 10 offset $1`,
     [offset],
   );
   return rows.map(conversation);

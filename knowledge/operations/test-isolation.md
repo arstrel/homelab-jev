@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T14:41:33Z
+  at: 2026-10-22T01:53:00Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -67,6 +67,12 @@ x_jev_sources:
     sha256: 9d3cb01ea7441e210a89c504d124b5fde5b1dcd9fab2e8c46b42b5ddb5e9a28d
   - path: tests/unit/mail-ingestion.test.ts
     sha256: cff8f13effa4351a59b05e923cc76f01e4232fcf18db0475cbb58cb9bcf4c5d9
+  - path: tests/unit/email-tasks.test.ts
+    sha256: 3dffbee7e65fc986c06b83fb8a930eee44656b6ed6cc906e66f70033689c9b73
+  - path: tests/adapters/email-tasks.test.ts
+    sha256: 442ded653b33a0e662b371599feaff3869a3fdfabb2f6e1d7cf6cc5210581fdb
+  - path: tests/integration/email-tasks.test.ts
+    sha256: 17311efcd698ac34909bc1128fb1f5ec26974f525c8e6a2617537fa6748dc54a
 ---
 
 # Offline and database test isolation
@@ -92,3 +98,5 @@ Triage tests use synthetic conversations, fixed results and MSW for malformed an
 Gmail admission tests cross the reader interface using synthetic transport responses and controlled monotonic timing, including concurrent reads released by a slow OAuth refresh. Separate production-wait tests cover cancellation/deadline without live calls. Body-part throttling remains terminal. Disposable PostgreSQL coverage verifies earlier commits, the failed item’s durable backoff, untouched later work, recognized diagnostics and a successful due retry. These tests do not establish live quota headroom or completed collection acceptance.
 
 Reviewed task tests use synthetic source sentences, projects and remote responses. Offline tests cover selected creation and a network error without SDK replay; disposable PostgreSQL verifies persisted uncertainty, repeated/overlapping apply and transactional settlement rollback. Compiled command checks remain network-denied. No real mail transfer or Todoist write is performed.
+
+V2 tests add independent eligibility rejection, contextual review-title validation, old review-file rejection with stable write identity, complete request bounds and message-recency ordering. Synthetic gateway tests validate code behavior under supplied judgments, not semantic model accuracy. Live synthetic/fresh-mail checks remain separate from deterministic gates.

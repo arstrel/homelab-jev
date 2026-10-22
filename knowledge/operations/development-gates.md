@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T14:41:33Z
+  at: 2026-10-22T01:53:00Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -37,9 +37,9 @@ x_jev_sources:
   - path: scripts/cli-smoke.ts
     sha256: 0961ba43ea14db0593ce2741344a933ee061884f7b1d17d27b542d30fdcb88d3
   - path: tests/unit/email-tasks.test.ts
-    sha256: 1ce6e201115e743514b2aa73ed14b4eaa5970947275ba51c0cc66a02ab2e1daa
+    sha256: 3dffbee7e65fc986c06b83fb8a930eee44656b6ed6cc906e66f70033689c9b73
   - path: tests/integration/email-tasks.test.ts
-    sha256: 8e1ab858b0f01dfe160fcd6d9663df8f1a355ea44a1d2015761be3f6f3b6c9ff
+    sha256: 17311efcd698ac34909bc1128fb1f5ec26974f525c8e6a2617537fa6748dc54a
 ---
 
 # Node development and Git gates
@@ -59,3 +59,5 @@ The explicit compiled `mail:sync` command is now validated offline, with durable
 The explicit `mail:classify` preview is also covered by offline compiled option/configuration checks and synthetic adapter/application tests. Disposable PostgreSQL checks exercise exact read-only evidence selection. Live Jev calls and private mail transfers are outside Git/CI gates.
 
 The [reviewed task commands](/providers/todoist-boundary.md) are covered by synthetic offline application/transport tests, compiled option checks and disposable PostgreSQL apply/replay/settlement tests. These gates never send real email to Jev or create live tasks.
+
+The v2 policy retains these gates and adds eligibility/title, review-version/request-bound and message-recency regressions. Live pilot reports remain separate; a passing gate does not establish capture quality.

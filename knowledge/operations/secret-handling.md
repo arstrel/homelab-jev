@@ -35,7 +35,7 @@ x_jev_sources:
   - path: src/cli-email-tasks.ts
     sha256: 03d03bcd3477bab151136626c8801c25267d15727583299a547fe616242f33e1
   - path: docs/email-tasks.md
-    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
+    sha256: 17f197c991ba5101312db27c84e2e145c4c3d181e319a73f764ae67dbf075a69
 ---
 
 # Configuration and private-data boundaries

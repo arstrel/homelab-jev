@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T14:41:33Z
+  at: 2026-10-22T01:53:00Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -31,13 +31,15 @@ x_jev_sources:
   - path: docs/mail-triage.md
     sha256: 2a9a384419b55a6f6c1c71511759ea7e1ef960e2ef01cf57ca025155ca396057
   - path: src/domain/email-task.ts
-    sha256: 558ebe892622bf60a60ee942c7d90e04a96f5c260bee85de367a06ee2aaad718
+    sha256: ae0b058b9b3670e6140193059a306bd7e5cdf923649b70f5df4db5fdf1d6ec6c
   - path: src/application/email-tasks.ts
-    sha256: fdf398f242f481cb2a40d124b72705d60d83c6f07150c1b9e70209fddbda57e7
+    sha256: 62c76aa18efc14e013816b152a1189716d3b085216ac063173565c8117d20962
   - path: src/adapters/jev-email-tasks.ts
-    sha256: 918a10eecf15005b16e8432756998596bee3860c74596da03bd931ed9edd828f
+    sha256: becaf504e775f5fc0e98cbb711246db2ac6e2346e2ac682be60855821dfe5ee4
   - path: docs/email-tasks.md
-    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
+    sha256: 17f197c991ba5101312db27c84e2e145c4c3d181e319a73f764ae67dbf075a69
+  - path: docs/email-task-pilot.md
+    sha256: 85b61890174102ebcce5d61a51a6a542cd1961237288daa1a907ca2f380b6d2b
 ---
 
 # Typed classification and evidence policy
@@ -48,7 +50,7 @@ Do not treat free-form model prose or email instructions as an executable plan. 
 
 The manual `mail:classify` preview implements separate kind, attention and lifecycle choices with explicit unknown values under `mail-triage/v1`, pinned to live-confirmed revision `jev-1.13.0`. It reads exact complete job evidence in a read-only transaction, sends minimized bounded state, validates responses and prints sanitized judgments. It leaves jobs and stored results unchanged. General candidate matching, corrections, calibrated thresholds and automatic task effects remain planned; parent 3.1 stays open.
 
-The separate [reviewed task flow](/product/todoist-projects.md) implements bounded action-sentence and current-project choices with explicit unknown outcomes. Source sentences and project text stay in untrusted state; trusted criteria reference only finite IDs. Code validates those IDs, uses Inbox for uncertain routing and revalidates approved proposals before effects. Human approval supplies the capture decision; original triage jobs/results remain untouched. Candidate matching, corrections and automatic capture remain planned.
+The separate [reviewed task flow](/product/todoist-projects.md) uses v2 review policy: independent obligation eligibility plus bounded sentence/project choices. Criteria directly describe quoted source/project data to reduce indirection; those quotes are untrusted data, not authority. Only required eligibility can produce a proposal. Contextual review titles use the originating subject; apply recomputes supported titles and validates destination IDs. Inbox remains the routing fallback. Human approval supplies the capture decision; original triage jobs/results remain untouched. Candidate matching, corrections and automatic capture remain planned.
 
 The initial model setting is uncalibrated. Evaluate a sanitized held-out set of representative messages, including ambiguous routing and matching, before choosing capture thresholds or enabling automatic capture. Low confidence and contradictory evidence route through [uncertainty](uncertainty.md). The triage runbook recorded in the source snapshots above describes privacy, bounds, replay charges and the model/evaluation boundary.
 

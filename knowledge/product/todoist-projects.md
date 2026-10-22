@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T14:41:33Z
+  at: 2026-10-22T01:53:00Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -26,11 +26,11 @@ x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
     sha256: d6bef852b7c90292aacb8707eb6b911c1203f710a127aae5d5fbe2c356532373
   - path: src/domain/email-task.ts
-    sha256: 558ebe892622bf60a60ee942c7d90e04a96f5c260bee85de367a06ee2aaad718
+    sha256: ae0b058b9b3670e6140193059a306bd7e5cdf923649b70f5df4db5fdf1d6ec6c
   - path: src/application/email-tasks.ts
-    sha256: fdf398f242f481cb2a40d124b72705d60d83c6f07150c1b9e70209fddbda57e7
+    sha256: 62c76aa18efc14e013816b152a1189716d3b085216ac063173565c8117d20962
   - path: docs/email-tasks.md
-    sha256: da69ac8a376614a70007889044d663a33c5c65b7cc2b8433d33434b9a2cd5b06
+    sha256: 17f197c991ba5101312db27c84e2e145c4c3d181e319a73f764ae67dbf075a69
 ---
 
 # Existing project routing and task kinds
@@ -43,4 +43,4 @@ Separate finite obligations from broad goals and reusable activity options. A fi
 
 See [manual edits](/architecture/manual-edits.md), [uncertainty](/architecture/uncertainty.md), and [Retro](/architecture/retro-feedback.md).
 
-The implemented [manual reviewed task flow](/providers/todoist-boundary.md) offers one source-sentence task per stored conversation, finite current project choices and Inbox on uncertain routing. Retro is excluded by name, optional configured ID and captured review identity. Apply requires explicit candidate approval and rejects a changed name/ID instead of silently rerouting. Automatic capture and broader task-kind synchronization remain planned.
+The implemented [manual reviewed task flow](/providers/todoist-boundary.md) offers one source-supported task per stored conversation after an independent required-obligation judgment, finite current project choices and Inbox on uncertain routing. Generic review links/notifications use their source subject in the title. Samples prioritize message time rather than retrieval time. Retro is excluded by name, optional configured ID and captured review identity. Apply requires explicit candidate approval and rejects a changed name/ID instead of silently rerouting. Automatic capture and broader task-kind synchronization remain planned.

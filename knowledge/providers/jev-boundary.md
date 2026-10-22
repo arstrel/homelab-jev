@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T03:33:58.004078Z
+  at: 2026-10-22T01:53:00Z
 stale_after: "2026-11-10T02:21:58Z"
 x_jev_delivery: mixed
 sources:
@@ -28,6 +28,10 @@ x_jev_sources:
     sha256: b88247e2ac8d915a1f365b46a7d3fe04fdd1207eec715d9aaac1eca7f5ce0646
   - path: src/domain/mail-triage.ts
     sha256: 5476e6c425cd5c30430d78459f5faedb11b6d52fc297c64a624fd9674768c7db
+  - path: src/adapters/jev-email-tasks.ts
+    sha256: becaf504e775f5fc0e98cbb711246db2ac6e2346e2ac682be60855821dfe5ee4
+  - path: docs/email-task-pilot.md
+    sha256: 85b61890174102ebcce5d61a51a6a542cd1961237288daa1a907ca2f380b6d2b
 ---
 
 # Jev adapter and judgment boundary
@@ -37,3 +41,5 @@ The current TypeSafe AI SDK adapter checks model availability with a bounded rea
 The explicit `mail:classify` preview asks independent kind, attention and lifecycle choices on complete stored evidence. Zod validates exact keys, enum choices, numeric probabilities/confidence, usage and returned model identity. Policy `mail-triage/v1` uses live-confirmed numeric model revision `jev-1.13.0`; mutable aliases are rejected. The initial setting is uncalibrated. Preview leaves storage/jobs/tasks unchanged. Matching and routing remain planned. No model output can extend project IDs, bypass manual overrides or request arbitrary tool execution.
 
 Only necessary subject/body/timestamp/direction state is sent, capped at 32 KiB without truncation; address lists, dedicated source IDs and attachment contents are omitted. Body text can contain private information. Calls have five-second timeouts, disabled retries/logging and shared cancellation/deadline bounds. Use [evaluation](/operations/classification-evaluation.md) to choose later thresholds, and follow [classification policy](/architecture/classification-policy.md).
+
+The v2 reviewed-task adapter asks eligibility separately from sentence/project selection in one request and checks the complete serialized request against the 32 KiB bound. Literal criteria quote source/project data; finite validated output cannot grant new destinations or actions. A tiny six-case live synthetic check and an explicitly approved ten-conversation fresh preview are development/pilot evidence, not a classifier-accuracy benchmark or permission for unattended capture.

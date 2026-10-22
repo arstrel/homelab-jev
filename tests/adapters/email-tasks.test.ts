@@ -19,8 +19,18 @@ it("sends finite action/project choices with full synthetic context to the pinne
       expect(body).toMatchObject({
         model: "jev-1.13.0",
         questions: {
-          action: { criteria: { a0: "Source sentence a0 in state.actionCandidates." } },
-          project: { criteria: { p1: "Existing project p1 in state.projects." } },
+          eligibility: {
+            criteria: {
+              conditional: expect.stringContaining("unconfirmed"),
+              none: expect.stringContaining("promotion"),
+            },
+          },
+          action: {
+            criteria: {
+              a0: expect.stringContaining('"Please send two dates for the boiler inspection."'),
+            },
+          },
+          project: { criteria: { p1: expect.stringContaining('"Home maintenance"') } },
         },
       });
       expect(body).toMatchObject({
@@ -83,6 +93,15 @@ it("creates a task using the saved request ID, reviewed project and Gmail source
       "00000000-0000-4000-8000-000000000004",
     ),
   ).toBe("task-1");
+});
+it("rejects an oversized complete request before sending source text", () => {
+  const question = taskQuestion(taskConversation(), taskProjects.slice(0, 2));
+  const message = question.state.messages[0];
+  if (!message) throw new Error("fixture");
+  message.text = "x".repeat(32_768);
+  expect(() => jevEmailTasks("fake-key")(question, new AbortController().signal)).toThrow(
+    "input-too-large",
+  );
 });
 it("does not let the Todoist SDK automatically replay a create after a network error", async () => {
   let attempts = 0;

@@ -1,5 +1,4 @@
 import {
-  actionSentences,
   emailTaskVersion,
   gmailLink,
   type TaskCandidate,
@@ -9,6 +8,7 @@ import {
   type TaskReview,
   taskAnswer,
   taskQuestion,
+  taskTitles,
 } from "../domain/email-task.js";
 import { fingerprint } from "../domain/mail-evidence.js";
 import type { MailBudget } from "./mail-budget.js";
@@ -112,7 +112,7 @@ export async function applyEmailTasks(
       if (
         !current ||
         fingerprint(current.evidence) !== candidate.fingerprint ||
-        !actionSentences(current).includes(candidate.title)
+        !taskTitles(current).some((c) => c.title === candidate.title)
       ) {
         results.push({ candidate: index, status: "stale-or-invalid-proposal" });
         continue;
