@@ -46,6 +46,7 @@
     "mail:preview": "node --env-file=.env dist/cli.js mail:preview",
     "mail:ingest": "node --env-file=.env dist/cli.js mail:ingest",
     "mail:sync": "node --env-file=.env dist/cli.js mail:sync",
+    "worker": "node --import tsx scripts/mail-worker-cli.ts",
     "mail:status": "node --env-file=.env dist/cli.js mail:status",
     "mail:tasks": "node --env-file=.env dist/cli.js mail:tasks",
     "mail:classify": "node --env-file=.env dist/cli.js mail:classify",

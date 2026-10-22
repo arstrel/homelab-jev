@@ -31,6 +31,7 @@ Offline checks need neither `.env` nor personal credentials. The database comman
 | `npm run mail:preview -- --days 30 --max-threads 20` | Compiled bounded Gmail evidence preview; build first, Google credentials only, sanitized counts and explicit coverage |
 | `npm run mail:ingest -- --days 30 --max-threads 20` | Manual durable evidence/jobs; build and explicitly migrate first, Google plus DB credentials, no checkpoints or remote writes |
 | `npm run mail:sync -- --days 30 --max-pages 5 --max-threads 20` | Manual resumable bootstrap/history and durable retrieval retries; explicit migrations, separate discovery/evidence freshness, no scheduling or remote writes |
+| `npm run worker -- --help` | Native collector install/start/stop/status; see the [deployment runbook](../deploy/README.md); installation requires a clean reviewed checkout and never applies migrations |
 | `npm run google:authorize` | One-time Desktop OAuth consent; temporary loopback listener and private refresh-token save to `.env` |
 | `npm test` | All offline unit/application and MSW contract tests |
 | `npm run test:coverage` | Offline tests with V8 branch coverage for review |
@@ -40,13 +41,13 @@ Offline checks need neither `.env` nor personal credentials. The database comman
 | `npm run fix` | Explicit developer-requested safe Biome fixes; review and stage the changes |
 | `npm run verify:foundation` | Slower clean-install and fault-injection evidence in a disposable checkout; requires populated `/private/tmp/jev-npm-cache` |
 
-`cycle --mode observe/capture` is a future command from Sections 2–7. It currently exits unsuccessfully instead of claiming to process mail. The manual [Gmail preview](gmail-preview.md) retrieves and normalizes evidence without persistent state or downstream writes. [Manual ingestion](mail-ingestion.md) stores complete evidence and exact-bound jobs in PostgreSQL, preserving old versions and legacy gaps. It does not advance checkpoints or perform classification. No launchd job is installed. Status reports ledger counts, not fabricated source freshness or publication success.
+`cycle --mode observe/capture` is a future command from Sections 2–7. It currently exits unsuccessfully instead of claiming to process mail. The manual [Gmail preview](gmail-preview.md) retrieves and normalizes evidence without persistent state or downstream writes. [Manual ingestion](mail-ingestion.md) stores complete evidence and exact-bound jobs in PostgreSQL, preserving old versions and legacy gaps. It does not advance checkpoints or perform classification. The optional [collector installer](../deploy/README.md) schedules collection only; development setup does not install a launchd job. Status reports ledger counts, not fabricated source freshness or publication success.
 
 ## Boundaries
 
 The [manual sync command](mail-sync.md) adds a session-owned discovery/backlog state separate from legacy checkpoint counts. History expiry is recovery-required, not a silent reset. All tests remain synthetic/offline or disposable PostgreSQL; no live sync pilot is implied.
 
-The CLI composes application ports with adapters. `src/domain/` is reserved for pure policy. Application ports contain internal types, with injected clocks and IDs. Google/Jev/Todoist SDKs remain inside adapters; PostgreSQL schema and inferred storage rows remain inside its adapter. Future workflow orchestration must translate those rows into domain types. `deploy/` holds later native release and launchd configuration. This milestone establishes storage and connection checks, without email classification, task capture or Drive publication.
+The CLI composes application ports with adapters. `src/domain/` is reserved for pure policy. Application ports contain internal types, with injected clocks and IDs. Google/Jev/Todoist SDKs remain inside adapters; PostgreSQL schema and inferred storage rows remain inside its adapter. Future workflow orchestration must translate those rows into domain types. `deploy/` documents the optional native collection installer; full processing-cycle orchestration remains planned. Foundation storage/connection checks do not themselves run classification, task capture or Drive publication.
 
 Configuration is explicit: `DB_URL` is authoritative whenever present, including when invalid; otherwise all `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` fields are required. Jev uses `JEV_API_KEY`. The configuration module has no environment-file side effects. [Connection setup](connections.md) covers independent provider authorization. Logs accept fixed event dimensions, never arbitrary error objects or configuration. Diagnostics name invalid fields without printing values.
 
