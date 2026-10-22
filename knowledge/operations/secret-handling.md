@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:37:01.245Z
+  at: 2026-10-22T13:58:41.723Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -37,15 +37,15 @@ x_jev_sources:
   - path: docs/email-tasks.md
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: src/cli-email-brief.ts
-    sha256: c7374612107f1c2e2e513dc4243fa1730b07bb8b5ef297967d017027b869ffef
+    sha256: 7feef65d8f1130a1f3e95a1ce6166d866f30c71d7445225485d433852c94e044
   - path: src/application/email-brief.ts
-    sha256: bde5b54bfffba9163f93cf1eefeb41f44bfe4b23f08d589230118c148c6ccb07
+    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
   - path: src/adapters/todoist-brief.ts
-    sha256: f60bf9703a34d30580fce1c1569a705e0cd98b5a3c12d8146666c81f4586412e
+    sha256: 175e6f795d3f62cef8009803e1f974f1bc96655624ce85f0eabf0dba90d45be7
   - path: src/domain/todoist-brief.ts
-    sha256: 4516ae5f375c3c5211c0b57a948391ad34bb40127aaa8744a1f585753fdb12b0
+    sha256: 97e80af779dba85133ded6ac4e92c5b7095da7b32297f6bb1997561e6b660e5e
   - path: docs/email-brief.md
-    sha256: c40b3cd8e7bb03361dfd5c35205ca8d51671d077b86dad2699a715b761725354
+    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
 ---
 
 # Configuration and private-data boundaries
@@ -64,4 +64,6 @@ See [Google grants](/providers/google-credentials.md), [test isolation](test-iso
 
 The explicit [reviewed task flow](/product/todoist-projects.md) deliberately displays proposed private task titles and Gmail links for approval, and writes mode-600 files under ignored `.cache/mail-tasks/`. Keep those artifacts and terminal output outside Git/shared logs. Preview sends bounded mail/project context to hosted Jev only when invoked; apply uses the local review without another model call. Tests use synthetic data and never perform live capture.
 
-The manual [Drive brief](/architecture/planner-handoff.md) contains private email subjects and copied Todoist task titles/due values in one app-owned private file. Todoist descriptions are used locally only for exact Gmail links; no task context is sent to Jev or stored as a database inventory. Console output contains fixed states/counts and the confirmed file URL, without task/project names or descriptions. Keep live read-back captures private and ignored; committed evidence is aggregate only.
+The manual [Drive brief](/architecture/planner-handoff.md) contains private email subjects and copied Todoist task titles/due values in one app-owned private file. Todoist descriptions are used locally only for exact Gmail links; no task context is stored as a database inventory; explicit Retro review can send candidate titles as described below. Console output contains fixed states/counts and the confirmed file URL, without task/project names or descriptions. Keep live read-back captures private and ignored; committed evidence is aggregate only.
+
+The private brief now also contains escaped recent Retro excerpts and optional review suggestions. Explicit --retro-review sends selected feedback text and current candidate task titles to hosted Jev; ordinary task descriptions, dedicated IDs and attachments remain omitted. Default source-context refresh makes no Retro inference calls. Console reporting stays aggregate; live content and read-back captures must remain outside Git.

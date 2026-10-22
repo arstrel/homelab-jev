@@ -13,6 +13,8 @@ import {
 import type { TaskConversation } from "../domain/email-task.js";
 import { taskExclusion } from "../domain/email-task.js";
 import { TriageError, triageResult, triageState } from "../domain/mail-triage.js";
+import { type RetroContext, type RetroRead, renderRetroContext } from "../domain/retro.js";
+import { type RetroRequest, renderRetroReview, retroResult } from "../domain/retro-review.js";
 import {
   renderTodoistContext,
   type TodoistBriefContext,
@@ -20,6 +22,7 @@ import {
 } from "../domain/todoist-brief.js";
 import { MailBudget } from "./mail-budget.js";
 import type { MailStatusReader, MailTriage, Runtime } from "./ports.js";
+import { reviewRetro } from "./review-retro.js";
 
 export interface BriefRecord {
   jobId: string;
@@ -53,6 +56,7 @@ export interface BriefOptions {
   maxConversations: number;
   days: number;
   maxNew: number;
+  retroReview?: boolean;
 }
 export function validateBriefOptions(o: BriefOptions) {
   if (
@@ -64,7 +68,8 @@ export function validateBriefOptions(o: BriefOptions) {
     o.days > 30 ||
     !Number.isInteger(o.maxNew) ||
     o.maxNew < 0 ||
-    o.maxNew > 20
+    o.maxNew > 20 ||
+    (o.retroReview !== undefined && typeof o.retroReview !== "boolean")
   )
     throw new Error("Invalid brief options");
 }
@@ -76,6 +81,10 @@ export async function publishEmailBrief(
     triage: MailTriage;
     drive: (budget: MailBudget) => BriefDrive;
     todoist?: (budget: MailBudget) => { read(): Promise<TodoistBriefInventory> };
+    retro?: (budget: MailBudget) => {
+      read(projectId: string, since: string, until: string): Promise<RetroRead>;
+    };
+    retroJudge?: (request: RetroRequest, signal: AbortSignal) => Promise<unknown>;
     clock: Runtime;
     signal?: AbortSignal;
   },
@@ -100,6 +109,15 @@ export async function publishEmailBrief(
       displayOmitted: 0,
       complete: false,
     },
+    retro: {
+      state: "not-read" as "not-read" | "available" | "unavailable",
+      entries: 0,
+      complete: false,
+      reviewRequested: options.retroReview ?? false,
+      reviewComplete: false,
+      suggestions: 0,
+      newRequests: 0,
+    },
   };
   let phase = "selection";
   try {
@@ -107,7 +125,7 @@ export async function publishEmailBrief(
       const signal = deps.signal
         ? AbortSignal.any([deps.signal, ownershipSignal])
         : ownershipSignal;
-      const budget = new MailBudget({ maxRequests: 40 }, signal);
+      const budget = new MailBudget({ maxRequests: 70 }, signal);
       try {
         budget.assertActive();
         const now = deps.clock.now();
@@ -225,6 +243,85 @@ export async function publishEmailBrief(
           displayOmitted: todoist.omitted,
           complete: todoist.complete,
         };
+        phase = "retro";
+        budget.assertActive();
+        let retroContext: RetroContext;
+        const retroIds = context.state === "available" ? (context.retroProjectIds ?? []) : [];
+        const retroSince = new Date(now.getTime() - 7 * 86_400_000).toISOString();
+        try {
+          if (context.state !== "available" || !deps.retro)
+            retroContext = {
+              state: "unavailable",
+              since: retroSince,
+              until,
+              readAt: null,
+              reason: "todoist-unavailable",
+            };
+          else if (retroIds.length !== 1)
+            retroContext = {
+              state: "unavailable",
+              since: retroSince,
+              until,
+              readAt: null,
+              reason: retroIds.length ? "ambiguous-retro" : "missing-retro",
+            };
+          else {
+            const data = await deps.retro(budget).read(retroIds[0] as string, retroSince, until);
+            budget.assertActive();
+            retroContext = {
+              ...data,
+              state: "available",
+              since: retroSince,
+              until,
+              readAt: deps.clock.now().toISOString(),
+            };
+          }
+        } catch {
+          budget.assertActive();
+          retroContext = {
+            state: "unavailable",
+            since: retroSince,
+            until,
+            readAt: null,
+            reason: "read-failed",
+          };
+        }
+        const retro = renderRetroContext(retroContext);
+        counts.retro = {
+          ...counts.retro,
+          state: retroContext.state,
+          entries: retro.entries.length,
+          complete: retro.complete,
+        };
+        phase = "retro-review";
+        const review = await reviewRetro(
+          retro.entries,
+          todoist.tasks,
+          options.retroReview ?? false,
+          retro.complete && todoist.complete,
+          async (request) => {
+            budget.assertActive();
+            const judge = deps.retroJudge;
+            if (counts.newRequests >= options.maxNew || !judge) return undefined;
+            counts.newRequests++;
+            counts.retro.newRequests++;
+            const raw = await budget.read(() => judge(request, budget.signal));
+            budget.assertActive();
+            const result = retroResult(raw, request);
+            const input = counts.inputTokens + result.usage.input_tokens,
+              output = counts.outputTokens + result.usage.output_tokens;
+            if (!Number.isSafeInteger(input) || !Number.isSafeInteger(output))
+              throw new Error("invalid-result");
+            counts.inputTokens = input;
+            counts.outputTokens = output;
+            return raw;
+          },
+          budget.signal,
+        );
+        const retroReview = renderRetroReview(review);
+        counts.retro.reviewComplete = retroReview.complete;
+        counts.retro.suggestions = review.suggestions.length;
+        budget.assertActive();
         phase = "publication";
         budget.assertActive();
         const drive = deps.drive(budget);
@@ -241,6 +338,8 @@ export async function publishEmailBrief(
           status,
           entries,
           todoist,
+          retro,
+          retroReview: retroReview.markdown,
         });
         await session.publishing();
         await drive.write(destination, generation, markdown);
@@ -253,7 +352,14 @@ export async function publishEmailBrief(
           generation,
           url: `https://drive.google.com/file/d/${destination.fileId}/view`,
           overlapping: false,
-          exitCode: counts.failed || counts.capped || !todoist.complete ? 1 : 0,
+          exitCode:
+            counts.failed ||
+            counts.capped ||
+            !todoist.complete ||
+            !retro.complete ||
+            (options.retroReview && !retroReview.complete)
+              ? 1
+              : 0,
         };
       } finally {
         budget.close();

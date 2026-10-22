@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:37:01.222Z
+  at: 2026-10-22T13:58:41.710Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -27,7 +27,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/design.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: a88e88277fc39a82d34caaa525fabd9eb1607d540f84695cfe38afa1e5e85a06
+    sha256: 202b9101e7fbd5caf158d98985648dd13eeb26ca12b821e84c0c6eb13679d73a
   - path: src/application/ports.ts
     sha256: 1a490007fcc489ecc38d1118a20d3f7ec0dce1f10957a17a8ad5b1fc70fffd71
   - path: src/domain/README.md
@@ -49,21 +49,23 @@ x_jev_sources:
   - path: src/cli-email-tasks.ts
     sha256: 03d03bcd3477bab151136626c8801c25267d15727583299a547fe616242f33e1
   - path: src/application/email-brief.ts
-    sha256: bde5b54bfffba9163f93cf1eefeb41f44bfe4b23f08d589230118c148c6ccb07
+    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
   - path: src/domain/email-brief.ts
-    sha256: c4706e39b9f50b0537e7759d93a5f22f30bea7dfc39b24c5f5ca44ae1f3447d2
+    sha256: 8ce409f2ead0df548d76472e94994940913ebcc21549e10d642da992987be9fa
   - path: src/cli-email-brief.ts
-    sha256: c7374612107f1c2e2e513dc4243fa1730b07bb8b5ef297967d017027b869ffef
+    sha256: 7feef65d8f1130a1f3e95a1ce6166d866f30c71d7445225485d433852c94e044
   - path: src/adapters/drive-brief.ts
     sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
   - path: src/adapters/postgres/email-brief.ts
     sha256: 21166686962ee9a41f1c7dcc9e240072887895023ef34e5d5869786a6be615ce
   - path: src/adapters/todoist-brief.ts
-    sha256: f60bf9703a34d30580fce1c1569a705e0cd98b5a3c12d8146666c81f4586412e
+    sha256: 175e6f795d3f62cef8009803e1f974f1bc96655624ce85f0eabf0dba90d45be7
   - path: src/domain/todoist-brief.ts
-    sha256: 4516ae5f375c3c5211c0b57a948391ad34bb40127aaa8744a1f585753fdb12b0
+    sha256: 97e80af779dba85133ded6ac4e92c5b7095da7b32297f6bb1997561e6b660e5e
   - path: src/domain/brief-text.ts
     sha256: 18b4b488bbcc7624c840e9d43503c61c47fe801438c9d3e99e143f29b75a08b2
+  - path: src/application/review-retro.ts
+    sha256: 18a777d202fc3f64612316601ad6b77df0767796c5626e36851b94524bfa4976
 ---
 
 # Application boundaries and composition
@@ -89,3 +91,5 @@ Gmail admission policy stays inside its existing adapter module: monotonic pacin
 The manual [Drive brief](planner-handoff.md) has one small use case with SDK-free database/publication ports. Domain code owns cache identity and the Markdown template; the existing Jev adapter supplies finite triage. PostgreSQL owns selection/atomic persistence/reserved identity, and Drive owns metadata/content verification. The CLI binds credentials and a bounded command budget. It adds no framework, dependency, migration or background cycle.
 
 The brief also has one SDK-free Todoist read port. Its adapter bounds current pages and extracts explicit Gmail links locally; pure domain code renders project tasks and associations using the shared text escaper. Todoist never enters triage questions/cache identity, and no task inventory table or remote write port is added. Provider failures are rendered as unavailable context; cancellation still stops publication.
+
+The manual Retro slice adds SDK-free source/review types and a small review use case. Todoist owns bounded open/completed/comment retrieval; Jev owns typed choice transport. Domain code constrains task references, exact excerpts and review labels. The existing publisher shares its cap/deadline and writes the same Drive artifact. No schema, dependency, service, task-write port or new cache is introduced.

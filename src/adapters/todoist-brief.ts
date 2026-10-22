@@ -8,6 +8,7 @@ export function todoistBrief(token: string, budget: MailBudget, retroId?: string
     async read(): Promise<TodoistBriefInventory> {
       const projects: TodoistBriefInventory["projects"] = [];
       const excluded = new Set(retroId ? [retroId] : []);
+      const retroProjectIds = new Set<string>();
       const projectIds = new Set<string>();
       const projectCursors = new Set<string>();
       let cursor: string | undefined;
@@ -20,6 +21,7 @@ export function todoistBrief(token: string, budget: MailBudget, retroId?: string
         for (const p of result.results) {
           if (p.id === retroId || p.name.trim().toLowerCase() === "retro") {
             excluded.add(p.id);
+            if (!p.isArchived && !p.isDeleted && !p.isFrozen) retroProjectIds.add(p.id);
             continue;
           }
           if (!p.isArchived && !p.isDeleted && !p.isFrozen && !projectIds.has(p.id)) {
@@ -70,6 +72,7 @@ export function todoistBrief(token: string, budget: MailBudget, retroId?: string
                 }
               : null,
             sourceIds: explicitGmailSources(t.description),
+            ...(t.due?.isRecurring ? { recurring: true } : {}),
           });
         }
         if (!result.nextCursor) {
@@ -80,7 +83,17 @@ export function todoistBrief(token: string, budget: MailBudget, retroId?: string
         taskCursors.add(result.nextCursor);
         cursor = result.nextCursor;
       }
-      return { projects, tasks, projectsComplete, tasksComplete, unknownProjects, retroExcluded };
+      return {
+        projects,
+        tasks,
+        projectsComplete,
+        tasksComplete,
+        unknownProjects,
+        retroExcluded,
+        retroProjectIds: retroId
+          ? [...retroProjectIds].filter((id) => id === retroId)
+          : [...retroProjectIds],
+      };
     },
   };
 }

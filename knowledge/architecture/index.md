@@ -12,7 +12,7 @@
 - [Preserve manual task changes](manual-edits.md): User task edits and completion override worker inference. (planned).
 - [Typed classification and evidence policy](classification-policy.md): Preview bounded typed judgments; evaluated matching, routing and capture remain planned. (mixed).
 - [Uncertainty remains visible](uncertainty.md): Prefer explicit review states to invented precision or silent loss. (planned).
-- [Retro interpretation and reusable inventory](retro-feedback.md): Use daily feedback without consuming broad goals or recurring activity options. (planned).
+- [Retro interpretation and reusable inventory](retro-feedback.md): Use daily feedback without consuming broad goals or recurring activity options. (mixed).
 - [Drive snapshot and planner freshness](planner-handoff.md): Manual email/Todoist context publication is implemented; full scheduled planner handoff remains planned. (mixed).
 
 [Bundle index](/index.md)

@@ -19,15 +19,17 @@ The small [reviewed email task flow](docs/email-tasks.md) now proposes source-ba
 
 [Five-minute collection tooling](deploy/README.md) installs the existing Gmail sync as a native launchd agent using an isolated compiled release. Use `npm run worker -- --help` for install/start/stop/status commands. Activation requires a merged release; [operational evidence](docs/mail-worker-evidence.md) distinguishes tooling from live scheduled acceptance.
 
-Publish a bounded email-only brief after building:
+Publish a bounded email, Todoist and Retro brief after building:
 
 ```sh
 npm run brief:publish -- --max-conversations 10 --days 7 --max-new 10
-# Reuse saved judgments without new Jev calls:
+# Include optional typed Retro review within the same new-call allowance:
+npm run brief:publish -- --max-new 20 --retro-review
+# Reuse saved email judgments and refresh source context without new Jev calls:
 npm run brief:publish -- --max-new 0
 ```
 
-This prints the confirmed Drive link. Each run also reads current Todoist projects/open tasks, excludes Retro and marks email actions with an explicit existing task source link as already tracked. It does not change tasks, Gmail read state, or scheduled prompts. See [brief publication and recovery](docs/email-brief.md) for configuration, caps and coverage limits.
+This prints the confirmed Drive link. Each run also reads current Todoist projects/open tasks, excludes Retro from the action inventory, adds recent Retro feedback separately and marks email actions with an explicit existing task source link as already tracked. [Optional Retro review](docs/retro-brief.md) distinguishes finite actions, reusable activities and broad goals, with source-linked suggestions for human review. It does not change tasks, Gmail read state, or scheduled prompts. See [brief publication and recovery](docs/email-brief.md) for configuration, caps and coverage limits.
 
 Start with [development setup](docs/development.md), [independent connections](docs/connections.md), [Gmail preview](docs/gmail-preview.md), [migration operations](docs/migrations.md) and [foundation evidence](docs/foundation-evidence.md).
 

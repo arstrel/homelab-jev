@@ -12,6 +12,7 @@ import {
   briefPolicy,
   renderEmailBrief,
 } from "../../src/domain/email-brief.js";
+import type { RetroRequest } from "../../src/domain/retro-review.js";
 import {
   briefFile,
   briefGeneration,
@@ -20,6 +21,7 @@ import {
   briefTime,
   todoistInventory,
 } from "../fixtures/email-brief.js";
+import { retroEntry, retroRead, retroResponse } from "../fixtures/retro.js";
 import { triageResponse } from "../fixtures/triage.js";
 
 const options = { maxConversations: 10, days: 7, maxNew: 10 };
@@ -38,6 +40,8 @@ function setup(records: BriefRecord[] = [briefRecord()]) {
   const write = vi.fn<BriefDrive["write"]>(async () => {});
   const allocate = vi.fn(async () => briefFile);
   const read = vi.fn(async () => todoistInventory());
+  const readRetro = vi.fn(async () => retroRead());
+  const retroJudge = vi.fn(async (request: RetroRequest) => retroResponse(request));
   const signal = new AbortController();
   const deps = {
     database: {
@@ -48,11 +52,92 @@ function setup(records: BriefRecord[] = [briefRecord()]) {
     triage: { judge },
     drive: () => ({ write, allocate }),
     todoist: () => ({ read }),
+    retro: () => ({ read: readRetro }),
+    retroJudge,
     clock: { now: () => new Date(briefTime), id: () => briefGeneration },
     signal: signal.signal,
   };
-  return { session, judge, write, allocate, read, signal, deps };
+  return { session, judge, write, allocate, read, readRetro, retroJudge, signal, deps };
 }
+it("publishes Retro context without additional inference unless explicitly requested", async () => {
+  const s = setup([]);
+  s.readRetro.mockResolvedValue(retroRead([retroEntry()]));
+  expect(await publishEmailBrief({ ...options, maxNew: 0 }, s.deps)).toMatchObject({
+    published: true,
+    newRequests: 0,
+    retro: { state: "available", entries: 1, reviewRequested: false },
+  });
+  expect(s.retroJudge).not.toHaveBeenCalled();
+  expect(s.write.mock.calls[0]?.[2]).toContain("Interpretation not requested");
+});
+it("shares one inference cap across email and Retro and reports bounded review gaps", async () => {
+  const s = setup();
+  s.readRetro.mockResolvedValue(retroRead([retroEntry()]));
+  const result = await publishEmailBrief({ ...options, maxNew: 2, retroReview: true }, s.deps);
+  expect(result).toMatchObject({
+    newRequests: 2,
+    classified: 1,
+    retro: { newRequests: 1, reviewRequested: true, reviewComplete: false },
+    exitCode: 1,
+    published: true,
+  });
+  expect(s.judge).toHaveBeenCalledTimes(1);
+  expect(s.retroJudge).toHaveBeenCalledTimes(1);
+  expect(s.write.mock.calls[0]?.[2]).toContain("new-call cap or judgment disabled");
+});
+it("refreshes changed Retro sources and removes prior interpretation on context-only replay", async () => {
+  const s = setup([]);
+  s.readRetro.mockResolvedValueOnce(retroRead([retroEntry("I finished the inspection.")]));
+  await publishEmailBrief({ ...options, retroReview: true }, s.deps);
+  s.readRetro.mockResolvedValueOnce(retroRead([retroEntry("I am waiting for confirmation.")]));
+  const result = await publishEmailBrief({ ...options, maxNew: 0 }, s.deps);
+  expect(result).toMatchObject({ published: true, newRequests: 0 });
+  const replay = s.write.mock.calls[1]?.[2];
+  expect(replay).toContain("waiting for confirmation");
+  expect(replay).not.toContain("finished the inspection");
+  expect(replay).toContain("Interpretation not requested");
+  expect(s.retroJudge).toHaveBeenCalledTimes(2);
+  expect(s.session.save).not.toHaveBeenCalled();
+});
+it("publishes Retro read failures without exposing private diagnostics or inferred completion", async () => {
+  const s = setup([]);
+  s.readRetro.mockRejectedValueOnce(new Error("private Retro body"));
+  const result = await publishEmailBrief({ ...options, retroReview: true }, s.deps);
+  expect(result).toMatchObject({
+    published: true,
+    exitCode: 1,
+    retro: { state: "unavailable", entries: 0 },
+  });
+  expect(JSON.stringify(result)).not.toContain("private");
+  expect(s.retroJudge).not.toHaveBeenCalled();
+  expect(s.write.mock.calls[0]?.[2]).toContain("Retro context unavailable: read-failed");
+});
+it.each([[], ["retro", "another-retro"]])(
+  "does not guess a missing or ambiguous Retro identity: %j",
+  async (...ids) => {
+    const s = setup([]);
+    s.read.mockResolvedValueOnce({ ...todoistInventory(), retroProjectIds: ids });
+    const result = await publishEmailBrief({ ...options, retroReview: true }, s.deps);
+    expect(result).toMatchObject({ published: true, exitCode: 1, retro: { state: "unavailable" } });
+    expect(s.readRetro).not.toHaveBeenCalled();
+    expect(s.retroJudge).not.toHaveBeenCalled();
+  },
+);
+it("stops publication and rejects late Retro judgments after cancellation", async () => {
+  const s = setup([]);
+  s.readRetro.mockResolvedValue(retroRead([retroEntry()]));
+  s.retroJudge.mockImplementationOnce(async (request) => {
+    s.signal.abort();
+    return retroResponse(request);
+  });
+  expect(await publishEmailBrief({ ...options, retroReview: true }, s.deps)).toMatchObject({
+    published: false,
+    failure: "cancelled",
+    newRequests: 1,
+  });
+  expect(s.retroJudge).toHaveBeenCalledTimes(1);
+  expect(s.write).not.toHaveBeenCalled();
+});
 it("refreshes renamed/moved/removed tasks on cached-only replay without altering saved email decisions", async () => {
   const s = setup();
   await publishEmailBrief(options, s.deps);
@@ -331,4 +416,25 @@ it.each([
   ["--unknown", "private"],
 ])("rejects invalid bounded command options: %j", (...args) => {
   expect(() => briefOptions(args)).toThrow("brief:publish options");
+});
+
+it("parses explicit Retro review independently of numeric option ordering", () => {
+  expect(briefOptions(["--retro-review", "--max-new", "0", "--days", "3"])).toEqual({
+    maxConversations: 10,
+    days: 3,
+    maxNew: 0,
+    retroReview: true,
+  });
+  expect(briefOptions(["--max-new", "2", "--retro-review"])).toEqual({
+    maxConversations: 10,
+    days: 7,
+    maxNew: 2,
+    retroReview: true,
+  });
+  expect(briefOptions([]).retroReview).toBeUndefined();
+  for (const args of [
+    ["--retro-review", "false"],
+    ["--retro-review", "--retro-review"],
+  ])
+    expect(() => briefOptions(args)).toThrow("brief:publish options");
 });

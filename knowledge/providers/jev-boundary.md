@@ -1,7 +1,8 @@
 ---
 type: Contract
 title: Jev adapter and judgment boundary
-description: Bounded typed triage is implemented; evaluated matching, routing and capture remain planned.
+description: Bounded typed triage is implemented; evaluated matching, routing
+  and capture remain planned.
 tags:
   - providers
   - jev
@@ -9,8 +10,8 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:10:40.938Z
-stale_after: "2026-11-10T02:21:58Z"
+  at: 2026-10-22T13:58:41.714Z
+stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
   - id: s1
@@ -33,11 +34,15 @@ x_jev_sources:
   - path: docs/email-task-pilot.md
     sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
   - path: src/application/email-brief.ts
-    sha256: bde5b54bfffba9163f93cf1eefeb41f44bfe4b23f08d589230118c148c6ccb07
+    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
   - path: docs/email-brief.md
-    sha256: c40b3cd8e7bb03361dfd5c35205ca8d51671d077b86dad2699a715b761725354
+    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
   - path: docs/email-brief-evidence.md
     sha256: bf7d371c90e3028e05719dd8f793e3522b48b5c0bb3d59f10f6b391a6abcce94
+  - path: src/adapters/jev-retro.ts
+    sha256: 2df78af6819a00281c02310b33b5f14dfa42d2a1b20b649573d998b4769713cf
+  - path: src/domain/retro-review.ts
+    sha256: 750a144c5d8cf6df1e99d7b7115c6afa1b394e11323c49c354c3700eb4477148
 ---
 
 # Jev adapter and judgment boundary
@@ -51,3 +56,5 @@ Only necessary subject/body/timestamp/direction state is sent, capped at 32 KiB 
 The v2 reviewed-task adapter asks eligibility separately from sentence/project selection in one request and checks the complete serialized request against the 32 KiB bound. Literal criteria quote source/project data; finite validated output cannot grant new destinations or actions. A tiny six-case live synthetic check and an explicitly approved ten-conversation fresh preview are development/pilot evidence, not a classifier-accuracy benchmark or permission for unattended capture.
 
 The manual [Drive brief](/architecture/planner-handoff.md) now reuses these triage choices and persists validated decisions with exact input identity. A separate new-attempt cap permits cached-only publication; unchanged replay makes no Jev call. Owner exclusions run first. This saves email triage only, without task effects, correction handling, calibration or unattended inference. Provider errors and invalid results remain retryable and visible; saved unknowns remain review cases.
+
+Explicit manual Retro review adds finite task-kind, task/relation and source-excerpt choices on pinned jev-1.13.0. It sends selected Retro text and current candidate task titles, omitting dedicated IDs, task descriptions and attachments. Full serialized requests are limited to 32 KiB, with strict returned model/answer/criterion/probability/usage validation. Attempts share the publisher's cap/deadline; retries remain disabled. Interpretations are ephemeral, and repeated explicit review is charged again. Conservative uncalibrated 0.85 gating yields human-review suggestions only. See [Retro](/architecture/retro-feedback.md).

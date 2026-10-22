@@ -1,11 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { driveBrief } from "./adapters/drive-brief.js";
 import { googleAuth } from "./adapters/google.js";
+import { jevRetro } from "./adapters/jev-retro.js";
 import { jevTriage } from "./adapters/jev-triage.js";
 import { connect } from "./adapters/postgres/client.js";
 import { briefDatabase } from "./adapters/postgres/email-brief.js";
 import { mailStatusReader } from "./adapters/postgres/mail-status.js";
 import { todoistBrief } from "./adapters/todoist-brief.js";
+import { todoistRetro } from "./adapters/todoist-retro.js";
 import {
   type BriefOptions,
   publishEmailBrief,
@@ -16,9 +18,15 @@ import { ConfigurationError, databaseUrl, type Environment } from "./config.js";
 export function briefOptions(args: readonly string[]): BriefOptions {
   const o: BriefOptions = { maxConversations: 10, days: 7, maxNew: 10 };
   const seen = new Set<string>();
-  for (let i = 0; i < args.length; i += 2) {
+  for (let i = 0; i < args.length; i++) {
     const flag = args[i],
       value = args[i + 1];
+    if (flag === "--retro-review") {
+      if (seen.has(flag)) throw new ConfigurationError(["brief:publish options"]);
+      seen.add(flag);
+      o.retroReview = true;
+      continue;
+    }
     if (
       !flag ||
       !["--max-conversations", "--days", "--max-new"].includes(flag) ||
@@ -31,6 +39,7 @@ export function briefOptions(args: readonly string[]): BriefOptions {
     if (flag === "--days") o.days = Number(value);
     else if (flag === "--max-new") o.maxNew = Number(value);
     else o.maxConversations = Number(value);
+    i++;
   }
   try {
     validateBriefOptions(o);
@@ -56,11 +65,13 @@ export async function runEmailBrief(
       database: briefDatabase(client),
       status: mailStatusReader(client),
       triage: jevTriage(key ?? "unused-cached-only"),
+      ...(key ? { retroJudge: jevRetro(key) } : {}),
       drive: (budget) => driveBrief(auth, budget),
       ...(todoistToken
         ? {
             todoist: (budget) =>
               todoistBrief(todoistToken, budget, env.TODOIST_RETRO_PROJECT_ID?.trim()),
+            retro: (budget) => todoistRetro(todoistToken, budget),
           }
         : {}),
       clock: { now: () => new Date(), id: randomUUID },

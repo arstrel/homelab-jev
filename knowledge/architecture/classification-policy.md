@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:10:40.938Z
+  at: 2026-10-22T13:58:41.706Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -41,11 +41,15 @@ x_jev_sources:
   - path: docs/email-task-pilot.md
     sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
   - path: src/domain/email-brief.ts
-    sha256: c4706e39b9f50b0537e7759d93a5f22f30bea7dfc39b24c5f5ca44ae1f3447d2
+    sha256: 8ce409f2ead0df548d76472e94994940913ebcc21549e10d642da992987be9fa
   - path: src/application/email-brief.ts
-    sha256: bde5b54bfffba9163f93cf1eefeb41f44bfe4b23f08d589230118c148c6ccb07
+    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
   - path: docs/email-brief.md
-    sha256: c40b3cd8e7bb03361dfd5c35205ca8d51671d077b86dad2699a715b761725354
+    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
+  - path: src/domain/retro-review.ts
+    sha256: 750a144c5d8cf6df1e99d7b7115c6afa1b394e11323c49c354c3700eb4477148
+  - path: src/application/review-retro.ts
+    sha256: 18a777d202fc3f64612316601ad6b77df0767796c5626e36851b94524bfa4976
 ---
 
 # Typed classification and evidence policy
@@ -65,3 +69,5 @@ Explicit owner rules precede semantic judgment: ordinary GitHub PR notifications
 See [Jev adapter](/providers/jev-boundary.md), [evaluation](/operations/classification-evaluation.md), and [Gmail evidence](gmail-checkpoints.md).
 
 The manual [Drive brief](planner-handoff.md) now saves successful typed triage and deterministic owner exclusions using exact evidence/direction/model/policy identity. Saving a judgment and completing its exact-bound job is atomic. Unchanged publication reuses saved decisions; invalid/provider failures do not complete jobs. Waiting has priority over attention; unknowns and resolution suggestions appear as review cases. This bounded email artifact does not complete parent classification/corrections/evaluation or authorize automatic capture.
+
+The manual [Retro review](retro-feedback.md) now implements bounded finite task-kind and specific candidate/relation/excerpt choices under retro-review/v1. Unknown/contradictory/low-confidence choices remain uncertain. A provisional 0.85 threshold is uncalibrated and authorizes only source-linked review suggestions. Code preserves reusable/recurring work and broad goals; no task effects are connected. Full matching and calibrated automatic reconciliation remain planned.

@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:37:01.242Z
+  at: 2026-10-22T13:58:41.729Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -34,7 +34,7 @@ x_jev_sources:
   - path: tests/unit/mail-status.test.ts
     sha256: 94fcb2b4a492fe368522e6ae4a0ce95b28450a9884d28a6dec6b22b54d1a51c3
   - path: scripts/cli-smoke.ts
-    sha256: 398fff4132993872bd2529d60279609936c8dee41a9f9a18259a30ac27742b51
+    sha256: fbb9104380a5cc53a3d3d161777f2aa61be56c3db5df28a5f10e039037e9d3f4
   - path: tests/setup.ts
     sha256: 848618590ddc9c3f5f53c84b13b41537b040c7f0c62ad0c6ba3cd41caab706b3
   - path: scripts/environment.ts
@@ -76,7 +76,11 @@ x_jev_sources:
   - path: tests/unit/todoist-brief.test.ts
     sha256: 0fc3a577b5fc653deeb775573efda07b99c72fcf590ab006718fa4cc387b517c
   - path: tests/adapters/todoist-brief.test.ts
-    sha256: af477f385465e1563fc34fd4d0999f1a9562eded2c4d8f1ced5741fcada39094
+    sha256: 5d549dad277889e55be04a102eafb802191512ff3a4c6694f41484f8a59e89be
+  - path: tests/unit/retro-review.test.ts
+    sha256: 4440613731c443784f92ed29d569af7eb74207efbaa83ada6ecb99c55021fadf
+  - path: tests/adapters/jev-retro.test.ts
+    sha256: 17ea80ef6bd0cf76c08f10882f77627686171b316ce345422a49367c164b8022
 ---
 
 # Offline and database test isolation
@@ -108,3 +112,5 @@ V2 tests add independent eligibility rejection, contextual review-title validati
 Brief publication tests use synthetic evidence, fixed judgments and MSW Drive responses. Disposable PostgreSQL verifies atomic exact-job completion and classification rollback, selection, reserved identity and prior-publication metadata. No operational credentials, real private content or live Drive publication are used in gates. Cached-only publication is also tested without an inference request.
 
 Read-only Todoist context uses synthetic SDK HTTP fixtures and controlled application reads to verify changed/moved/removed tasks without mutating live tasks. Tests cover exact-link associations, filtering, incomplete/failed reads and cached-only refresh without extra inference. Live verification separately publishes the private artifact; no private task data enters committed fixtures.
+
+Retro tests use invented feedback/task text and mocked completed-task/comment/Jev responses. They establish code behavior under supplied judgments, including preserved activities/goals, unknowns, malformed outputs, hostile source text and cap/deadline behavior. A separate bounded live development evaluation is not a held-out accuracy benchmark; no private feedback enters committed fixtures.
