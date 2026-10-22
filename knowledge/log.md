@@ -1,5 +1,11 @@
 # Knowledge change log
 
+## 2026-10-22
+
+Added bounded recent Retro context and explicit finite-choice human-review suggestions to the manual Drive brief. Reviewed source, privacy, budget, preservation and delivery claims with their relevant snapshots; preserved draft/unverified state and original review deadlines. Automatic reconciliation and scheduled planner acceptance remain planned.
+
+Approved live verification reviewed ten Retro records against 43 task titles, preserved uncertainty for all ten and confirmed the same private Drive artifact. Source coverage remains capped; zero-inference context refresh and final Retro-only publication are recorded separately from matching quality. Updated the Retro/handoff evidence snapshots while preserving original review deadlines and draft/unverified status. No tasks, collector, prompts or reset credits changed.
+
 ## 2026-10-21
 
 Added current read-only Todoist context to the existing manual Drive brief: project-grouped open tasks, source due values and exact Gmail-link associations, with Retro excluded. Reviewed privacy, provider bounds, layering, cache separation, degraded-source reporting and deterministic gates against code and synthetic tests. Updated relevant source snapshots while preserving existing review deadlines and draft/unverified status. Live cached-only publication and independent read-back verified 43 displayed tasks across eight projects, six Retro tasks excluded, the same private Drive ID and zero new Jev requests. Exact-link/task-change acceptance uses controlled reads; no matching live source link or altered live task is claimed. Todoist remains authoritative; no semantic matching, task mutation or scheduled prompt change is introduced.
@@ -51,5 +57,3 @@ Added the implemented Gmail evidence contract and revised layers, checkpoint/led
 ## 2026-10-10
 
 Initial Jev OKF v0.2 bundle, based on the supplied Drive deck/notes, pinned Google specification and merged Node/Drizzle foundation. Introduced grouped navigation and 25 draft concepts with delivery state, source snapshots and review deadlines. No human verification or production classifier integration is claimed.
-
-Added bounded recent Retro context and explicit finite-choice human-review suggestions to the manual Drive brief. Reviewed source, privacy, budget, preservation and delivery claims with their relevant snapshots; preserved draft/unverified state and original review deadlines. Automatic reconciliation and scheduled planner acceptance remain planned.

@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.678Z
+  at: 2026-10-22T14:53:12.375Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -34,6 +34,8 @@ x_jev_sources:
     sha256: 18a777d202fc3f64612316601ad6b77df0767796c5626e36851b94524bfa4976
   - path: docs/retro-brief.md
     sha256: a4c8f75490b5390265db0e922edd6834e401b1c9654a7c1ec1246d8fd81c96bd
+  - path: docs/retro-brief-evidence.md
+    sha256: 078d68a8fdb76a6c9d588819586191fade8f6ea535dbcbae24341fc8e9cec354
 ---
 
 # Retro interpretation and reusable inventory
@@ -53,3 +55,5 @@ The manual publisher reads recent open/completed Retro tasks and bounded comment
 Explicit --retro-review asks pinned Jev finite choices for task kind, one supplied task, relationship and an exact excerpt. Each required choice must meet provisional 0.85 confidence; the setting is uncalibrated. Ambiguous, conflicting, low-confidence and foreign-author evidence remains uncertain. Reusable activities, broad goals and source-recurring work stay available/open. Output is only a human-review suggestion: no task mutation, inferred date or generated action is accepted.
 
 Review uses at most 50 displayed current task candidates and ten source records, within the same new-call cap and deadline as email triage. Full serialized requests are bounded to 32 KiB. Source context is refreshed on every publication; interpretations are ephemeral and explicit repeat review spends new calls. Context-only replay replaces them with not-requested state. Automatic reconciliation and scheduled planner acceptance remain planned. See the repository runbook docs/retro-brief.md and its source snapshots.
+
+The approved live check reviewed ten feedback records against 43 current task titles in the same private Drive artifact. All ten remained uncertain below the provisional threshold; this establishes bounded transport/publication and conservative review, not matching accuracy. The source scan covered twelve tasks and comments on ten, omitting two records. A zero-inference context publication was verified before the final Retro-focused review, which deliberately omitted new email inference. See the sanitized evidence recorded in docs/retro-brief-evidence.md.

@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.702Z
+  at: 2026-10-22T14:53:12.380Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -47,6 +47,8 @@ x_jev_sources:
     sha256: 18b4b488bbcc7624c840e9d43503c61c47fe801438c9d3e99e143f29b75a08b2
   - path: docs/todoist-brief-evidence.md
     sha256: a5a4c60b65336f51012956db6fa2ec942a1b8467fedd042a4235dd9ee06b643f
+  - path: docs/retro-brief-evidence.md
+    sha256: 078d68a8fdb76a6c9d588819586191fade8f6ea535dbcbae24341fc8e9cec354
 ---
 
 # Drive snapshot and planner freshness
@@ -55,7 +57,7 @@ x_jev_sources:
 
 The manual brief:publish command creates one private app-owned jev-current.md in Drive, reusing the existing classifications and write-intent tables. It selects current complete stored conversations by latest message time, applies owner exclusions before Jev and saves validated typed decisions by evidence/directions/model/policy identity. Unchanged replay reuses decisions; failed cases remain visible and retryable. No migration or collector redeployment is required.
 
-The templated artifact has Action, FYI, Noise, Waiting, Uncertain/review and owner-exclusion sections. Escaped subjects and Gmail links preserve inspectability without publishing message bodies or address lists. It records generation, sample/window/eligible counts, source observations, pending retrievals and gaps. Model judgments are uncalibrated. Current Todoist context is included as described below; Recent Retro feedback and optional typed review are described below; Calendar context remains absent.
+The templated artifact has Action, FYI, Noise, Waiting, Uncertain/review and owner-exclusion sections. Escaped subjects and Gmail links preserve inspectability without publishing message bodies or address lists. It records generation, sample/window/eligible counts, source observations, pending retrievals and gaps. Model judgments are uncalibrated. Current Todoist context, recent Retro feedback and optional typed review are described below; Calendar context remains absent.
 
 Reserve a Drive-generated file ID durably before creation. Every explicit retry resolves that same ID; expected name/type/app ownership and generation/content read-back are required before success. A failed update preserves prior confirmed publication metadata in storage, although remote bytes may already have changed. Never replace a confirmed missing file or search by name automatically. A separate publisher lock leaves collection independent; no providers run inside SQL transactions. See [ledger](ledger.md) and [Jev boundary](/providers/jev-boundary.md).
 
@@ -72,3 +74,5 @@ The same manual brief now fetches current Todoist projects and open tasks on eve
 ## Retro in the same manual artifact
 
 Recent read-only Retro feedback and optional typed review now appear in the same owned Drive file. A fixed seven-day source window includes completed tasks and bounded comments; timestamps describe provider records, not inferred activity dates. Source/candidate/display gaps remain explicit. --retro-review shares email's new-call allowance and publishes ephemeral finite task-kind/candidate/relation/excerpt choices, subject to conservative review rules. No task is completed or edited. Context-only replay refreshes sources with no new Retro inference and removes prior interpretations. Automatic publication and actual scheduled planner retrieval remain unimplemented. See [Retro](retro-feedback.md).
+
+Approved live Retro verification confirmed the same private owned file, generation/content read-back and owner-only sharing. Ten records were reviewed against 43 current task titles; all remained uncertain and source coverage stayed explicitly incomplete. A zero-call source refresh preceded the final Retro-focused artifact, whose labelled verification scope deliberately omits new email selection/inference. This is publication evidence, not scheduled planner or semantic matching acceptance. See docs/retro-brief-evidence.md.

@@ -14,4 +14,4 @@
 
 ## 4. Integration evidence
 
-- [ ] 4.1 Pass offline and disposable PostgreSQL gates, run a bounded live synthetic Jev evaluation and real read-only Retro publication within the remaining $2 allowance, then verify the same private Drive file and context-only replay. Record sanitized outcomes and limitations and deliver a PR, leaving tasks, collector, prompts and reset credits untouched.
+- [x] 4.1 Pass offline and disposable PostgreSQL gates, run a bounded live synthetic Jev evaluation and real read-only Retro publication within the remaining $2 allowance, then verify the same private Drive file and context-only replay. Record sanitized outcomes and limitations and deliver a PR, leaving tasks, collector, prompts and reset credits untouched.
