@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.721Z
+  at: 2026-10-22T16:22:06.014Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -26,7 +26,7 @@ x_jev_sources:
   - path: src/cli.ts
     sha256: 202b9101e7fbd5caf158d98985648dd13eeb26ca12b821e84c0c6eb13679d73a
   - path: openspec/changes/add-personal-brief-preprocessing/tasks.md
-    sha256: 306bfcf09d7a0e01b3cee6969a4606a6045ba4fc89f504d658bc2c75bd7f3a2e
+    sha256: 1bb5251caaa35c7fb47b169e260f8a191c06dab5fe97ab0e34b688c3203b9c55
   - path: docs/foundation-evidence.md
     sha256: 0631d15b29a84b3bd873d14a3e76f86be6081ba85281aaaef6e4173a4e9b6270
   - path: docs/mail-observation-evidence.md
@@ -38,11 +38,11 @@ x_jev_sources:
   - path: docs/email-task-pilot.md
     sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
   - path: deploy/README.md
-    sha256: 3761f092a650433670f0cf0edb6afc364e1c9af753d4e3a337a750465366c6b5
+    sha256: d9cff016d5cd902a8459361782f5bfd918cbc687fecccd2f82beb973a977eb95
   - path: docs/mail-worker-evidence.md
     sha256: e7c1c9a9dcb0b8d7bc10c289ac6a28960a5255b113343279c620b70943cb76ca
   - path: docs/email-brief.md
-    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
+    sha256: 10d6613da7824e6d996e8aee904c0cf66eab2f664e49a7cdb491aea4924a1089
   - path: src/application/email-brief.ts
     sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
   - path: docs/email-brief-evidence.md
@@ -82,3 +82,5 @@ The manual [Drive brief](/architecture/planner-handoff.md) initially delivered t
 The manual brief now includes current read-only Todoist context by project, existing due values and exact source-link already-tracked annotations. Read/page/display gaps remain visible and Todoist stays authoritative. Full semantic reconciliation, automatic capture and scheduled planner consumption remain unfinished; bounded Retro context/review is described below. This partial task-read slice does not complete the full parent reconciliation or handoff milestones.
 
 The manual brief now includes recent Retro task/comment context and optional typed review, sharing its existing artifact and inference allowance. Completed feedback is read, not interpreted as automatic task closure. This narrows the remaining Retro work to full reconciliation, calibrated evaluation and actual scheduled planner use; it does not complete those parent requirements.
+
+The separate cached-only publisher now refreshes the owned Drive artifact every five minutes with zero Jev calls, and both existing daily prompts have an additive freshness/fallback handoff. This does not enable automatic classification or reconciliation. Scheduler tests verified exact generation retrieval and source fallback; the planner reported an unresolved canonical-plan save limitation. Actual next-timer consumer acceptance remains pending. See [planner handoff](/architecture/planner-handoff.md).

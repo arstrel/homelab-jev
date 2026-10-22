@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T03:19:37.075Z
+  at: 2026-10-22T16:14:17.896Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -26,7 +26,7 @@ x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/specs/worker-operations/spec.md
     sha256: cb573cbb85a6a53ad61363014df299c6f4eea8b6707a48b6aeb1d99b639e0408
   - path: deploy/README.md
-    sha256: 3761f092a650433670f0cf0edb6afc364e1c9af753d4e3a337a750465366c6b5
+    sha256: d9cff016d5cd902a8459361782f5bfd918cbc687fecccd2f82beb973a977eb95
   - path: scripts/mail-worker.ts
     sha256: 87ff1739e86a7a02fa241e6a4b5253e0547d9ad39a5513c24314454ece280a4c
 ---
@@ -41,4 +41,4 @@ Provider failures must preserve pending work and report real freshness gaps. Bou
 
 Follow [Gmail checkpoints](gmail-checkpoints.md), [remote write safety](remote-write-safety.md), [planner handoff](planner-handoff.md), and [native releases](/operations/native-releases.md).
 
-Manual [incremental synchronization](mail-sync.md) implements collection with exclusive session ownership and durable retries. The optional launcher reuses that command and lock rather than introducing another processing loop. Persistent classification, reconciliation, publication and full live rollout remain planned.
+Manual [incremental synchronization](mail-sync.md) implements collection with exclusive session ownership and durable retries. The optional launcher reuses that command and lock rather than introducing another processing loop. A separate five-minute cached-only publisher refreshes the owned Drive brief and current Todoist/Retro context with zero hosted inference. Persistent classification, reconciliation and full live rollout remain planned.

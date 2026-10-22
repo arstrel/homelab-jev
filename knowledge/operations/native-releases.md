@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:10:40.938Z
+  at: 2026-10-22T16:14:17.896Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -25,7 +25,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/design.md
 x_jev_sources:
   - path: deploy/README.md
-    sha256: 3761f092a650433670f0cf0edb6afc364e1c9af753d4e3a337a750465366c6b5
+    sha256: d9cff016d5cd902a8459361782f5bfd918cbc687fecccd2f82beb973a977eb95
   - path: openspec/changes/add-personal-brief-preprocessing/specs/worker-operations/spec.md
     sha256: cb573cbb85a6a53ad61363014df299c6f4eea8b6707a48b6aeb1d99b639e0408
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
@@ -48,6 +48,6 @@ Apply reviewed compatible migrations explicitly. Capture health, duration, last 
 
 Rollback should select a compatible previous release while preserving ledger records and user tasks. Do not assume SQL reversal is safe. Rehearse the migration/release rollback procedure before production capture.
 
-Full classification/reconciliation/publication scheduling and catch-up/no-change acceptance remain planned. See [processing cycle](/architecture/processing-cycle.md), [migrations](database-migrations.md), and [delivery boundary](/product/delivery-boundary.md).
+A separate cached-only publisher now runs the merged brief command every five minutes; full classification/reconciliation scheduling and catch-up/no-change acceptance remain planned. See [processing cycle](/architecture/processing-cycle.md), [migrations](database-migrations.md), and [delivery boundary](/product/delivery-boundary.md).
 
-On October 21 Pacific, merged collector release ae4477994fa7558717e451c31d2f01a0c2f6f349 was activated. Two automatic invocations added 35 complete versions/jobs, and an overlapping manual invocation skipped with no provider work. The recorded snapshot retained 488 retrievals and null evidence freshness; full catch-up/no-change acceptance remains open. This is timestamped operational evidence, not a continuing health guarantee. The manual brief feature does not redeploy this collector or schedule inference/publication.
+On October 21 Pacific, merged collector release ae4477994fa7558717e451c31d2f01a0c2f6f349 was activated. Two automatic invocations added 35 complete versions/jobs, and an overlapping manual invocation skipped with no provider work. The recorded snapshot retained 488 retrievals and null evidence freshness; full catch-up/no-change acceptance remains open. This is timestamped operational evidence, not a continuing health guarantee. The separate cached-only publisher preserves the collector configuration and schedules no hosted inference. See the repository runbook deploy/brief-refresh.md and evidence docs/scheduled-brief-evidence.md.

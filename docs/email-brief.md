@@ -1,4 +1,4 @@
-# Manual Drive email brief
+# Drive email brief
 
 This is a bounded email, current Todoist and recent Retro context artifact, not the complete Daily Life Plan handoff. It uses current complete stored conversations, saved typed judgments and fresh read-only Todoist pages. Collection continues independently; this command does not fetch Gmail, create Todoist tasks, change read state, or edit scheduled prompts.
 
@@ -52,4 +52,4 @@ A separate session lock skips overlapping publishers before any providers, witho
 
 Offline domain/application and HTTP tests cover cache/input changes, owner precedence, uncertain outcomes, caps, cancellation/deadline, escaping, create/update, ownership, lost responses and read-back mismatches. Todoist cases cover paginated reads, project/Retro filtering, due values, exact link boundaries, changing task state, truncation and degraded reports without new inference or task writes. Disposable PostgreSQL tests cover recency/current-version selection, atomic rollback, exact binding, reserved-ID recovery, prior-publication preservation and overlap. Compiled CLI configuration/option checks remain network-free. Run `npm run check` and `npm run test:integration` before live work.
 
-See the [initial live publication and cached-only replay evidence](email-brief-evidence.md) and [Todoist context verification](todoist-brief-evidence.md), recorded separately from synthetic guarantees. Provider usage is an estimate at [published model prices](https://docs.typesafe.ai/models), not a billing receipt. Scheduled publication, real planner retrieval, full task reconciliation and calibrated automatic capture remain later deliverables.
+See the [initial live publication and cached-only replay evidence](email-brief-evidence.md) and [Todoist context verification](todoist-brief-evidence.md), recorded separately from synthetic guarantees. Provider usage is an estimate at [published model prices](https://docs.typesafe.ai/models), not a billing receipt. A separate [cached-only scheduled refresh and consumer handoff](scheduled-brief-handoff.md) reuses this command with zero new inference. Actual timer-triggered consumer verification, full task reconciliation and calibrated automatic capture have separate acceptance evidence.
