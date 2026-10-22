@@ -10,4 +10,4 @@
 
 ## 3. Integration evidence
 
-- [ ] 3.1 Run offline and disposable database gates, publish a bounded authorized live sample within the remaining $2 Jev allowance, read it back and repeat cached-only against the same file (or record the exact external blocker). Update relevant OKF/delivery evidence and deliver a PR without changing the active collector or scheduled prompts.
+- [x] 3.1 Run offline and disposable database gates, publish a bounded authorized live sample within the remaining $2 Jev allowance, read it back and repeat cached-only against the same file (or record the exact external blocker). Update relevant OKF/delivery evidence and deliver a PR without changing the active collector or scheduled prompts.
