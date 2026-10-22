@@ -1,6 +1,6 @@
 # Manual Drive email brief
 
-This is a bounded email-only artifact, not the complete Daily Life Plan handoff. It uses current complete stored conversations and saved typed judgments. Collection continues independently; this command does not fetch Gmail, create Todoist tasks, change read state, or edit scheduled prompts.
+This is a bounded email and current Todoist context artifact, not the complete Daily Life Plan handoff. It uses current complete stored conversations, saved typed judgments and fresh read-only Todoist pages. Collection continues independently; this command does not fetch Gmail, create Todoist tasks, change read state, or edit scheduled prompts.
 
 ```sh
 nvm use 24
@@ -10,7 +10,7 @@ npm run brief:publish -- --max-conversations 10 --days 7 --max-new 10
 npm run brief:publish -- --max-conversations 10 --days 7 --max-new 0
 ```
 
-Configuration: existing reviewed database schema, `DB_URL` (or DB variables), `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, and `drive.file` consent. `JEV_API_KEY` is needed only when `--max-new` is positive. The explicit npm command loads `.env`; tests and hooks never do.
+Configuration: existing reviewed database schema, `DB_URL` (or DB variables), `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, and `drive.file` consent. `TODOIST_API_TOKEN` enables current task context; optional `TODOIST_RETRO_PROJECT_ID` preserves Retro exclusion after a rename. A project named Retro (trimmed, case-insensitive) is also excluded. A missing Todoist token publishes an explicit unavailable section with exit 1. `JEV_API_KEY` is needed only when `--max-new` is positive. The explicit npm command loads `.env`; tests and hooks never do.
 
 ## Selection, judgment and privacy
 
@@ -20,9 +20,19 @@ Narrow owner rules for routine GitHub PR notifications and Google Cloud terms no
 
 Validated decisions are saved in existing classifications, atomically with exact-job completion. Cache identity includes evidence fingerprint, direction hints, pinned model and decision policy. Changed input requires a fresh decision; unchanged replay uses saved results. Deterministic exclusions have no fabricated model confidence. Unknown judgments are saved as unknown. Invalid/oversized evidence, invalid results and provider failures remain visible and retryable; failed jobs are not completed. A malformed cache fails closed for review. These uncalibrated judgments do not authorize task effects.
 
-The private template groups Action, FYI, Noise, Waiting, Uncertain/review and owner exclusions. Waiting takes priority over attention; resolution suggestions and unknown choices require review. Each item has an escaped subject, Gmail source link, timestamp and typed choices/confidences. It contains no message bodies or address lists. Coverage includes generation, message window, observation/freshness timestamps, backlog, retries and history gaps. Todoist, Retro and Calendar context are explicitly absent. Fresh generation never implies fresh complete collection.
+The private template groups Action, FYI, Noise, Waiting, Uncertain/review and owner exclusions. Waiting takes priority over attention; resolution suggestions and unknown choices require review. Each item has an escaped subject, Gmail source link, timestamp and typed choices/confidences. It contains no message bodies or address lists. Coverage includes generation, message window, observation/freshness timestamps, backlog, retries and history gaps. Retro feedback and Calendar context are explicitly absent. Fresh generation never implies fresh complete collection.
 
 Console output contains counts, fixed failure phases, returned usage and a confirmed Drive URL, without subjects, message bodies or Gmail identifiers. Keep the Drive artifact private; do not commit live content or operational credentials.
+
+## Current Todoist context
+
+Each publication fetches up to five pages of 100 projects and two pages of 100 open tasks. Only current active non-Retro projects and their returned open tasks appear. Duplicate task IDs are collapsed; completed/deleted items and tasks without an available project are omitted. Page caps and missing-project counts are disclosed. The read interval is reported separately from Gmail freshness because API pagination is not an atomic snapshot.
+
+The task section groups source titles by current project with Todoist links and existing due date/datetime/timezone values. No due date is inferred or reformatted into a new date. Task titles remain source data, including optional activities; the integration does not decide that everything on the list is mandatory. Descriptions are read locally for explicit links, never published or sent to Jev. Task contents are fetched afresh each time rather than stored in PostgreSQL. The section has a 24 KiB display bound with an explicit omitted-item count; the whole file retains its 64 KiB limit.
+
+An email in Action is annotated **Already tracked (explicit source link)** when a displayed open task description contains its exact supported Gmail conversation link: `https://mail.google.com/mail/u/0/#all/<id>`, `#inbox/<id>` or `#sent/<id>`. Multiple matches remain visible (up to three inline links, with the remaining count pointing to the task section). Similar wording, bare IDs, other accounts, search routes and unrelated hosts do not establish a match. This is a conversation association, not proof that every action in a thread is covered or completed. No link or an omitted task is not evidence that the work is untracked.
+
+A successful renamed/moved/removed task read appears on the next publication, even with `--max-new 0`; this adds no Jev questions and leaves the email cache identity unchanged. Provider/malformed-response/pagination failures discard partial contents and produce a fixed unavailable section. Incomplete or unavailable Todoist context exits 1 while allowing an otherwise confirmed degraded Drive publication. Cancellation/deadline still stops publication. No previous task list is presented as a new successful read.
 
 ## One owned destination and recovery
 
@@ -36,6 +46,6 @@ A separate session lock skips overlapping publishers before any providers, witho
 
 ## Verification
 
-Offline domain/application and HTTP tests cover cache/input changes, owner precedence, uncertain outcomes, caps, cancellation/deadline, escaping, create/update, ownership, lost responses and read-back mismatches. Disposable PostgreSQL tests cover recency/current-version selection, atomic rollback, exact binding, reserved-ID recovery, prior-publication preservation and overlap. Compiled CLI configuration/option checks remain network-free. Run `npm run check` and `npm run test:integration` before live work.
+Offline domain/application and HTTP tests cover cache/input changes, owner precedence, uncertain outcomes, caps, cancellation/deadline, escaping, create/update, ownership, lost responses and read-back mismatches. Todoist cases cover paginated reads, project/Retro filtering, due values, exact link boundaries, changing task state, truncation and degraded reports without new inference or task writes. Disposable PostgreSQL tests cover recency/current-version selection, atomic rollback, exact binding, reserved-ID recovery, prior-publication preservation and overlap. Compiled CLI configuration/option checks remain network-free. Run `npm run check` and `npm run test:integration` before live work.
 
-See the [live publication and cached-only replay evidence](email-brief-evidence.md), recorded separately from synthetic guarantees. Provider usage is an estimate at [published model prices](https://docs.typesafe.ai/models), not a billing receipt. Scheduled publication, real planner retrieval, Todoist/Retro integration and calibrated automatic capture remain later deliverables.
+See the [initial live publication and cached-only replay evidence](email-brief-evidence.md) and [Todoist context verification](todoist-brief-evidence.md), recorded separately from synthetic guarantees. Provider usage is an estimate at [published model prices](https://docs.typesafe.ai/models), not a billing receipt. Scheduled publication, real planner retrieval, full task reconciliation, Retro interpretation and calibrated automatic capture remain later deliverables.

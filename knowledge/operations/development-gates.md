@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:10:40.938Z
+  at: 2026-10-22T04:37:01.241Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -47,11 +47,15 @@ x_jev_sources:
   - path: tests/unit/mail-worker.test.ts
     sha256: 0518c100be01d18dbf638dd3875a0ee6d05f350ef2972648484b7a9bca15f0a5
   - path: tests/unit/email-brief.test.ts
-    sha256: a8be242ca043e82b3c8212064db12b7c1aa04280dce014be3190fda2cd573901
+    sha256: 6311a2698060b312e555250f82fc11937a8e0fa486786ea19768d79ade13220a
   - path: tests/adapters/drive-brief.test.ts
     sha256: 237288c05bf0e8138f88e7819a0f58fac03ac0945eccfbe8aa0929abe93de7d8
   - path: tests/integration/email-brief.test.ts
     sha256: a721685082df5ca0a19041bd788974e8a715ff6ffebf85e92a56cd8e216735b1
+  - path: tests/unit/todoist-brief.test.ts
+    sha256: 0fc3a577b5fc653deeb775573efda07b99c72fcf590ab006718fa4cc387b517c
+  - path: tests/adapters/todoist-brief.test.ts
+    sha256: af477f385465e1563fc34fd4d0999f1a9562eded2c4d8f1ced5741fcada39094
 ---
 
 # Node development and Git gates
@@ -77,3 +81,5 @@ The v2 policy retains these gates and adds eligibility/title, review-version/req
 Native collector deployment tests use real archive extraction and a tiny compiled fixture with fake package installation and launchctl. They verify release isolation, reviewed/clean checkout checks, schema preflight, stop/start and failed activation restoration without installing an agent or reading production credentials. The optional worker npm command is an operator action outside hooks/CI; actual recurring acceptance stays separate.
 
 The manual [Drive brief](/architecture/planner-handoff.md) adds offline cache/cap/uncertainty/cancellation/template and HTTP ownership/create/update/read-back cases, compiled option/configuration checks and disposable PostgreSQL selection/atomicity/recovery/overlap tests. Gates never publish live Drive files or spend the owner's Jev allowance; live evidence remains a separate explicit operation.
+
+Todoist-aware brief tests use synthetic paginated project/task responses, changed/removed task state, due fields, Retro filtering, exact-link boundaries, display limits and degraded/cancelled publication. Existing compiled CLI and disposable database regression gates remain required. Live task contents and Drive writes stay outside hooks/CI.

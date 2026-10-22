@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T01:53:00Z
+  at: 2026-10-22T04:37:01.221Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -31,6 +31,12 @@ x_jev_sources:
     sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
   - path: docs/email-tasks.md
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
+  - path: src/adapters/todoist-brief.ts
+    sha256: f60bf9703a34d30580fce1c1569a705e0cd98b5a3c12d8146666c81f4586412e
+  - path: src/domain/todoist-brief.ts
+    sha256: 4516ae5f375c3c5211c0b57a948391ad34bb40127aaa8744a1f585753fdb12b0
+  - path: docs/email-brief.md
+    sha256: c40b3cd8e7bb03361dfd5c35205ca8d51671d077b86dad2699a715b761725354
 ---
 
 # Existing project routing and task kinds
@@ -46,3 +52,5 @@ See [manual edits](/architecture/manual-edits.md), [uncertainty](/architecture/u
 The implemented [manual reviewed task flow](/providers/todoist-boundary.md) offers one source-supported task per stored conversation after an independent required-obligation judgment, finite current project choices and Inbox on uncertain routing. Generic review links/notifications use their source subject in the title. Samples prioritize message time rather than retrieval time. Retro is excluded by name, optional configured ID and captured review identity. Apply requires explicit candidate approval and rejects a changed name/ID instead of silently rerouting. Automatic capture and broader task-kind synchronization remain planned.
 
 Owner preference: routine GitHub PR opens/comments/review requests are handled in GitHub and should not duplicate work in Todoist; routine Google Cloud terms updates also produce no task. Deterministic sender/subject exclusions enforce these categories before model calls and again on apply. Marking those PR emails read is a separate Gmail operation, not completion of a Todoist obligation.
+
+The manual [Drive brief](/architecture/planner-handoff.md) now reads current task inventory by active project with task links and existing due values. Retro remains outside the actionable list; optional activities remain copied source data. Exact Gmail source-link associations can mark an email action already tracked, without claiming semantic equivalence, completion or full coverage. Fetching again reflects current returned names, placement and open status. The Drive artifact is a bounded observation; Todoist stays authoritative.

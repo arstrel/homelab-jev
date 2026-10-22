@@ -27,7 +27,7 @@ npm run brief:publish -- --max-conversations 10 --days 7 --max-new 10
 npm run brief:publish -- --max-new 0
 ```
 
-This prints the confirmed Drive link. It does not change tasks, Gmail read state, or scheduled prompts. See [brief publication and recovery](docs/email-brief.md) for configuration, caps and coverage limits.
+This prints the confirmed Drive link. Each run also reads current Todoist projects/open tasks, excludes Retro and marks email actions with an explicit existing task source link as already tracked. It does not change tasks, Gmail read state, or scheduled prompts. See [brief publication and recovery](docs/email-brief.md) for configuration, caps and coverage limits.
 
 Start with [development setup](docs/development.md), [independent connections](docs/connections.md), [Gmail preview](docs/gmail-preview.md), [migration operations](docs/migrations.md) and [foundation evidence](docs/foundation-evidence.md).
 
