@@ -153,12 +153,15 @@ export function mailStatusReader(
           group by 1 order by 1`,
           ["primary", retrievalFailureNames],
         );
+        // Use the classifier's current-evidence identity, retaining deferred backlog.
         const {
           rows: [jobs],
         } = await connection.query<{ pending: number; unbound: number }>(
-          `select count(*)::int as pending,
-          count(*) filter (where evidence_fingerprint is null)::int as unbound
-          from jev.pending_jobs where mailbox = $1 and state = 'pending'`,
+          `select count(*) filter (where s.fingerprint = j.evidence_fingerprint)::int as pending,
+          count(*) filter (where j.evidence_fingerprint is null)::int as unbound
+          from jev.pending_jobs j
+          left join jev.sources s on s.mailbox = j.mailbox and s.source_id = j.source_id
+          where j.mailbox = $1 and j.state = 'pending'`,
           ["primary"],
         );
         if (!retrievals || !jobs) throw new Error("Missing aggregate");

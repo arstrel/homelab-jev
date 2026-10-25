@@ -7,6 +7,7 @@ import type { PoolClient } from "pg";
 import { afterAll, beforeEach, expect, it } from "vitest";
 import { testDatabaseUrl } from "../../scripts/test-database.js";
 import { connect } from "../../src/adapters/postgres/client.js";
+import { briefDatabase } from "../../src/adapters/postgres/email-brief.js";
 import { mailEvidenceStore } from "../../src/adapters/postgres/mail-evidence.js";
 import { mailStatusReader } from "../../src/adapters/postgres/mail-status.js";
 import { mailSyncStore } from "../../src/adapters/postgres/mail-sync.js";
@@ -117,8 +118,64 @@ it("recognizes ready but uninitialized storage and existing unbound classificati
     window: null,
     evidenceSyncedAt: null,
     retrievals: { pending: 0, due: 0, retrying: 0, failures: {} },
-    classification: { pendingJobs: 2, unboundPendingJobs: 1 },
+    classification: { pendingJobs: 1, unboundPendingJobs: 1 },
     exitCode: 0,
+  });
+});
+it("counts current pending evidence rather than superseded, unbound or completed jobs", async () => {
+  await initialize();
+  const store = mailEvidenceStore(client);
+  const original = submission();
+  await store.persistEvidence([original]);
+  const current = submission();
+  current.jobId = randomUUID();
+  const message = current.evidence.messages[0];
+  if (!message) throw new Error("fixture");
+  message.subject = "A newer request";
+  current.observation.observedAt = new Date(mailInstant.getTime() + 1_000).toISOString();
+  await store.persistEvidence([current]);
+  const future = submission();
+  future.jobId = randomUUID();
+  future.evidence.source.threadId = "deferred";
+  future.availableAt = new Date(mailInstant.getTime() + 300_000);
+  await store.persistEvidence([future]);
+  const completed = submission();
+  completed.jobId = randomUUID();
+  completed.evidence.source.threadId = "completed";
+  await store.persistEvidence([completed]);
+  const other = submission();
+  other.jobId = randomUUID();
+  other.evidence.source.mailbox = "other";
+  await store.persistEvidence([other]);
+  await client.pool.query("update jev.pending_jobs set state='complete' where id=$1", [
+    completed.jobId,
+  ]);
+  await client.db.insert(pendingJobs).values({
+    id: randomUUID(),
+    mailbox: "primary",
+    sourceId: "t-boiler",
+    fingerprint: "legacy",
+    policyVersion: "legacy",
+    availableAt: mailInstant,
+  });
+  const jobs = async () =>
+    (await client.pool.query("select * from jev.pending_jobs order by id")).rows;
+  const before = await jobs();
+  expect(await mailStatus(reader, clock)).toMatchObject({
+    classification: { pendingJobs: 2, unboundPendingJobs: 1 },
+  });
+  await briefDatabase(client).exclusive(async (session) => {
+    expect((await session.pending(mailInstant, 10)).map((r) => r.jobId)).toEqual([current.jobId]);
+    expect((await session.pending(future.availableAt, 10)).map((r) => r.jobId).sort()).toEqual(
+      [current.jobId, future.jobId].sort(),
+    );
+  });
+  expect(await jobs()).toEqual(before);
+  await client.pool.query("update jev.pending_jobs set state='complete' where id=any($1::uuid[])", [
+    [current.jobId, future.jobId],
+  ]);
+  expect(await mailStatus(reader, clock)).toMatchObject({
+    classification: { pendingJobs: 0, unboundPendingJobs: 1 },
   });
 });
 it("rejects unmanaged, conflicting, newer and structurally incomplete storage without repair", async () => {

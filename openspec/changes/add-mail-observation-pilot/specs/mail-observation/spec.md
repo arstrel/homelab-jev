@@ -39,6 +39,10 @@ Diagnostics SHALL distinguish all, due and retrying retrievals, future retry tim
 - **WHEN** history has caught up but incomplete bodies remain queued for retry
 - **THEN** status retains the previous evidence timestamp and reports the retrieval gap independently of classification jobs
 
+#### Scenario: Pending historical versions are superseded
+- **WHEN** old evidence jobs remain pending beside current, deferred, completed and unbound jobs
+- **THEN** classification backlog counts only pending primary-mailbox jobs bound to current source evidence, including deferred work, and reports unbound pending jobs separately without mutating any job
+
 ### Requirement: Sanitized operational artifacts
 Diagnostics and committed observation reports SHALL contain only reviewed fixed fields, aggregate counts, timestamps, window bounds, build identity and limitations. They SHALL exclude credentials, connection details, source/task IDs, anchors, tokens, subjects, addresses, bodies, fingerprints and raw exceptions. Unknown database failure strings SHALL NOT pass through unchanged.
 

@@ -9,19 +9,17 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:15:25.569164Z
+  at: 2026-10-25T21:08:29Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
   - id: s1
-    resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/src/adapters/postgres/repositories.ts
-    title: src/adapters/postgres/repositories.ts
+    resource: https://github.com/arstrel/homelab-jev/blob/8c6a365d315ec11c2298bd7353255474ea69da50/src/adapters/postgres/mail-sync.ts
+    title: src/adapters/postgres/mail-sync.ts
   - id: s2
     resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/openspec/changes/add-personal-brief-preprocessing/specs/mail-synchronization/spec.md
     title: openspec/changes/add-personal-brief-preprocessing/specs/mail-synchronization/spec.md
 x_jev_sources:
-  - path: src/adapters/postgres/repositories.ts
-    sha256: 3b180be48d0705cc565ec4b6e48293f83a3f1b1ef634c5d792675f69bc790414
   - path: openspec/changes/add-personal-brief-preprocessing/specs/mail-synchronization/spec.md
     sha256: cd7c2aa91d93d41b935b8c3cc12ea3e9b6d18df35bfccab6262f0d7d0274f508
   - path: src/adapters/postgres/mail-evidence.ts
@@ -36,9 +34,9 @@ x_jev_sources:
 
 # Gmail evidence and checkpoint safety
 
-The ledger foundation has an ingestion transaction that stores source identities, deduplicated pending jobs and the checkpoint together. Manual [Gmail evidence retrieval](gmail-evidence.md) is implemented without ledger writes; the separate manual incremental synchronizer is now implemented. The separate [manual ingestion](mail-ingestion.md) path now stores immutable normalized versions and exact-bound jobs without changing checkpoints. The foundation checkpoint primitive still permits legacy unbound jobs; the implemented history path uses a durable retrieval backlog and a separate complete-evidence watermark.
+The production incremental synchronizer uses dedicated sync/evidence adapters with a durable retrieval backlog and a separate complete-evidence watermark. The separate [manual ingestion](mail-ingestion.md) path stores immutable normalized versions and exact-bound jobs without changing checkpoints. The unused foundation checkpoint/ingestion primitive was removed; legacy unbound rows remain preserved. Manual [Gmail evidence retrieval](gmail-evidence.md) remains available without ledger writes.
 
-The planned launcher polls incremental history every five minutes. The manual command paginates and expands affected full threads under bounded runs. Include incoming and sent evidence, including already-read mail; read/unread is not the obligation boundary. The implemented initial window is configurable, defaulting to 30 days.
+The native collector polls incremental history every five minutes. The manual command paginates and expands affected full threads under bounded runs. Include incoming and sent evidence, including already-read mail; read/unread is not the obligation boundary. The implemented initial window is configurable, defaulting to 30 days.
 
 The manual [sync contract](mail-sync.md) separates two frontiers: atomically queue discovered thread IDs before advancing discovery, then atomically save complete evidence/jobs and acknowledge the selected generation. Advance evidence freshness only after history exhaustion and an empty backlog. A discovery cursor alone does not prove complete evidence. A crash must replay evidence without duplicating jobs for the same source fingerprint and policy version. [Expired-cursor recovery](mail-recovery.md) preserves data, captures a fresh anchor and scans recent mail plus all local mapped threads, conservatively covering open obligations. Catch-up and backlog drainage establish scoped freshness while the expired-history gap remains explicit.
 

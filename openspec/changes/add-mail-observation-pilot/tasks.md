@@ -17,6 +17,8 @@
 ## 4. Integration acceptance
 
 - [x] 4.1 Run the full offline and disposable PostgreSQL gates and review the final diff/report against the capability scenarios; verify scheduled operation, classifier quality and live recovery are not claimed without evidence, no new migration is introduced and normal Git/CI gates remain enforced.
+- [x] 4.2 Count only pending jobs bound to current source evidence as classification backlog, retaining deferred work and a separate unbound diagnostic; verify superseded/completed/other-mailbox exclusions and unchanged stored rows against the classifier selector.
+- [x] 4.3 Remove unused foundation repository mutations and test-only queries, preserving production raw status and schema-constraint/migration coverage through direct disposable fixtures; update affected documentation and reviewed OKF sources and verify offline/disposable PostgreSQL checks.
 
 Planning creates no runtime changes or live authorization. Tooling can be delivered with task 3.1 pending when no operational session has been authorized or live acceptance remains incomplete; report that state explicitly rather than marking the change complete.
 

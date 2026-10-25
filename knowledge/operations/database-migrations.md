@@ -28,7 +28,7 @@ sources:
     title: migrations/0001_ambiguous_squadron_sinister.sql
 x_jev_sources:
   - path: src/adapters/postgres/mail-status.ts
-    sha256: 589afa11025780e47d01cb6ac6051e71b365c635dabd26488c49c3b3a6646cb9
+    sha256: d7671524c8b0a60891ee1263ea38f375c7b55727652af500f467c1e4dbb36c6d
   - path: docs/migrations.md
     sha256: fcead5afc6bebede5a1c38ef1005b18aa3f22d5ecde40f8a8b3ce524aa6527b2
   - path: src/adapters/postgres/migrate.ts
