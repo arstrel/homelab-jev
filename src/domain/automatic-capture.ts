@@ -80,6 +80,8 @@ export function captureAnswer(raw: unknown, question: CaptureQuestion) {
   const candidate = taskAnswer({ ...parsed, answers }, question);
   if (!["none", "unknown", ...question.tasks.map((_, i) => `t${i}`)].includes(existing.choice))
     throw new Error("invalid-match");
+  if (parsed.answers.eligibility.confidence < 0.95)
+    return { type: "review" as const, usage: parsed.usage };
   if (
     candidate !== undefined &&
     parsed.answers.eligibility.choice === "required" &&

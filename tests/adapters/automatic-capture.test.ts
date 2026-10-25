@@ -74,6 +74,45 @@ it("fails closed when task pagination remains incomplete", async () => {
   );
   await expect(reader().inventory(now)).rejects.toThrow("task-pagination");
 });
+it.each([false, true])(
+  "excludes configured Retro when absent/archived=%s in project discovery",
+  async (archived) => {
+    providers();
+    server.use(
+      http.get(`${root}/projects`, () =>
+        HttpResponse.json({
+          results: [
+            todoistProject("inbox", { inbox_project: true }),
+            todoistProject(),
+            ...(archived ? [todoistProject("retro", { is_archived: true })] : []),
+          ],
+          next_cursor: null,
+        }),
+      ),
+      http.get(`${root}/tasks/completed/by_completion_date`, () =>
+        HttpResponse.json({
+          items: [
+            todoistTask("retro-done", {
+              project_id: "retro",
+              checked: true,
+              completed_at: "2026-10-10T12:00:00Z",
+            }),
+            todoistTask("other-done", {
+              project_id: "other-archived",
+              checked: true,
+              completed_at: "2026-10-10T12:00:00Z",
+            }),
+          ],
+          next_cursor: null,
+        }),
+      ),
+    );
+    expect((await reader().inventory(now)).tasks.map((t) => t.id)).toEqual([
+      "manual-edited",
+      "other-done",
+    ]);
+  },
+);
 it("sends finite existing-task choices and titles without provider IDs or descriptions", async () => {
   const q = captureQuestion(taskConversation(), {
     projects: taskProjects.slice(0, 2),

@@ -69,7 +69,7 @@ x_jev_sources:
   - path: src/application/capture-mail.ts
     sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
   - path: src/domain/automatic-capture.ts
-    sha256: 2f9cc24b50d33ebc6492004129c583605b37766c8f5e2b7956f3fb1eb866082f
+    sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: src/adapters/postgres/automatic-capture.ts
     sha256: 3656d23083bbbff8243784295bf21be29568679ad212c08d6201a341925f3b42
 ---

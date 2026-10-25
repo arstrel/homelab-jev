@@ -40,9 +40,9 @@ x_jev_sources:
   - path: src/domain/retro-review.ts
     sha256: 750a144c5d8cf6df1e99d7b7115c6afa1b394e11323c49c354c3700eb4477148
   - path: src/domain/automatic-capture.ts
-    sha256: 2f9cc24b50d33ebc6492004129c583605b37766c8f5e2b7956f3fb1eb866082f
+    sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: src/adapters/todoist-capture.ts
-    sha256: d1ccb174879c8ead18d98fa360b3e77472db9a32f331ee9dcb3b29fff9895b81
+    sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
   - path: docs/automatic-todoist-capture.md
     sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
 ---

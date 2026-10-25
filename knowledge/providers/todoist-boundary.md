@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:27:08Z
+  at: 2026-10-25T18:38:32Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -45,7 +45,7 @@ x_jev_sources:
   - path: src/adapters/todoist-retro.ts
     sha256: e4f8df66104ea1740daa923cf4ca61bc607df35a3de6792518eb5a065a3d1cbe
   - path: src/adapters/todoist-capture.ts
-    sha256: d1ccb174879c8ead18d98fa360b3e77472db9a32f331ee9dcb3b29fff9895b81
+    sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
   - path: src/application/capture-mail.ts
     sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
   - path: docs/automatic-todoist-capture.md
@@ -65,3 +65,5 @@ The manual [Drive brief](/architecture/planner-handoff.md) adds bounded read-onl
 The publisher also resolves one current active Retro identity and reads bounded open/completed tasks plus comments using the existing read-only transport. It selects a seven-day provider-date window and ten newest source records; caps, skipped comment parents, unread attachments, ambiguous identity and read failures are visible. Other/unknown authors cannot support owner accomplishment. Retro stays outside actionable inventory and is never changed. See [Retro](/architecture/retro-feedback.md).
 
 The capture adapter reuses project discovery and the existing source-marked creation method. It reads at most two 100-item pages each of open and last-30-day completed tasks, fails closed on unfinished pagination or over 100 distinct candidates, and excludes Retro by resolved identity. Descriptions are inspected locally for supported primary-account Gmail references; model context contains only titles/completed hints. Unknown/archived-project tasks can prevent duplicates but cannot become creation destinations. The capture port exposes no remote update, completion, deletion or reopen method. Durable links preserve mapped work even when no longer returned. See docs/automatic-todoist-capture.md.
+
+The configured Retro identity is excluded even when its project is archived, frozen or absent from active discovery; recent completed feedback must not enter matching context.

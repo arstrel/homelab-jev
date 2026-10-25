@@ -67,9 +67,9 @@ x_jev_sources:
   - path: tests/adapters/gmail.test.ts
     sha256: 451a0241d05e52ad39055b9d01bf38fb8fbb52db7629099132215c6179ee4c03
   - path: tests/unit/automatic-capture.test.ts
-    sha256: ba52ad094c0442efcf3ccdeed4db269ea20b88220947ec6c297de21b5a1928c0
+    sha256: 987a45365322ff9b5407d54b3d90e74c9923cf5a17a16e43cc2c9c21b4cfd3b1
   - path: tests/adapters/automatic-capture.test.ts
-    sha256: 5593660e2c96e57a973f0e1fae5c049a18842826fd0613ec243f24c0874c028b
+    sha256: fd517e79bd8e6e3ed8a63ab45be2735ce1b6d3a7616b9473aa0e0c83dfb98953
 ---
 
 # Node development and Git gates

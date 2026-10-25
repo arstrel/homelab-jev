@@ -241,3 +241,24 @@ it("leaves FYI/resolved judgments without a task", async () => {
   expect(await s.run()).toMatchObject({ skipped: 1, created: 0 });
   expect(s.remote.create).not.toHaveBeenCalled();
 });
+it.each(["none", "resolved"])(
+  "discloses low-confidence %s judgments for review",
+  async (choice) => {
+    const s = setup();
+    s.judge.mockResolvedValue({
+      ...response(),
+      answers: {
+        ...response().answers,
+        eligibility: { ...response().answers.eligibility, choice, confidence: 0 },
+      },
+    });
+    expect(await s.run()).toMatchObject({ review: 1, skipped: 0, created: 0 });
+    expect(s.session.record).toHaveBeenCalledWith(
+      s.record,
+      "review",
+      null,
+      expect.objectContaining({ type: "review" }),
+    );
+    expect(s.remote.create).not.toHaveBeenCalled();
+  },
+);

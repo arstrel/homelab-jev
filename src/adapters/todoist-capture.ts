@@ -18,6 +18,7 @@ export function todoistCapture(token: string, budget: MailBudget, retroId?: stri
       );
       const excluded = new Set(retroIds),
         tasks = new Map<string, CaptureTask>();
+      if (retroId) excluded.add(retroId);
       const add = (task: Task, completed: boolean) => {
         if (excluded.has(task.projectId) || task.isDeleted) return;
         if (tasks.has(task.id)) return;

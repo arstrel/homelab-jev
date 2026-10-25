@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:27:08Z
+  at: 2026-10-25T18:38:32Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -61,7 +61,7 @@ x_jev_sources:
   - path: tests/unit/scheduled-email-brief.test.ts
     sha256: 2003a6d13f08af3ee07d194863a69435d1dd4d260c7cbf503608e2809188c5df
   - path: src/domain/automatic-capture.ts
-    sha256: 2f9cc24b50d33ebc6492004129c583605b37766c8f5e2b7956f3fb1eb866082f
+    sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: src/adapters/jev-capture.ts
     sha256: c24f33370498ddf03285d6bf32d90abcc790e20241cf6526db72453205608a0d
   - path: src/application/capture-mail.ts
@@ -95,3 +95,5 @@ The optional scheduled --classify-pending path processes up to ten due current j
 Scheduled preprocessing now verifies managed storage readiness while holding publisher ownership before selecting jobs, reserving inference cost or saving decisions. Non-ready or unreadable storage prevents preprocessing; publication retains its independent readiness check. See src/cli-email-brief.ts and the scheduled composition regressions.
 
 The opt-in capture pilot adds finite existing-task matching to source-supported eligibility/title/project selection. At most 100 open/recent-completed task titles enter a bounded request. Unknowns, contradictory choices, Inbox routing and confidence below 0.95 remain review-only. This provisional pilot cutoff is not calibrated accuracy or completion of the parent evaluation requirement. Code owns source-time admission, live inventory recheck, project IDs, the daily cap and all writes. See docs/automatic-todoist-capture.md.
+
+Low-confidence negative eligibility (none/resolved) also remains review-only; it cannot silently become a terminal no-action result.

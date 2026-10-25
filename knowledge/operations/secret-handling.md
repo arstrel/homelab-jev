@@ -51,7 +51,7 @@ x_jev_sources:
   - path: src/adapters/jev-capture.ts
     sha256: c24f33370498ddf03285d6bf32d90abcc790e20241cf6526db72453205608a0d
   - path: src/adapters/todoist-capture.ts
-    sha256: d1ccb174879c8ead18d98fa360b3e77472db9a32f331ee9dcb3b29fff9895b81
+    sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
   - path: docs/automatic-capture-evidence.md
     sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
 ---
