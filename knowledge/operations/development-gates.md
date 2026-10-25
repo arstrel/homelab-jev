@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:28:39Z
+  at: 2026-10-25T21:00:15Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -67,7 +67,7 @@ x_jev_sources:
   - path: tests/adapters/gmail.test.ts
     sha256: 451a0241d05e52ad39055b9d01bf38fb8fbb52db7629099132215c6179ee4c03
   - path: tests/unit/automatic-capture.test.ts
-    sha256: 778530bf872e27e35e01c489d0f2f6e63ca6d9324fd0923c147e53580ab128ee
+    sha256: e8265e8517cf50fa6cbb70713387f3eae305964306ce0e1c6699979ff24477d1
   - path: tests/adapters/automatic-capture.test.ts
     sha256: 664d8747eceb2401e16411506c251bec242809a700c2b88f24f727ee5e6a8da2
 ---
@@ -103,3 +103,5 @@ Retro gates add synthetic SDK completed-task/comment pagination, source-window/a
 Copilot review is a required PR workflow gate alongside CI: check summaries, inline threads and conversation comments on the current changes, and fix yellow/medium/warning and red/high/error findings. Keep at most three fix-and-review loops per PR, recorded with Copilot-Fix-Loop commit trailers. If findings remain after the third loop, stop patching and present a root-cause/design rethink before further work. Initial reviews and documentation-only pushes do not add fix loops; pending or absent review is not clean acceptance. See docs/development.md and AGENTS.md.
 
 Capture gates add synthetic strict-choice, budget, matching, evidence/inventory-change, uncertain-write and annotation checks. Disposable PostgreSQL verifies current recent selection, durable non-owned mappings, terminal outcome reuse, shared writer overlap and the rolling three-intent cap. They never perform live Todoist writes. The separate two-request live shadow is aggregate evidence, not a quality benchmark or production activation.
+
+Idle-capture regressions also verify zero inventory/inference calls for empty or locally ineligible batches, local skip/review persistence despite Todoist unavailability, one shared initial inventory for eligible records, and a fresh inventory read before creation.

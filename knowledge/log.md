@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-25 idle capture reads
+
+Capture now selects local work and checks evidence/exclusions/classification confidence before loading Todoist inventory. Empty or entirely locally ineligible batches make no capture provider calls; eligible records reuse one initial inventory, retaining fresh inventory/evidence checks before semantic linking or creation. Reviewed the changed use case, capture runbook and unit tests against dependent concepts; their ownership, privacy, admission and release boundaries remain unchanged. Refreshed only those three reviewed source snapshots, preserving all review deadlines and human-verification metadata. Synthetic regressions cover idle/unavailable providers, local outcomes, shared inventory and pre-write freshness. The fix awaits merged-release deployment; brief publication still refreshes its own Todoist context.
+
 ## 2026-10-25 delivery reconciliation
 
 Reconciled requirements, README and the parent OpenSpec checklist with the implemented collector/classifier/capture/publication/handoff slices. Recorded a strict zero-work collector timer pair at 20:17:17.791Z and 20:22:23.307Z, closing scoped catch-up/no-change observation; closed the already-verified Pages deployment/review tasks. Kept broad evaluation, corrections, useful capture, multi-obligation/lifecycle and full rollback acceptance open. The specific block-fit criterion remains distinct from accepted daily-consumer retrieval. Historical observations retain their original dates and outcomes.

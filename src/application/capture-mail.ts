@@ -55,10 +55,10 @@ export async function captureMail(
     ambiguous: false,
   };
   budget.assertActive();
-  const inventory = await remote.inventory(now);
   const records = await session.select(since, now);
   if (records.length > 5) throw new Error("invalid-selection");
   report.selected = records.length;
+  let inventory: CaptureInventory | undefined;
   for (const record of records) {
     budget.assertActive();
     const conversation = record.conversation;
@@ -85,6 +85,7 @@ export async function captureMail(
       await session.record(record, "review", null);
       continue;
     }
+    inventory ??= await remote.inventory(now);
     const exact = inventory.tasks.filter((t) => t.sourceIds.includes(record.sourceId));
     if (exact.length) {
       if (exact.length === 1 && exact[0]) {

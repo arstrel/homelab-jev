@@ -72,6 +72,78 @@ function setup() {
     });
   return { record, conversation, session, inventory, remote, allowance, judge, prepare, run };
 }
+it("keeps an empty capture tick independent of Todoist availability", async () => {
+  const s = setup();
+  vi.mocked(s.session.select).mockResolvedValue([]);
+  s.remote.inventory.mockRejectedValue(new Error("Todoist unavailable"));
+  expect(await s.run()).toEqual({
+    selected: 0,
+    created: 0,
+    matched: 0,
+    review: 0,
+    skipped: 0,
+    failed: 0,
+    capped: 0,
+    newRequests: 0,
+    inputTokens: 0,
+    budgetExhausted: false,
+    ambiguous: false,
+  });
+  expect(s.remote.inventory).not.toHaveBeenCalled();
+  expect(s.remote.create).not.toHaveBeenCalled();
+  expect(s.prepare).not.toHaveBeenCalled();
+  expect(s.allowance.reserveInference).not.toHaveBeenCalled();
+  expect(s.session.record).not.toHaveBeenCalled();
+});
+it.each(["stale", "uncertain"])(
+  "records %s email outcomes without loading Todoist inventory",
+  async (reason) => {
+    const s = setup();
+    if (reason === "stale") s.record.saved.inputHash = "stale";
+    else s.record.saved.decision.result.answers.attention.confidence = 0.8;
+    s.remote.inventory.mockRejectedValue(new Error("Todoist unavailable"));
+    expect(await s.run()).toMatchObject({
+      selected: 1,
+      skipped: reason === "stale" ? 1 : 0,
+      review: reason === "uncertain" ? 1 : 0,
+      newRequests: 0,
+    });
+    expect(s.session.record).toHaveBeenCalledWith(
+      s.record,
+      reason === "stale" ? "skipped" : "review",
+      null,
+    );
+    expect(s.remote.inventory).not.toHaveBeenCalled();
+    expect(s.prepare).not.toHaveBeenCalled();
+    expect(s.allowance.reserveInference).not.toHaveBeenCalled();
+    expect(s.remote.create).not.toHaveBeenCalled();
+  },
+);
+it("loads inventory only after local checks and reuses it across eligible records", async () => {
+  const s = setup();
+  const stale = structuredClone(s.record);
+  stale.saved.inputHash = "stale";
+  const next = { ...s.record, sourceId: "next-source" };
+  vi.mocked(s.session.select).mockResolvedValue([stale, s.record, next]);
+  s.inventory.tasks.push({
+    id: "existing",
+    projectId: "home",
+    title: "My edited title",
+    completed: false,
+    sourceIds: [s.record.sourceId, next.sourceId],
+  });
+  expect(await s.run()).toMatchObject({ selected: 3, skipped: 1, matched: 2 });
+  expect(s.session.record).toHaveBeenCalledBefore(s.remote.inventory);
+  expect(s.remote.inventory).toHaveBeenCalledOnce();
+  expect(s.session.link).toHaveBeenCalledTimes(2);
+  expect(s.prepare).not.toHaveBeenCalled();
+});
+it("rejects an oversized selection before reading Todoist", async () => {
+  const s = setup();
+  vi.mocked(s.session.select).mockResolvedValue(Array.from({ length: 6 }, () => s.record));
+  await expect(s.run()).rejects.toThrow("invalid-selection");
+  expect(s.remote.inventory).not.toHaveBeenCalled();
+});
 it("creates one source-supported task through durable admission and settles shared inference usage", async () => {
   const s = setup();
   expect(await s.run()).toMatchObject({ created: 1, newRequests: 1, ambiguous: false });
@@ -88,6 +160,10 @@ it("creates one source-supported task through durable admission and settles shar
     "task-created",
   );
   expect(s.remote.inventory).toHaveBeenCalledTimes(2);
+  expect(s.session.select).toHaveBeenCalledBefore(s.remote.inventory);
+  expect(s.remote.inventory.mock.invocationCallOrder[1]).toBeLessThan(
+    vi.mocked(s.session.reserve).mock.invocationCallOrder[0] ?? 0,
+  );
 });
 it.each([false, true])(
   "links exact references including completed=%s without inference or edits",
