@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T16:14:17.896Z
+  at: 2026-10-25T18:27:08Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -36,6 +36,12 @@ x_jev_sources:
     sha256: efd8f407d3f8c656d9e2f22ac1dec4a9fd2b8dc67ab806e5115bec3c62454b75
   - path: docs/mail-worker-evidence.md
     sha256: e7c1c9a9dcb0b8d7bc10c289ac6a28960a5255b113343279c620b70943cb76ca
+  - path: docs/automatic-capture-evidence.md
+    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
+  - path: deploy/brief-refresh.md
+    sha256: 94128809110944b597666a5b17c25a39195a9cc8c4c5e7b6389000cc89c97507
+  - path: docs/automatic-todoist-capture.md
+    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
 ---
 
 # Native Node releases and scheduling
@@ -48,6 +54,8 @@ Apply reviewed compatible migrations explicitly. Capture health, duration, last 
 
 Rollback should select a compatible previous release while preserving ledger records and user tasks. Do not assume SQL reversal is safe. Rehearse the migration/release rollback procedure before production capture.
 
-A separate cached-only publisher now runs the merged brief command every five minutes; full classification/reconciliation scheduling and catch-up/no-change acceptance remain planned. See [processing cycle](/architecture/processing-cycle.md), [migrations](database-migrations.md), and [delivery boundary](/product/delivery-boundary.md).
+A separate publisher runs the merged brief command every five minutes; the October 25 upgrade below activates pending classification. General reconciliation remains planned. See [processing cycle](/architecture/processing-cycle.md), [migrations](database-migrations.md), and [delivery boundary](/product/delivery-boundary.md).
 
 On October 21 Pacific, merged collector release ae4477994fa7558717e451c31d2f01a0c2f6f349 was activated. Two automatic invocations added 35 complete versions/jobs, and an overlapping manual invocation skipped with no provider work. The recorded snapshot retained 488 retrievals and null evidence freshness; full catch-up/no-change acceptance remains open. This is timestamped operational evidence, not a continuing health guarantee. The separate cached-only publisher preserves the collector configuration and schedules no hosted inference. See the repository runbook deploy/brief-refresh.md and evidence docs/scheduled-brief-evidence.md.
+
+On October 25, both jobs were upgraded to merged release 7f7cda11d08c85673a5744ea1c2c0a37bfffe7c1 after a private validated backup and explicit migration 0005. Genuine subsequent timer reports confirmed ten classifications, publication and zero current retrieval gaps; independent owned-file readback passed. This is timestamped acceptance, not a continuing health guarantee. The proposed capture flag is not installed. Enable it only from its merged reviewed immutable release with an explicit source-time boundary; removing the flag disables new task effects while retaining ledger history. See docs/automatic-capture-evidence.md and the repository runbook deploy/brief-refresh.md.

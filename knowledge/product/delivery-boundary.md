@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T15:00:34.395Z
+  at: 2026-10-25T18:28:39Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -24,7 +24,7 @@ sources:
     title: docs/foundation-evidence.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: 202b9101e7fbd5caf158d98985648dd13eeb26ca12b821e84c0c6eb13679d73a
+    sha256: 600132fdfa3ab4a8132dba8a8f315dc0cca4a00bf8012c52e8050da34c440c8e
   - path: openspec/changes/add-personal-brief-preprocessing/tasks.md
     sha256: 1bb5251caaa35c7fb47b169e260f8a191c06dab5fe97ab0e34b688c3203b9c55
   - path: docs/foundation-evidence.md
@@ -44,7 +44,7 @@ x_jev_sources:
   - path: docs/email-brief.md
     sha256: 10d6613da7824e6d996e8aee904c0cf66eab2f664e49a7cdb491aea4924a1089
   - path: src/application/email-brief.ts
-    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
+    sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: docs/email-brief-evidence.md
     sha256: bf7d371c90e3028e05719dd8f793e3522b48b5c0bb3d59f10f6b391a6abcce94
   - path: src/adapters/todoist-brief.ts
@@ -53,6 +53,12 @@ x_jev_sources:
     sha256: 97e80af779dba85133ded6ac4e92c5b7095da7b32297f6bb1997561e6b660e5e
   - path: docs/todoist-brief-evidence.md
     sha256: a5a4c60b65336f51012956db6fa2ec942a1b8467fedd042a4235dd9ee06b643f
+  - path: src/application/capture-mail.ts
+    sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
+  - path: docs/automatic-capture-evidence.md
+    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
+  - path: docs/automatic-todoist-capture.md
+    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
 ---
 
 # Implemented foundation and planned release
@@ -84,3 +90,5 @@ The manual brief now includes current read-only Todoist context by project, exis
 The manual brief now includes recent Retro task/comment context and optional typed review, sharing its existing artifact and inference allowance. Completed feedback is read, not interpreted as automatic task closure. This narrows the remaining Retro work to full reconciliation, calibrated evaluation and actual scheduled planner use; it does not complete those parent requirements.
 
 The separate cached-only publisher now refreshes the owned Drive artifact every five minutes with zero Jev calls, and both existing daily prompts have an additive freshness/fallback handoff. This does not enable automatic classification or reconciliation. October 23 daily runs verified exact generation retrieval, live-source authority and saved canonical artifacts. The owner-approved October 25 digest JSON repair and full readback close the isolated handoff slice; broader rollout requirements remain open. See [planner handoff](/architecture/planner-handoff.md).
+
+October 25 update: merged PR #23 is active for both native jobs after backup/migration. A real recurring classification/publication and independent owned-file readback passed, with zero current retrieval gaps at observation and explicit incomplete classification/Retro coverage. The opt-in create-only Todoist capture pilot is implemented for review, with exact-reference/bounded semantic matching and preserved user fields/mapped completion. It awaits merge and activation; useful live capture, calibrated evaluation, waiting/lifecycle updates and general reconciliation remain open. See docs/automatic-capture-evidence.md.

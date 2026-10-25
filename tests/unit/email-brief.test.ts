@@ -408,6 +408,33 @@ it("groups waiting and resolution suggestions conservatively and escapes untrust
   expect(text).toContain("#all/id%2Fwith%20spaces");
   expect(text).toContain("Complete evidence freshness: not established");
 });
+it("discloses capture review and uncertain writes without treating a historical match as live completion", () => {
+  const text = renderEmailBrief({
+    generation: briefGeneration,
+    generatedAt: briefTime,
+    since: briefTime,
+    until: briefTime,
+    eligible: 1,
+    status: briefStatus(),
+    entries: [
+      {
+        sourceId: "thread",
+        subject: "Action",
+        receivedAt: briefTime,
+        decision: { type: "jev", result: triageResponse() },
+        capture: { state: "matched-completed", taskId: "existing-task" },
+      },
+    ],
+    captureRun: { review: 2, capped: 1, ambiguous: true, budgetExhausted: true },
+  });
+  expect(text).toContain("Capture history: matched-completed");
+  expect(text).toContain("https://app.todoist.com/app/task/existing-task");
+  expect(text).toContain("live Todoist state remains authoritative");
+  expect(text).toContain("2 need review");
+  expect(text).toContain("1 deferred by the daily limit");
+  expect(text).toContain("uncertain outcome. Creation stopped");
+  expect(text).toContain("approved lifetime spending limit");
+});
 it.each([
   ["--max-conversations", "21"],
   ["--max-new", "-1"],

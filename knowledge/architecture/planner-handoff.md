@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T17:01:28Z
+  at: 2026-10-25T18:27:08Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -26,11 +26,11 @@ x_jev_sources:
   - path: docs/product-requirements.md
     sha256: 8aee3e08be20666e36dffa7a46b8a80acd682b76f6413ececc431fd63f9c46e7
   - path: src/domain/email-brief.ts
-    sha256: 8ce409f2ead0df548d76472e94994940913ebcc21549e10d642da992987be9fa
+    sha256: 6d0919c76180ed5192a304028b75ad55f9a3fc1025d4c1b50be2c8a5a46da7b4
   - path: src/application/email-brief.ts
-    sha256: 6c9b2f4d528095c31db200a8ca3e9837b14c80ee9d33197c29d3561111bb84fd
+    sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: src/adapters/postgres/email-brief.ts
-    sha256: ccafbe1d5d1161e3237605c40b6d611ace180484f49b227395ffcd712ec1272c
+    sha256: 480be952ed744105755a955e58e636d77d0269bb54d198f5a8a2b99764009e19
   - path: src/adapters/drive-brief.ts
     sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
   - path: docs/email-brief.md
@@ -50,11 +50,15 @@ x_jev_sources:
   - path: docs/retro-brief-evidence.md
     sha256: 078d68a8fdb76a6c9d588819586191fade8f6ea535dbcbae24341fc8e9cec354
   - path: src/cli-email-brief.ts
-    sha256: 18f3605fb0c39827e98d19f140a185b79c962269aa0c3d73051e676575510374
+    sha256: 60851a6968994b4f983070dcab5c5a6d631b292344b5339323afdb6d6226254e
   - path: deploy/brief-refresh.md
-    sha256: 37c9a450d9019298e9dad24dfb917cf120eb1ee6eff7f2e1e46400a8cc140980
+    sha256: 94128809110944b597666a5b17c25a39195a9cc8c4c5e7b6389000cc89c97507
   - path: docs/automatic-mail-classification.md
     sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
+  - path: docs/automatic-capture-evidence.md
+    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
+  - path: docs/automatic-todoist-capture.md
+    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
 ---
 
 # Drive snapshot and planner freshness
@@ -69,7 +73,7 @@ Reserve a Drive-generated file ID durably before creation. Every explicit retry 
 
 ## Scheduled handoff and remaining acceptance
 
-A separate cached-only LaunchAgent refreshes the existing owned file every five minutes. Both existing daily prompts receive the versioned freshness/fallback handoff after exact-file/live-source probes and private backups. October 23 scheduled retrieval is observed; the owner-approved October 25 canonical JSON repair and exact readback complete this isolated handoff acceptance. Preserve Daily Life Plan, Daily Inbox Digest and user retrospectives. Generation time never advances source freshness.
+A separate LaunchAgent refreshes the existing owned file every five minutes; the initial cached-only handoff was later upgraded with bounded pending classification. Both existing daily prompts receive the versioned freshness/fallback handoff after exact-file/live-source probes and private backups. October 23 scheduled retrieval is observed; the owner-approved October 25 canonical JSON repair and exact readback complete this isolated handoff acceptance. Preserve Daily Life Plan, Daily Inbox Digest and user retrospectives. Generation time never advances source freshness.
 
 The installed prompt appendix uses a 15-minute publication cutoff and checks source freshness independently. Actual scheduled retrieval must select the latest generation and current Todoist inventory, disclose stale/unavailable input and follow an explicit fallback. Calendar blocks help choose actions; they do not authorize writes or prove completion. Verify retrieval before changing prompts. See [personal brief loop](/product/personal-brief-loop.md), [uncertainty](uncertainty.md), and [Retro](retro-feedback.md).
 
@@ -85,4 +89,6 @@ Approved live Retro verification confirmed the same private owned file, generati
 
 The October 22 scheduled-handoff rollout activates cached-only five-minute publication and appends the same freshness/source-authority contract to the existing prompts after private backups. The email scheduler test retained actual generation provenance. The first planner test did not; a repeat with clarified reporting returned the current publisher generation, while retaining a null exact fetch time and direct-source fallback. The existing planner could not save its updated daily artifact through the connected Drive operation and reported that gap. October 23 daily runs independently saved all three canonical artifacts and used matching publisher generations; the earlier planner save limitation did not recur in that run. The owner-approved October 25 repair removed only orphaned duplicate lines outside named fields; the complete canonical Run record now parses and the full document matched independent readback. This closes the isolated handoff acceptance while broader classification/reconciliation requirements remain open. The repository report docs/scheduled-brief-evidence.md distinguishes these surfaces.
 
-The automatic classification upgrade adds --classify-pending before cached publication. The display and Retro paths remain --max-new 0; preprocessing has separate request/token counters and a durable $2 lifetime cap. The template change is prepared for merged-release activation, while prior scheduled handoff evidence describes the cached-only rollout. See docs/automatic-mail-classification.md.
+The automatic classification upgrade adds --classify-pending before cached publication. The display and Retro paths remain --max-new 0; preprocessing has separate request/token counters and a durable $2 lifetime cap. The merged template is now active, while prior scheduled handoff evidence describes the initial cached-only rollout. See docs/automatic-mail-classification.md.
+
+The merged PR #23 classifier was activated and verified on a genuine October 25 timer cycle, with independent readback of the exact owned Drive file. Retrieval was complete at observation; classification and Retro gaps remained explicit. Opt-in task capture adds per-source processing history and cycle counts/review/failure/cap/ambiguity disclosures to the same artifact. Historical matching never establishes current completion; live Todoist remains authoritative. Capture is not yet deployed. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.

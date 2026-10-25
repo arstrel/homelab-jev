@@ -221,3 +221,71 @@ it("prioritizes fresh jobs and continues beyond a bounded first selection", asyn
     ]);
   });
 });
+
+it("selects only recent classified current evidence for capture and persists terminal review annotations", async () => {
+  const { captureDatabase } = await import("../../src/adapters/postgres/automatic-capture.js");
+  await mailEvidenceStore(client).persistEvidence([submission()]);
+  await database.exclusive(async (session) => {
+    const record = (await session.sample(since, until, 1)).records[0];
+    if (!record?.conversation) throw new Error("fixture");
+    const result = triageResponse();
+    result.answers.attention.confidence = 1;
+    result.answers.lifecycle.confidence = 1;
+    await session.save(record, {
+      policy: briefPolicy,
+      inputHash: briefInputHash(record.fingerprint, record.conversation.directions),
+      decision: { type: "jev", result },
+    });
+  });
+  await captureDatabase(client).exclusive(async (session) => {
+    expect(await session.select("2026-10-12T00:00:00.000Z", new Date(briefTime))).toEqual([]);
+    const records = await session.select(since, new Date(briefTime));
+    expect(records).toHaveLength(1);
+    const record = records[0];
+    if (!record) throw new Error("fixture");
+    await session.record(record, "review", null);
+    expect(await session.select(since, new Date(briefTime))).toEqual([]);
+  });
+  await database.exclusive(async (session) => {
+    expect((await session.sample(since, until, 1)).records[0]?.capture).toEqual({
+      state: "review",
+    });
+  });
+});
+it("keeps durable links across edited/completed/deleted remote work and caps ambiguous creation admissions at three", async () => {
+  const { captureDatabase } = await import("../../src/adapters/postgres/automatic-capture.js");
+  const { taskReview } = await import("../fixtures/email-task.js");
+  await mailEvidenceStore(client).persistEvidence([submission()]);
+  await captureDatabase(client).exclusive(async (session) => {
+    const first = taskReview().candidates[0];
+    if (!first) throw new Error("fixture");
+    await session.link(first.sourceId, "user-edited-or-completed-task");
+    expect(
+      (
+        await client.pool.query("select overrides from jev.task_links where source_id=$1", [
+          first.sourceId,
+        ])
+      ).rows[0]?.overrides,
+    ).toEqual({ workerOwned: false, preserveAllFields: true });
+    await expect(session.link(first.sourceId, "another-task")).rejects.toThrow("mapping-changed");
+    expect(await session.reserve(first, 3)).toEqual({
+      status: "linked",
+      taskId: "user-edited-or-completed-task",
+    });
+    for (let i = 0; i < 3; i++)
+      expect(await session.reserve({ ...first, sourceId: `new-${i}` }, 3)).toMatchObject({
+        status: "ready",
+      });
+    expect(await session.reserve({ ...first, sourceId: "fourth" }, 3)).toEqual({
+      status: "capped",
+    });
+    expect(
+      (
+        await client.pool.query(
+          "select count(*)::int n from jev.write_intents where destination='todoist' and state='ambiguous'",
+        )
+      ).rows[0]?.n,
+    ).toBe(3);
+    expect(await captureDatabase(client).exclusive(async () => "unexpected")).toBeUndefined();
+  });
+});

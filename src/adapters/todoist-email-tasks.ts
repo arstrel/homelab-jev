@@ -31,7 +31,7 @@ export function todoistEmailTasks(token: string, signal: AbortSignal): EmailTask
         {
           content: candidate.title,
           projectId: candidate.projectId,
-          description: `Source: [Gmail conversation](${gmailLink(candidate.sourceId)})\n\nJev reviewed email task. Marker: ${emailTaskKey(candidate.sourceId)}`,
+          description: `Source: [Gmail conversation](${gmailLink(candidate.sourceId)})\n\nCaptured from email by Jev. Marker: ${emailTaskKey(candidate.sourceId)}`,
         },
         requestId,
       );

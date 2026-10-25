@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-25 bounded Todoist capture
+
+Activated merged PR #23 after private backup/migration and verified genuine recurring classification/publication plus exact owned-file readback. Recorded zero retrieval gaps at observation separately from incomplete classification/Retro context. Added an opt-in create-only capture pilot with exact-reference/bounded semantic matching, preserved user fields/mapped completion, strict review outcomes, source-time admission and a three-intent daily cap. A two-request live shadow produced none/review and zero Todoist writes. Reviewed relevant claims/source snapshots; retained draft/unverified status and review deadlines. Capture awaits merge and activation; general lifecycle and calibrated evaluation remain open.
+
 ## 2026-10-25 Copilot PR review gate
 
 Recorded mandatory Copilot findings checks and a maximum of three fix/re-review loops per PR. Corrected readiness-before-preprocessing and independent MIME recovery in PR #23, with synthetic regressions. Updated relevant claims and source snapshots without changing review deadlines or adding human verification; re-review remains required.

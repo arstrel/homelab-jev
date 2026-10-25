@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T17:34:46Z
+  at: 2026-10-25T18:28:39Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -47,11 +47,11 @@ x_jev_sources:
   - path: tests/unit/mail-worker.test.ts
     sha256: 0518c100be01d18dbf638dd3875a0ee6d05f350ef2972648484b7a9bca15f0a5
   - path: tests/unit/email-brief.test.ts
-    sha256: 038696ede8b555a1b13afaab0b308997c24bedaac72720afce9f8f8ed0cdd20e
+    sha256: b9b85318a576b847119590d19c34c85315d8bef921b64e392727fa4cb7cd9fe6
   - path: tests/adapters/drive-brief.test.ts
     sha256: 237288c05bf0e8138f88e7819a0f58fac03ac0945eccfbe8aa0929abe93de7d8
   - path: tests/integration/email-brief.test.ts
-    sha256: a721685082df5ca0a19041bd788974e8a715ff6ffebf85e92a56cd8e216735b1
+    sha256: c8cb22c564d46803352951d066e3d97d04e3fd856b7b8449fcf0fd62d1945355
   - path: tests/unit/todoist-brief.test.ts
     sha256: 0fc3a577b5fc653deeb775573efda07b99c72fcf590ab006718fa4cc387b517c
   - path: tests/adapters/todoist-brief.test.ts
@@ -63,9 +63,13 @@ x_jev_sources:
   - path: AGENTS.md
     sha256: 814ef8b121d6c5b51a98d949561d8e50a682f42caccb9f5524d06c1cb355cf00
   - path: tests/unit/scheduled-email-brief.test.ts
-    sha256: c3ddcdb1435b994cc6fa4c5d60da3beeccaf593a0da5a8169a60b9f43d30e4dd
+    sha256: 2003a6d13f08af3ee07d194863a69435d1dd4d260c7cbf503608e2809188c5df
   - path: tests/adapters/gmail.test.ts
     sha256: 451a0241d05e52ad39055b9d01bf38fb8fbb52db7629099132215c6179ee4c03
+  - path: tests/unit/automatic-capture.test.ts
+    sha256: ba52ad094c0442efcf3ccdeed4db269ea20b88220947ec6c297de21b5a1928c0
+  - path: tests/adapters/automatic-capture.test.ts
+    sha256: 5593660e2c96e57a973f0e1fae5c049a18842826fd0613ec243f24c0874c028b
 ---
 
 # Node development and Git gates
@@ -97,3 +101,5 @@ Todoist-aware brief tests use synthetic paginated project/task responses, change
 Retro gates add synthetic SDK completed-task/comment pagination, source-window/author/cap cases, exact typed choices, conservative completion rules, shared-budget/cancellation and bounded rendering checks. Compiled CLI checks include --retro-review. Live synthetic model evaluation and private source publication remain explicit operations outside hooks/CI.
 
 Copilot review is a required PR workflow gate alongside CI: check summaries, inline threads and conversation comments on the current changes, and fix yellow/medium/warning and red/high/error findings. Keep at most three fix-and-review loops per PR, recorded with Copilot-Fix-Loop commit trailers. If findings remain after the third loop, stop patching and present a root-cause/design rethink before further work. Initial reviews and documentation-only pushes do not add fix loops; pending or absent review is not clean acceptance. See docs/development.md and AGENTS.md.
+
+Capture gates add synthetic strict-choice, budget, matching, evidence/inventory-change, uncertain-write and annotation checks. Disposable PostgreSQL verifies current recent selection, durable non-owned mappings, terminal outcome reuse, shared writer overlap and the rolling three-intent cap. They never perform live Todoist writes. The separate two-request live shadow is aggregate evidence, not a quality benchmark or production activation.

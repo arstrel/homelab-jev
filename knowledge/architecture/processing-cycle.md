@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T17:01:28Z
+  at: 2026-10-25T18:27:08Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -32,7 +32,15 @@ x_jev_sources:
   - path: src/application/classify-pending-mail.ts
     sha256: 6724c301287e07d370fc003942d529ab720b4a6774bac54cbac76f92eea02d71
   - path: deploy/brief-refresh.md
-    sha256: 37c9a450d9019298e9dad24dfb917cf120eb1ee6eff7f2e1e46400a8cc140980
+    sha256: 94128809110944b597666a5b17c25a39195a9cc8c4c5e7b6389000cc89c97507
+  - path: src/cli-email-brief.ts
+    sha256: 60851a6968994b4f983070dcab5c5a6d631b292344b5339323afdb6d6226254e
+  - path: src/application/capture-mail.ts
+    sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
+  - path: docs/automatic-capture-evidence.md
+    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
+  - path: docs/automatic-todoist-capture.md
+    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
 ---
 
 # Five-minute processing cycle
@@ -45,6 +53,8 @@ Provider failures must preserve pending work and report real freshness gaps. Bou
 
 Follow [Gmail checkpoints](gmail-checkpoints.md), [remote write safety](remote-write-safety.md), [planner handoff](planner-handoff.md), and [native releases](/operations/native-releases.md).
 
-Manual [incremental synchronization](mail-sync.md) implements collection with exclusive session ownership and durable retries. The optional launcher reuses that command and lock rather than introducing another processing loop. A separate five-minute cached-only publisher refreshes the owned Drive brief and current Todoist/Retro context with zero hosted inference. Persistent classification, reconciliation and full live rollout remain planned.
+Manual [incremental synchronization](mail-sync.md) implements collection with exclusive session ownership and durable retries. The optional launcher reuses that command and lock rather than introducing another processing loop. A separate publisher refreshes the owned Drive brief and current Todoist/Retro context; its initially cached-only rollout is now upgraded with bounded pending classification. General reconciliation remains planned.
 
-The automatic classification upgrade adds an opt-in pending-mail stage to the separate publisher. It processes at most ten due current jobs, uses a durable lifetime allowance and then refreshes cached publication with live source context. Reconciliation and automatic task effects remain planned. The new template requires a coordinated merged-release/migration upgrade; this implementation alone does not claim recurring activation. See docs/automatic-mail-classification.md.
+The automatic classification upgrade adds an opt-in pending-mail stage to the separate publisher. It processes at most ten due current jobs, uses a durable lifetime allowance and then refreshes cached publication with live source context. General reconciliation remains planned. The merged template was activated after a coordinated release/migration upgrade, as recorded below. See docs/automatic-mail-classification.md.
+
+On October 25, merged PR #23 was activated for both native jobs after backup and migration 0005. A genuine recurring run classified ten conversations and published the owned artifact; collection reported discovery caught up and zero retrieval gaps at that observation. This does not imply complete classification or Retro coverage. The new opt-in capture stage is implemented for review but is not active: it follows classification inside publisher ownership, shares the manual writer lock and lifetime inference allowance, and stops after one successful task creation. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.

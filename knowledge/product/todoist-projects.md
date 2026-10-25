@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.719Z
+  at: 2026-10-25T18:27:08Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -28,7 +28,7 @@ x_jev_sources:
   - path: src/domain/email-task.ts
     sha256: 0d3f27d05e8b330b028e79fa526f20b9c5b1370df2098cc8478b4b7ad95bcdc2
   - path: src/application/email-tasks.ts
-    sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
+    sha256: 4e482cd3b344f06d4eb32aa5314be0efc091b0557f39b94e95a08e4e58afa3fd
   - path: docs/email-tasks.md
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: src/adapters/todoist-brief.ts
@@ -36,9 +36,15 @@ x_jev_sources:
   - path: src/domain/todoist-brief.ts
     sha256: 97e80af779dba85133ded6ac4e92c5b7095da7b32297f6bb1997561e6b660e5e
   - path: docs/email-brief.md
-    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
+    sha256: 10d6613da7824e6d996e8aee904c0cf66eab2f664e49a7cdb491aea4924a1089
   - path: src/domain/retro-review.ts
     sha256: 750a144c5d8cf6df1e99d7b7115c6afa1b394e11323c49c354c3700eb4477148
+  - path: src/domain/automatic-capture.ts
+    sha256: 2f9cc24b50d33ebc6492004129c583605b37766c8f5e2b7956f3fb1eb866082f
+  - path: src/adapters/todoist-capture.ts
+    sha256: d1ccb174879c8ead18d98fa360b3e77472db9a32f331ee9dcb3b29fff9895b81
+  - path: docs/automatic-todoist-capture.md
+    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
 ---
 
 # Existing project routing and task kinds
@@ -58,3 +64,5 @@ Owner preference: routine GitHub PR opens/comments/review requests are handled i
 The manual [Drive brief](/architecture/planner-handoff.md) now reads current task inventory by active project with task links and existing due values. Retro remains outside the actionable list; optional activities remain copied source data. Exact Gmail source-link associations can mark an email action already tracked, without claiming semantic equivalence, completion or full coverage. Fetching again reflects current returned names, placement and open status. The Drive artifact is a bounded observation; Todoist stays authoritative.
 
 Optional manual [Retro review](/architecture/retro-feedback.md) now judges finite actions, reusable activities and broad goals from current candidate titles. A rowing session preserves the activity option, progress preserves the broad goal, and source recurrence always keeps future occurrences available. Specific supported finite completion is only a review suggestion; there is no completion/write integration.
+
+The opt-in automatic pilot now checks durable mappings, exact supported Gmail references and bounded semantic choices before creating source-supported tasks in existing themed projects. Retro is excluded by resolved identity; uncertain/Inbox routing stays review-only. No task fields, dates, labels or completion are changed. Source-time enablement and a rolling three-intent cap bound rollout. Open plus 30-day completed matching is bounded, not an all-time task inventory. Capture awaits a merged reviewed release and explicit activation; broader lifecycle work remains planned. See docs/automatic-todoist-capture.md.

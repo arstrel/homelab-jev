@@ -27,13 +27,13 @@ function conversation(row: Row): TaskConversation {
 const sourceQuery = `select s.source_id as "sourceId", s.fingerprint, v.evidence, s.observation
  from jev.sources s join jev.mail_evidence_versions v on v.mailbox=s.mailbox and v.source_id=s.source_id and v.fingerprint=s.fingerprint
  where s.mailbox='primary'`;
-function writer(connection: PoolClient): EmailTaskWriter {
+export function emailTaskWriter(connection: PoolClient): EmailTaskWriter {
   return {
     async current(id) {
       const { rows } = await connection.query<Row>(`${sourceQuery} and s.source_id=$1`, [id]);
       return rows[0] ? conversation(rows[0]) : undefined;
     },
-    async reserve(candidate) {
+    async reserve(candidate, maxCreated24h) {
       const linked = await connection.query<{ task_id: string }>(
         "select task_id from jev.task_links where mailbox='primary' and source_id=$1 limit 1",
         [candidate.sourceId],
@@ -45,6 +45,23 @@ function writer(connection: PoolClient): EmailTaskWriter {
           .rowCount
       )
         return { status: "suppressed" };
+      if (
+        (
+          await connection.query(
+            "select 1 from jev.write_intents where destination='todoist' and obligation_key=$1",
+            [key],
+          )
+        ).rowCount
+      )
+        return { status: "ambiguous" };
+      if (maxCreated24h !== undefined) {
+        if (!Number.isInteger(maxCreated24h) || maxCreated24h < 1 || maxCreated24h > 3)
+          throw new Error("invalid-cap");
+        const count = await connection.query<{ n: number }>(
+          "select count(*)::int n from jev.write_intents where destination='todoist' and created_at >= now()-interval '24 hours'",
+        );
+        if ((count.rows[0]?.n ?? 0) >= maxCreated24h) return { status: "capped" };
+      }
       const requestId = randomUUID();
       const inserted = await connection.query(
         `insert into jev.write_intents (id,destination,obligation_key,request_id,state,outcome,created_at)
@@ -98,7 +115,7 @@ export function emailTaskDatabase(client: ReturnType<typeof connect>): EmailTask
           "select pg_try_advisory_lock(hashtextextended('jev:reviewed-email-tasks',0)) as held",
         );
         if (!lock.rows[0]?.held) return undefined;
-        return await run(writer(connection));
+        return await run(emailTaskWriter(connection));
       } finally {
         connection.removeListener("error", onError);
         connection.release(true); // Destroying the dedicated session also releases its advisory lock.

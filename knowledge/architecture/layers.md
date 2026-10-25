@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.710Z
+  at: 2026-10-25T18:28:39Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -27,7 +27,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/design.md
 x_jev_sources:
   - path: src/cli.ts
-    sha256: 202b9101e7fbd5caf158d98985648dd13eeb26ca12b821e84c0c6eb13679d73a
+    sha256: 600132fdfa3ab4a8132dba8a8f315dc0cca4a00bf8012c52e8050da34c440c8e
   - path: src/application/ports.ts
     sha256: 1a490007fcc489ecc38d1118a20d3f7ec0dce1f10957a17a8ad5b1fc70fffd71
   - path: src/domain/README.md
@@ -45,19 +45,19 @@ x_jev_sources:
   - path: src/adapters/postgres/mail-triage.ts
     sha256: b05c6fc375b98f2b81964291761c7c2733565ebc2e0db59f77336389ffb2bf7f
   - path: src/application/email-tasks.ts
-    sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
+    sha256: 4e482cd3b344f06d4eb32aa5314be0efc091b0557f39b94e95a08e4e58afa3fd
   - path: src/cli-email-tasks.ts
     sha256: 03d03bcd3477bab151136626c8801c25267d15727583299a547fe616242f33e1
   - path: src/application/email-brief.ts
-    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
+    sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: src/domain/email-brief.ts
-    sha256: 8ce409f2ead0df548d76472e94994940913ebcc21549e10d642da992987be9fa
+    sha256: 6d0919c76180ed5192a304028b75ad55f9a3fc1025d4c1b50be2c8a5a46da7b4
   - path: src/cli-email-brief.ts
-    sha256: 7feef65d8f1130a1f3e95a1ce6166d866f30c71d7445225485d433852c94e044
+    sha256: 60851a6968994b4f983070dcab5c5a6d631b292344b5339323afdb6d6226254e
   - path: src/adapters/drive-brief.ts
     sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
   - path: src/adapters/postgres/email-brief.ts
-    sha256: 21166686962ee9a41f1c7dcc9e240072887895023ef34e5d5869786a6be615ce
+    sha256: 480be952ed744105755a955e58e636d77d0269bb54d198f5a8a2b99764009e19
   - path: src/adapters/todoist-brief.ts
     sha256: 175e6f795d3f62cef8009803e1f974f1bc96655624ce85f0eabf0dba90d45be7
   - path: src/domain/todoist-brief.ts
@@ -66,6 +66,12 @@ x_jev_sources:
     sha256: 18b4b488bbcc7624c840e9d43503c61c47fe801438c9d3e99e143f29b75a08b2
   - path: src/application/review-retro.ts
     sha256: 18a777d202fc3f64612316601ad6b77df0767796c5626e36851b94524bfa4976
+  - path: src/application/capture-mail.ts
+    sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
+  - path: src/domain/automatic-capture.ts
+    sha256: 2f9cc24b50d33ebc6492004129c583605b37766c8f5e2b7956f3fb1eb866082f
+  - path: src/adapters/postgres/automatic-capture.ts
+    sha256: 3656d23083bbbff8243784295bf21be29568679ad212c08d6201a341925f3b42
 ---
 
 # Application boundaries and composition
@@ -93,3 +99,5 @@ The manual [Drive brief](planner-handoff.md) has one small use case with SDK-fre
 The brief also has one SDK-free Todoist read port. Its adapter bounds current pages and extracts explicit Gmail links locally; pure domain code renders project tasks and associations using the shared text escaper. Todoist never enters triage questions/cache identity, and no task inventory table or remote write port is added. Provider failures are rendered as unavailable context; cancellation still stops publication.
 
 The manual Retro slice adds SDK-free source/review types and a small review use case. Todoist owns bounded open/completed/comment retrieval; Jev owns typed choice transport. Domain code constrains task references, exact excerpts and review labels. The existing publisher shares its cap/deadline and writes the same Drive artifact. No schema, dependency, service, task-write port or new cache is introduced.
+
+The opt-in capture slice adds one SDK-free use case plus narrow pure question/answer policy, reusing the existing writer and shared allowance. Todoist exposes only inventory/create to this use case; Jev only returns finite choices. PostgreSQL owns exact-version selection, durable outcomes and the same manual writer lock. Publisher composition orders classification, capture and same-artifact publication; no new background service is introduced.

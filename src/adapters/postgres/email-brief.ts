@@ -6,11 +6,13 @@ import {
   type PendingMailSession,
 } from "../../application/classify-pending-mail.js";
 import type { BriefRecord, BriefSession } from "../../application/email-brief.js";
+import { capturePolicy } from "../../domain/automatic-capture.js";
 import {
   briefDestination,
   briefModel,
   briefPolicy,
   briefPublicationSchema,
+  captureAnnotationSchema,
 } from "../../domain/email-brief.js";
 import { storedEvidence } from "../../domain/stored-mail-evidence.js";
 import type { connect } from "./client.js";
@@ -81,24 +83,32 @@ function briefSession(connection: PoolClient): BriefSession & PendingMailSession
         observation: unknown;
         saved: unknown;
         eligible: string;
+        capture_state: string | null;
+        capture_task_id: string | null;
       }>(
-        `select j.id as "jobId", s.source_id as "sourceId", s.fingerprint, v.evidence, s.observation, c.result as saved, count(*) over() as eligible
+        `select j.id as "jobId", s.source_id as "sourceId", s.fingerprint, v.evidence, s.observation, c.result as saved, case when exists(select 1 from jev.write_intents i where i.destination='todoist' and i.state='ambiguous' and i.outcome->>'sourceId'=s.source_id) then 'ambiguous' else cap.result->>'state' end as capture_state, (select task_id from jev.task_links l where l.mailbox=s.mailbox and l.source_id=s.source_id order by obligation_key limit 1) as capture_task_id, count(*) over() as eligible
       from jev.sources s
       join jev.mail_evidence_versions v on v.mailbox=s.mailbox and v.source_id=s.source_id and v.fingerprint=s.fingerprint
       join lateral (select id from jev.pending_jobs where mailbox=s.mailbox and source_id=s.source_id and evidence_fingerprint=s.fingerprint and ($6::uuid is null or id=$6::uuid) order by available_at,id limit 1) j on true
       cross join lateral (select max((m->>'receivedAt')::timestamptz) as received from jsonb_array_elements(v.evidence->'messages') m) latest
       left join lateral (select result from jev.classifications where job_id=j.id and result->>'policy'=$4 and model_version in ($5,'owner-rules/v1') order by created_at desc,id desc limit 1) c on true
+      left join lateral (select result from jev.classifications where job_id=j.id and result->>'policy'=$7 order by created_at desc,id desc limit 1) cap on true
       where s.mailbox='primary' and ($6::uuid is not null or (latest.received >= $1::timestamptz and latest.received <= $2::timestamptz))
       order by latest.received desc,s.source_id limit $3`,
-        [since, until, limit, briefPolicy, briefModel, jobId ?? null],
+        [since, until, limit, briefPolicy, briefModel, jobId ?? null, capturePolicy],
       );
       return {
         eligible: Number(rows[0]?.eligible ?? 0),
         records: rows.map((row): BriefRecord => {
+          const annotation = captureAnnotationSchema.safeParse({
+            state: row.capture_state,
+            ...(row.capture_task_id ? { taskId: row.capture_task_id } : {}),
+          });
           const base = {
             jobId: row.jobId,
             sourceId: row.sourceId,
             fingerprint: row.fingerprint,
+            ...(annotation.success ? { capture: annotation.data } : {}),
             ...(row.saved === null ? {} : { saved: row.saved }),
           };
           try {
