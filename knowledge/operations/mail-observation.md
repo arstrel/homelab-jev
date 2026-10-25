@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T21:08:29Z
+  at: 2026-10-25T21:27:18Z
 stale_after: "2026-11-18T02:37:00Z"
 x_jev_delivery: implemented
 sources:
@@ -33,7 +33,7 @@ x_jev_sources:
 
 The implemented `mail:status` diagnostic needs database configuration only. A read-only repeatable transaction checks managed migration history/structures and reads whitelisted aggregates. It uses no sync ownership lock, provider client, migration function or message payload. Missing/failed measurements remain unknown, not zero; successful observation is not a provider-health result.
 
-Schema readiness includes the inference-allowance table introduced by migration 0005; diagnostics retain no write authority. Classification `pendingJobs` now counts only pending primary jobs bound to current source evidence, following the classifier's identity join. Deferred current jobs remain backlog even before they are due. Superseded versions are excluded without deletion; `unboundPendingJobs` separately counts pending legacy rows lacking an exact binding, outside `pendingJobs`. Legacy `status` retains raw ledger counts, and earlier dated reports keep their original semantics. This reporting correction awaits merged-release deployment.
+Schema readiness includes the inference-allowance table introduced by migration 0005; diagnostics retain no write authority. Classification `pendingJobs` now counts only pending primary jobs bound to current source evidence, following the classifier's identity join. Deferred current jobs remain backlog even before they are due. Superseded versions are excluded without deletion; `unboundPendingJobs` separately counts pending legacy rows lacking an exact binding, outside `pendingJobs`. Legacy `status` retains raw ledger counts, and earlier dated reports keep their original semantics. The correction was deployed to both jobs on October 25 in merged release `9cc3815`; candidate preflight confirmed 705 current jobs versus 721 raw pending rows, including 16 preserved superseded jobs. These are dated observations, not current counts.
 
 Retrieval counts, future retry time and stored discovery/evidence frontiers remain separate from classification/task freshness. Status never advances a frontier. Unknown failure text becomes a fixed category. Expired-history gaps remain visible after bounded scoped recovery.
 

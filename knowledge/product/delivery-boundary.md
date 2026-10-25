@@ -40,7 +40,7 @@ x_jev_sources:
   - path: deploy/README.md
     sha256: d9cff016d5cd902a8459361782f5bfd918cbc687fecccd2f82beb973a977eb95
   - path: docs/mail-worker-evidence.md
-    sha256: 90d70e598cfa14dd1161fa7fd244ed1f24b74e21048ac8a3d05b66f2c9e0ab10
+    sha256: fee54c01c054bb694b003da4ed762a8d448835994a504057634ac4ea979cbe59
   - path: docs/email-brief.md
     sha256: 10d6613da7824e6d996e8aee904c0cf66eab2f664e49a7cdb491aea4924a1089
   - path: src/application/email-brief.ts
@@ -56,7 +56,7 @@ x_jev_sources:
   - path: src/application/capture-mail.ts
     sha256: 1ad2014e481f2692dd9ad7c4c045f92b8074d3f150d9f2ed41b0f0b7694cceff
   - path: docs/automatic-capture-evidence.md
-    sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
+    sha256: ba920263f6910dd41b2d633734aad3b5e7f40baeab0bc0da999b3acad7c1e242
   - path: docs/automatic-todoist-capture.md
     sha256: 4500e3552d9904b415ce7d8de25e2d8c4cb15c3920091013d98b01d8f7c2a4fe
 ---

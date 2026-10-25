@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T20:58:36Z
+  at: 2026-10-25T21:27:18Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -68,4 +68,4 @@ The capture adapter reuses project discovery and the existing source-marked crea
 
 The configured Retro identity is excluded even when its project is archived, frozen or absent from active discovery; recent completed feedback must not enter matching context.
 
-Capture selects and validates local email work before lazily loading its inventory. Empty or entirely locally skipped/review-only batches make no capture Todoist reads; eligible records share the initial inventory and retain the separate fresh read before semantic linking/creation. Publication independently refreshes its current Todoist/Retro context. This idle-read correction is implemented but awaits merged-release deployment.
+Capture selects and validates local email work before lazily loading its inventory. Empty or entirely locally skipped/review-only batches make no capture Todoist reads; eligible records share the initial inventory and retain the separate fresh read before semantic linking/creation. Publication independently refreshes its current Todoist/Retro context. This idle-read correction was deployed on October 25 in merged release `9cc3815`; the observed empty capture branch plus synthetic regressions support the behavior, without claiming live HTTP request tracing.
