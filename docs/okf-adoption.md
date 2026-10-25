@@ -39,6 +39,16 @@ The portable bundle is [knowledge/](../knowledge/index.md). Relevant source, scr
 
 ## Commands
 
+Browse the [hosted knowledge graph](https://arstrel.github.io/homelab-jev/) without running anything locally. The [Pages workflow](../.github/workflows/okf-pages.yml) builds the existing viewer on PRs and publishes merged `main` commits; it can also be dispatched manually on `main`.
+
+For initial setup, select **Settings → Pages → Build and deployment → Source → GitHub Actions** in the repository. The first deployment happens after the workflow is merged. Check **Actions → OKF graph** for its result and deployment URL. If a repository token configures this setting through the API, it needs repository **Pages: read and write** permission; no application credentials or repository secret is needed by the workflow itself.
+
+Only the generated self-contained HTML is uploaded, renamed to `index.html` in a dedicated artifact directory. It embeds the already-public `knowledge/` bundle and viewer libraries, not private runtime data, `.env`, the checkout or other cache files. Graph navigation works below the project-site path without a backend or CDN. Publication preserves draft/staleness/source-drift indicators; hosting does not verify the knowledge. Disable Pages to unpublish the site or revert a change on `main` to republish the previous content.
+
+The commands below remain available for local preview and unmerged edits.
+
+Deployment preparation on October 25 verified the generated graph at a local `/homelab-jev/` path: 30 concepts, 156 links, rendered graph and concept navigation. The repository token's Pages setup request returned HTTP 403, so the owner must select GitHub Actions in the Pages setting above (or grant the token Pages write permission). The hosted URL and deployment remain unverified until this workflow is merged and Pages is enabled.
+
 ```sh
 nvm use 24
 npm ci

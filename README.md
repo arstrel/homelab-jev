@@ -48,6 +48,8 @@ The machine's Node 24 installation is `/Users/artem/.nvm/versions/node/v24.21.0/
 
 ## OKF knowledge
 
+Browse the [OKF knowledge graph](https://arstrel.github.io/homelab-jev/) on GitHub Pages. The site updates after merges to `main`; the first publication requires the Pages workflow to be merged and GitHub Actions selected as the repository's Pages source.
+
 Start at the [knowledge index](knowledge/index.md) for linked product rules, architecture invariants, provider contracts and runbooks. See [adoption and maintenance](docs/okf-adoption.md) for sources, coverage and SSH viewing.
 
 ```sh
