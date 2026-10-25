@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T17:11:09Z
+  at: 2026-10-25T18:28:39Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -37,9 +37,13 @@ x_jev_sources:
   - path: src/adapters/postgres/mail-sync.ts
     sha256: da9949dd1e99d00b259c27dbfe9b6b1f73522b2a2aa8bb45273d987cd4e24b77
   - path: src/adapters/postgres/email-brief.ts
-    sha256: f03f365c18795f7a5e0583a3d5b8d9b97ddc5246db7851a44806596ff298ee66
+    sha256: 480be952ed744105755a955e58e636d77d0269bb54d198f5a8a2b99764009e19
   - path: src/application/classify-pending-mail.ts
     sha256: 6724c301287e07d370fc003942d529ab720b4a6774bac54cbac76f92eea02d71
+  - path: src/adapters/postgres/automatic-capture.ts
+    sha256: 3656d23083bbbff8243784295bf21be29568679ad212c08d6201a341925f3b42
+  - path: src/adapters/postgres/email-tasks.ts
+    sha256: e6ce035c84332bf068fff049598c0c37d9563823749ae23039d282d4c4ecccdd
 ---
 
 # PostgreSQL processing ledger
@@ -63,3 +67,5 @@ DB-only [diagnostics](/operations/mail-observation.md) compare managed migration
 Manual [brief publication](planner-handoff.md) reuses existing classifications and write intents without a migration. Its dedicated session lock is distinct from collection. Each saved exact-input judgment and bound-job completion share one transaction; remote calls occur outside transactions. One unique drive intent reserves the destination ID before creation and retains the prior successful generation/time through ambiguous updates. This is application-specific recovery, not a cross-service transaction or general reconciliation engine.
 
 The optional scheduled classifier reuses current exact-bound jobs and saved brief judgments. New `inference_budgets` stores one stable lifetime allowance in integer nanodollars: admission atomically reserves maximum request cost; valid usage settles once, while crashes and ambiguous failures retain the charge. Queue deferral uses existing attempts/available-at fields. This is a small local spending ledger, with provider calls outside transactions. See docs/automatic-mail-classification.md.
+
+Automatic capture reuses classifications for per-version terminal/retry outcomes and task_links for persistent source associations. Existing-task associations explicitly record no worker ownership and preserve all fields. The shared writer counts all recent Todoist creation intents, including ambiguous admissions, before a capped new write. No task inventory table or schema migration is added.

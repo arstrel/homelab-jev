@@ -18,10 +18,11 @@ export interface EmailTaskWriter {
   current(sourceId: string): Promise<TaskConversation | undefined>;
   reserve(
     candidate: TaskCandidate,
+    maxCreated24h?: number,
   ): Promise<
     | { status: "ready"; requestId: string }
     | { status: "linked"; taskId: string }
-    | { status: "ambiguous" | "suppressed" }
+    | { status: "ambiguous" | "suppressed" | "capped" }
   >;
   complete(candidate: TaskCandidate, requestId: string, taskId: string): Promise<void>;
 }

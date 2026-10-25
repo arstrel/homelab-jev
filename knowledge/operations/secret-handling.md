@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.723Z
+  at: 2026-10-25T18:28:39Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -37,15 +37,23 @@ x_jev_sources:
   - path: docs/email-tasks.md
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: src/cli-email-brief.ts
-    sha256: 7feef65d8f1130a1f3e95a1ce6166d866f30c71d7445225485d433852c94e044
+    sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: src/application/email-brief.ts
-    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
+    sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: src/adapters/todoist-brief.ts
     sha256: 175e6f795d3f62cef8009803e1f974f1bc96655624ce85f0eabf0dba90d45be7
   - path: src/domain/todoist-brief.ts
     sha256: 97e80af779dba85133ded6ac4e92c5b7095da7b32297f6bb1997561e6b660e5e
   - path: docs/email-brief.md
     sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
+  - path: src/application/capture-mail.ts
+    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
+  - path: src/adapters/jev-capture.ts
+    sha256: e2753f6ca0a71258c4b0cce39826dea29704d081d2d58fce5165aee8f3908ed9
+  - path: src/adapters/todoist-capture.ts
+    sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
+  - path: docs/automatic-capture-evidence.md
+    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
 ---
 
 # Configuration and private-data boundaries
@@ -67,3 +75,5 @@ The explicit [reviewed task flow](/product/todoist-projects.md) deliberately dis
 The manual [Drive brief](/architecture/planner-handoff.md) contains private email subjects and copied Todoist task titles/due values in one app-owned private file. Todoist descriptions are used locally only for exact Gmail links; no task context is stored as a database inventory; explicit Retro review can send candidate titles as described below. Console output contains fixed states/counts and the confirmed file URL, without task/project names or descriptions. Keep live read-back captures private and ignored; committed evidence is aggregate only.
 
 The private brief now also contains escaped recent Retro excerpts and optional review suggestions. Explicit --retro-review sends selected feedback text and current candidate task titles to hosted Jev; ordinary task descriptions, dedicated IDs and attachments remain omitted. Default source-context refresh makes no Retro inference calls. Console reporting stays aggregate; live content and read-back captures must remain outside Git.
+
+Opt-in automatic capture may send necessary email evidence and up to 100 current/recent-completed task-title hints to hosted Jev under the approved shared lifetime cap. Task descriptions are parsed locally only for exact Gmail references; dedicated provider IDs stay out of model state. Private shadow receipts remain ignored and committed evidence contains aggregates only. Durable processing outcomes are local private source-linked records, not a synchronized task inventory.

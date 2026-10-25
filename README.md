@@ -57,3 +57,5 @@ npm run okf:visualize
 This opens the local concept graph. Use `npm run okf:check` to validate and `npm run okf:build` to generate the portable HTML. New concepts remain draft and unverified until reviewed.
 
 The [regular brief refresh and scheduled-task handoff](docs/scheduled-brief-handoff.md) connects the private Drive context to existing daily routines. See [deployment](deploy/brief-refresh.md) and [verification evidence](docs/scheduled-brief-evidence.md).
+
+The [automatic Todoist capture pilot](docs/automatic-todoist-capture.md) adds optional matching and capped task creation while preserving existing tasks. The [deployment evidence](docs/automatic-capture-evidence.md) records the active classifier; capture requires its own reviewed release and explicit enablement.

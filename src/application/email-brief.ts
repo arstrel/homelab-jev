@@ -6,6 +6,8 @@ import {
   briefModel,
   briefPolicy,
   briefSource,
+  type CaptureAnnotation,
+  type CaptureRun,
   renderEmailBrief,
   type SavedBriefDecision,
   savedBriefSchema,
@@ -30,6 +32,7 @@ export interface BriefRecord {
   sourceId: string;
   conversation?: TaskConversation;
   saved?: unknown;
+  capture?: CaptureAnnotation;
 }
 export interface BriefSession {
   sample(
@@ -59,6 +62,7 @@ export interface BriefOptions {
   maxNew: number;
   retroReview?: boolean;
   classifyPending?: boolean;
+  captureTasks?: boolean;
 }
 export function validateBriefOptions(o: BriefOptions) {
   if (
@@ -73,7 +77,9 @@ export function validateBriefOptions(o: BriefOptions) {
     o.maxNew > 20 ||
     (o.retroReview !== undefined && typeof o.retroReview !== "boolean") ||
     (o.classifyPending !== undefined && typeof o.classifyPending !== "boolean") ||
-    (o.classifyPending && (o.maxNew !== 0 || o.retroReview))
+    (o.classifyPending && (o.maxNew !== 0 || o.retroReview)) ||
+    (o.captureTasks !== undefined && typeof o.captureTasks !== "boolean") ||
+    (o.captureTasks && !o.classifyPending)
   )
     throw new Error("Invalid brief options");
 }
@@ -90,6 +96,7 @@ export async function publishEmailBrief(
     };
     retroJudge?: (request: RetroRequest, signal: AbortSignal) => Promise<unknown>;
     clock: Runtime;
+    captureRun?: CaptureRun;
     signal?: AbortSignal;
   },
 ) {
@@ -156,7 +163,10 @@ export async function publishEmailBrief(
             continue;
           }
           const conversation = record.conversation;
-          const entry: BriefEntry = briefSource(conversation);
+          const entry: BriefEntry = {
+            ...briefSource(conversation),
+            ...(record.capture ? { capture: record.capture } : {}),
+          };
           const hash = briefInputHash(record.fingerprint, conversation.directions);
           const rule = taskExclusion(conversation);
           let decision: BriefDecision | undefined;
@@ -341,6 +351,7 @@ export async function publishEmailBrief(
           eligible: sample.eligible,
           status,
           entries,
+          ...(deps.captureRun ? { captureRun: deps.captureRun } : {}),
           todoist,
           retro,
           retroReview: retroReview.markdown,

@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T17:34:46Z
+  at: 2026-10-25T18:50:05Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -33,19 +33,19 @@ x_jev_sources:
   - path: src/domain/email-task.ts
     sha256: 0d3f27d05e8b330b028e79fa526f20b9c5b1370df2098cc8478b4b7ad95bcdc2
   - path: src/application/email-tasks.ts
-    sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
+    sha256: 4e482cd3b344f06d4eb32aa5314be0efc091b0557f39b94e95a08e4e58afa3fd
   - path: src/adapters/jev-email-tasks.ts
-    sha256: becaf504e775f5fc0e98cbb711246db2ac6e2346e2ac682be60855821dfe5ee4
+    sha256: b95e50552261fb4665a4854d3758b32aa4760e10f73df01190f05bc6b19dc43e
   - path: docs/email-tasks.md
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: docs/email-task-pilot.md
     sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
   - path: src/domain/email-brief.ts
-    sha256: 8ce409f2ead0df548d76472e94994940913ebcc21549e10d642da992987be9fa
+    sha256: 6d0919c76180ed5192a304028b75ad55f9a3fc1025d4c1b50be2c8a5a46da7b4
   - path: src/application/email-brief.ts
-    sha256: 6c9b2f4d528095c31db200a8ca3e9837b14c80ee9d33197c29d3561111bb84fd
+    sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: docs/email-brief.md
-    sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
+    sha256: 10d6613da7824e6d996e8aee904c0cf66eab2f664e49a7cdb491aea4924a1089
   - path: src/domain/retro-review.ts
     sha256: 750a144c5d8cf6df1e99d7b7115c6afa1b394e11323c49c354c3700eb4477148
   - path: src/application/review-retro.ts
@@ -53,13 +53,21 @@ x_jev_sources:
   - path: src/application/classify-pending-mail.ts
     sha256: 6724c301287e07d370fc003942d529ab720b4a6774bac54cbac76f92eea02d71
   - path: src/adapters/postgres/email-brief.ts
-    sha256: f03f365c18795f7a5e0583a3d5b8d9b97ddc5246db7851a44806596ff298ee66
+    sha256: 480be952ed744105755a955e58e636d77d0269bb54d198f5a8a2b99764009e19
   - path: docs/automatic-mail-classification.md
     sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
   - path: src/cli-email-brief.ts
-    sha256: 27e0097c16ecb2c393c1cdcc20cc8f3bf520fc479555f77de831388fc653c18c
+    sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: tests/unit/scheduled-email-brief.test.ts
-    sha256: c3ddcdb1435b994cc6fa4c5d60da3beeccaf593a0da5a8169a60b9f43d30e4dd
+    sha256: 2003a6d13f08af3ee07d194863a69435d1dd4d260c7cbf503608e2809188c5df
+  - path: src/domain/automatic-capture.ts
+    sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
+  - path: src/adapters/jev-capture.ts
+    sha256: e2753f6ca0a71258c4b0cce39826dea29704d081d2d58fce5165aee8f3908ed9
+  - path: src/application/capture-mail.ts
+    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
+  - path: docs/automatic-todoist-capture.md
+    sha256: 8b231fe4d9887c93c92d96acf48e44265440bdababbf7fb783e8b23aed761cc6
 ---
 
 # Typed classification and evidence policy
@@ -72,7 +80,7 @@ The manual `mail:classify` preview implements separate kind, attention and lifec
 
 The separate [reviewed task flow](/product/todoist-projects.md) uses v2 review policy: independent obligation eligibility plus bounded sentence/project choices. Criteria directly describe quoted source/project data to reduce indirection; those quotes are untrusted data, not authority. Only required eligibility can produce a proposal. Contextual review titles use the originating subject; apply recomputes supported titles and validates destination IDs. Inbox remains the routing fallback. Human approval supplies the capture decision; original triage jobs/results remain untouched. Candidate matching, corrections and automatic capture remain planned.
 
-The initial model setting is uncalibrated. Evaluate a sanitized held-out set of representative messages, including ambiguous routing and matching, before choosing capture thresholds or enabling automatic capture. Low confidence and contradictory evidence route through [uncertainty](uncertainty.md). The triage runbook recorded in the source snapshots above describes privacy, bounds, replay charges and the model/evaluation boundary.
+The initial model setting is uncalibrated. Evaluate a sanitized held-out set of representative messages, including ambiguous routing and matching, before broader rollout or claiming calibrated automatic capture. Low confidence and contradictory evidence route through [uncertainty](uncertainty.md). The triage runbook recorded in the source snapshots above describes privacy, bounds, replay charges and the model/evaluation boundary.
 
 Explicit owner rules precede semantic judgment: ordinary GitHub PR notifications and Google Cloud terms-update notices are excluded before Jev and during apply. Sender/subject matching excludes neither security/CI notifications nor mixed direct correspondence. The fresh pilot's two proposals were rejected by the owner; source-supported wording alone does not establish personal usefulness. No task was created.
 
@@ -85,3 +93,9 @@ The manual [Retro review](retro-feedback.md) now implements bounded finite task-
 The optional scheduled --classify-pending path processes up to ten due current jobs before cached publication, independently of display membership. Exact decisions and owner exclusions reuse the existing save contract; failures defer one hour. A persistent $2 lifetime allowance reserves maximum request cost before inference and retains ambiguous charges. It creates no tasks and does not calibrate automatic capture. Activation requires the merged runtime and migration. See docs/automatic-mail-classification.md.
 
 Scheduled preprocessing now verifies managed storage readiness while holding publisher ownership before selecting jobs, reserving inference cost or saving decisions. Non-ready or unreadable storage prevents preprocessing; publication retains its independent readiness check. See src/cli-email-brief.ts and the scheduled composition regressions.
+
+The opt-in capture pilot adds finite existing-task matching to source-supported eligibility/title/project selection. At most 100 open/recent-completed task titles enter a bounded request. Unknowns, contradictory choices, Inbox routing and confidence below 0.95 remain review-only. This provisional pilot cutoff is not calibrated accuracy or completion of the parent evaluation requirement. Code owns source-time admission, live inventory recheck, project IDs, the daily cap and all writes. See docs/automatic-todoist-capture.md.
+
+Low-confidence negative eligibility (none/resolved) also remains review-only; it cannot silently become a terminal no-action result.
+
+Complete-request validation precedes inference allowance reservation. Deterministic oversized input is terminal review-only for that evidence version and costs no credit; dispatched ambiguous failures retain their charge.

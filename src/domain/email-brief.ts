@@ -46,12 +46,28 @@ export type BriefFailure =
   | "provider-error"
   | "new-call-cap"
   | "cancelled";
+export const captureAnnotationSchema = z.object({
+  state: z.enum([
+    "created",
+    "matched",
+    "matched-completed",
+    "review",
+    "none",
+    "skipped",
+    "failed",
+    "capped",
+    "ambiguous",
+  ]),
+  taskId: z.string().min(1).optional(),
+});
+export type CaptureAnnotation = z.infer<typeof captureAnnotationSchema>;
 export interface BriefEntry {
   sourceId: string;
   subject: string;
   receivedAt: string | null;
   decision?: BriefDecision;
   failure?: BriefFailure;
+  capture?: CaptureAnnotation;
 }
 export function briefInputHash(fingerprint: string, directions: TaskConversation["directions"]) {
   return createHash("sha256")
@@ -91,6 +107,16 @@ export function briefGroup(entry: BriefEntry) {
     attention.choice
   ];
 }
+export interface CaptureRun {
+  created?: number;
+  matched?: number;
+  review?: number;
+  failed?: number;
+  capped?: number;
+  budgetExhausted?: boolean;
+  ambiguous?: boolean;
+  overlapping?: boolean;
+}
 export interface BriefDocument {
   generation: string;
   generatedAt: string;
@@ -99,6 +125,7 @@ export interface BriefDocument {
   eligible: number;
   status: MailStatusSnapshot;
   entries: BriefEntry[];
+  captureRun?: CaptureRun;
   todoist?: ReturnType<typeof renderTodoistContext>;
   retro?: ReturnType<typeof renderRetroContext>;
   retroReview?: string;
@@ -164,11 +191,33 @@ export function renderEmailBrief(doc: BriefDocument) {
               ", ",
             )}${tracked.length > 3 ? `; ${tracked.length - 3} additional linked tasks in the task section` : ""}.`
         : "";
+      const capture = entry.capture
+        ? ` Capture history: ${entry.capture.state}${entry.capture.taskId ? ` ([Todoist task](${todoistTaskLink(entry.capture.taskId)}))` : ""}; live Todoist state remains authoritative.`
+        : "";
       lines.push(
-        `- [${briefText(entry.subject)}](${gmailLink(entry.sourceId)}) — ${entry.receivedAt ?? "time unknown"}; ${detail}.${association}`,
+        `- [${briefText(entry.subject)}](${gmailLink(entry.sourceId)}) — ${entry.receivedAt ?? "time unknown"}; ${detail}.${association}${capture}`,
         "",
       );
     }
+  }
+  if (doc.captureRun) {
+    const c = doc.captureRun;
+    lines.push(
+      "## Email task capture",
+      "",
+      `This cycle: ${c.created ?? 0} created; ${c.matched ?? 0} matched; ${c.review ?? 0} need review; ${c.failed ?? 0} failed; ${c.capped ?? 0} deferred by the daily limit.`,
+      ...(c.budgetExhausted
+        ? ["New inference stopped at the approved lifetime spending limit."]
+        : []),
+      ...(c.ambiguous
+        ? [
+            "A task write has an uncertain outcome. Creation stopped; inspect existing tasks before retrying.",
+          ]
+        : []),
+      ...(c.overlapping ? ["Capture skipped because another task writer owns the cycle."] : []),
+      "Existing task fields and completion remain owned by the user. Capture history is bounded processing evidence, not a substitute for live Todoist state.",
+      "",
+    );
   }
   lines.push(
     doc.todoist?.markdown ??

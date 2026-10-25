@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T01:53:00Z
+  at: 2026-10-25T18:27:08Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -28,7 +28,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
 x_jev_sources:
   - path: src/adapters/postgres/schema.ts
-    sha256: 24dbe743ecb812b02c3250cf7315edd142c4dfdecbec1edfe65396f3766c39f5
+    sha256: 072baf9d636dc10659c4cb1501973534164388c2c58565d6b5ac89b2462218a8
   - path: src/adapters/postgres/repositories.ts
     sha256: 3b180be48d0705cc565ec4b6e48293f83a3f1b1ef634c5d792675f69bc790414
   - path: src/adapters/todoist.ts
@@ -36,13 +36,19 @@ x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
     sha256: d6bef852b7c90292aacb8707eb6b911c1203f710a127aae5d5fbe2c356532373
   - path: src/adapters/postgres/email-tasks.ts
-    sha256: db821ef4f6d482c7b593f42f32836c7a14da54be2e404f54065d01cc908b6e76
+    sha256: e6ce035c84332bf068fff049598c0c37d9563823749ae23039d282d4c4ecccdd
   - path: src/application/email-tasks.ts
-    sha256: b863ceb3d61d8dc0313ae392b1b9502a4a0ebeda6727b4cfdc102f741875cf65
+    sha256: 4e482cd3b344f06d4eb32aa5314be0efc091b0557f39b94e95a08e4e58afa3fd
   - path: docs/email-tasks.md
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: src/domain/email-task.ts
     sha256: 0d3f27d05e8b330b028e79fa526f20b9c5b1370df2098cc8478b4b7ad95bcdc2
+  - path: src/application/capture-mail.ts
+    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
+  - path: src/adapters/postgres/automatic-capture.ts
+    sha256: 3656d23083bbbff8243784295bf21be29568679ad212c08d6201a341925f3b42
+  - path: docs/automatic-todoist-capture.md
+    sha256: 8b231fe4d9887c93c92d96acf48e44265440bdababbf7fb783e8b23aed761cc6
 ---
 
 # Replay-safe remote writes
@@ -58,3 +64,5 @@ One thread may contain several obligations; one obligation may span threads. Mat
 Completion/deletion suppressions prevent replay from resurrecting user-resolved work. See [manual edits](manual-edits.md), [uncertainty](uncertainty.md), and [ledger](ledger.md).
 
 Review policy v2 rejects old v1 review files, while source-scoped creation identities deliberately retain the v1 key. A new prompt or title policy must not bypass an existing ambiguous intent or task link. The October 21 fresh preview made no task-intent/link changes; no live capture or automated reconciliation is established by that result.
+
+The opt-in automatic capture pilot reuses the manual writer lock, stable source identity and ambiguous-intent protocol. It admits at most three new creation intents per rolling 24 hours, counting ambiguous/manual intents too, and stops after one successful create per cycle. Exact-reference or bounded semantic matches save associations only, not ownership or remote edits. Persistent mapped tasks are never recreated. Full reconciliation of ambiguous outcomes remains manual; the pilot does not claim all-time duplicate detection. See docs/automatic-todoist-capture.md.
