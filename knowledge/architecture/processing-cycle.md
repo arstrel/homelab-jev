@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T20:32:10Z
+  at: 2026-10-25T20:58:36Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -36,11 +36,11 @@ x_jev_sources:
   - path: src/cli-email-brief.ts
     sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: src/application/capture-mail.ts
-    sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
+    sha256: 1ad2014e481f2692dd9ad7c4c045f92b8074d3f150d9f2ed41b0f0b7694cceff
   - path: docs/automatic-capture-evidence.md
     sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
   - path: docs/automatic-todoist-capture.md
-    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
+    sha256: 4500e3552d9904b415ce7d8de25e2d8c4cb15c3920091013d98b01d8f7c2a4fe
 ---
 
 # The five-minute processing cycle
@@ -49,7 +49,7 @@ Two native one-shot LaunchAgents run every five minutes on the Mac mini: a paced
 
 The collector holds its dedicated PostgreSQL ownership session, discovers/queues Gmail changes and atomically saves complete evidence, exact-bound jobs and acknowledgement. Discovery progress and complete-evidence freshness are separate. Bounded expired-cursor recovery covers a recent window and mapped conversations; its unreplayed-history gap remains explicit.
 
-The active publisher holds publisher ownership while classifying up to ten current due conversations under the durable lifetime allowance. Optional capture then selects up to five recent classified sources under the shared manual-writer lock, checks current projects/tasks, matches known obligations and admits at most three creation intents per rolling day. Existing task fields remain untouched; ambiguous writes stop blind retries.
+The active publisher holds publisher ownership while classifying up to ten current due conversations under the durable lifetime allowance. Optional capture then selects up to five recent classified sources under the shared manual-writer lock, checks current projects/tasks, matches known obligations and admits at most three creation intents per rolling day. Capture loads inventory only after the first record passes local evidence/exclusion/confidence checks; idle or entirely locally ineligible batches make no capture provider calls. Eligible records share one initial inventory while semantic linking/creation still requires a fresh read. This idle-read correction awaits merged-release deployment. Existing task fields remain untouched; ambiguous writes stop blind retries.
 
 Publication reacquires publisher ownership separately, refreshes current Todoist/Retro context and writes/readbacks the same private Drive artifact. It reuses saved email judgments; Retro inference remains explicit/manual. Capture counters describe the current invocation, and historical mappings are not live completion authority. The CLI orders these stages; it is not one atomic transaction or one continuous lock across every stage.
 

@@ -11,6 +11,10 @@ The system SHALL require explicit enablement and a source-time boundary, examine
 - **WHEN** source evidence predates enablement or the creation allowance is exhausted
 - **THEN** no new task is created for that source and capped work remains deferred
 
+#### Scenario: No locally eligible capture work
+- **WHEN** local selection is empty or every selected record fails evidence, exclusion or saved-classification eligibility checks
+- **THEN** capture makes no Todoist inventory reads or hosted inference requests, preserving local skip/review outcomes
+
 ### Requirement: Matching before creation
 The system SHALL prefer durable mappings and exact Gmail references before bounded typed matching against current open and recent completed tasks. Incomplete inventory, ambiguous matches, unknown judgments or insufficient confidence SHALL prevent automatic creation.
 

@@ -44,11 +44,11 @@ x_jev_sources:
   - path: src/domain/email-task.ts
     sha256: 0d3f27d05e8b330b028e79fa526f20b9c5b1370df2098cc8478b4b7ad95bcdc2
   - path: src/application/capture-mail.ts
-    sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
+    sha256: 1ad2014e481f2692dd9ad7c4c045f92b8074d3f150d9f2ed41b0f0b7694cceff
   - path: src/adapters/postgres/automatic-capture.ts
     sha256: 3656d23083bbbff8243784295bf21be29568679ad212c08d6201a341925f3b42
   - path: docs/automatic-todoist-capture.md
-    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
+    sha256: 4500e3552d9904b415ce7d8de25e2d8c4cb15c3920091013d98b01d8f7c2a4fe
 ---
 
 # Replay-safe remote writes

@@ -58,7 +58,7 @@ x_jev_sources:
   - path: docs/automatic-capture-evidence.md
     sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
   - path: docs/automatic-todoist-capture.md
-    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
+    sha256: 4500e3552d9904b415ce7d8de25e2d8c4cb15c3920091013d98b01d8f7c2a4fe
 ---
 
 # Drive snapshot and planner freshness

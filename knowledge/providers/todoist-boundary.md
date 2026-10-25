@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:38:32Z
+  at: 2026-10-25T20:58:36Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -47,9 +47,9 @@ x_jev_sources:
   - path: src/adapters/todoist-capture.ts
     sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
   - path: src/application/capture-mail.ts
-    sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
+    sha256: 1ad2014e481f2692dd9ad7c4c045f92b8074d3f150d9f2ed41b0f0b7694cceff
   - path: docs/automatic-todoist-capture.md
-    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
+    sha256: 4500e3552d9904b415ce7d8de25e2d8c4cb15c3920091013d98b01d8f7c2a4fe
 ---
 
 # Todoist identity and adapter contract
@@ -67,3 +67,5 @@ The publisher also resolves one current active Retro identity and reads bounded 
 The capture adapter reuses project discovery and the existing source-marked creation method. It reads at most two 100-item pages each of open and last-30-day completed tasks, fails closed on unfinished pagination or over 100 distinct candidates, and excludes Retro by resolved identity. Descriptions are inspected locally for supported primary-account Gmail references; model context contains only titles/completed hints. Unknown/archived-project tasks can prevent duplicates but cannot become creation destinations. The capture port exposes no remote update, completion, deletion or reopen method. Durable links preserve mapped work even when no longer returned. See docs/automatic-todoist-capture.md.
 
 The configured Retro identity is excluded even when its project is archived, frozen or absent from active discovery; recent completed feedback must not enter matching context.
+
+Capture selects and validates local email work before lazily loading its inventory. Empty or entirely locally skipped/review-only batches make no capture Todoist reads; eligible records share the initial inventory and retain the separate fresh read before semantic linking/creation. Publication independently refreshes its current Todoist/Retro context. This idle-read correction is implemented but awaits merged-release deployment.
