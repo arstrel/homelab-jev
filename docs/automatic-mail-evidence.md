@@ -1,6 +1,6 @@
 # Automatic mail preprocessing verification
 
-October 25, 2026; private content and provider identities remain in ignored evidence. This records implementation/live checks, not activation of an unmerged release.
+October 25, 2026; private content and provider identities remain in ignored evidence. The initial sections record pre-merge implementation/live checks. Subsequent [merged classifier/capture activation](automatic-capture-evidence.md) completed the operational follow-up; their original pre-activation statements below are historical.
 
 ## Gmail retrieval
 

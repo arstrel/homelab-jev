@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T19:30:09Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -22,7 +22,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: 8aee3e08be20666e36dffa7a46b8a80acd682b76f6413ececc431fd63f9c46e7
+    sha256: a5069d9ab2ebc61ee4aacdb855e90be35208537a22b8e5dd844d94a762f00d15
   - path: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
     sha256: d6bef852b7c90292aacb8707eb6b911c1203f710a127aae5d5fbe2c356532373
   - path: src/domain/email-task.ts
@@ -57,7 +57,7 @@ Separate finite obligations from broad goals and reusable activity options. A fi
 
 See [manual edits](/architecture/manual-edits.md), [uncertainty](/architecture/uncertainty.md), and [Retro](/architecture/retro-feedback.md).
 
-The implemented [manual reviewed task flow](/providers/todoist-boundary.md) offers one source-supported task per stored conversation after an independent required-obligation judgment, finite current project choices and Inbox on uncertain routing. Generic review links/notifications use their source subject in the title. Samples prioritize message time rather than retrieval time. Retro is excluded by name, optional configured ID and captured review identity. Apply requires explicit candidate approval and rejects a changed name/ID instead of silently rerouting. Automatic capture and broader task-kind synchronization remain planned.
+The implemented [manual reviewed task flow](/providers/todoist-boundary.md) offers one source-supported task per stored conversation after an independent required-obligation judgment, finite current project choices and Inbox on uncertain routing. Generic review links/notifications use their source subject in the title. Samples prioritize message time rather than retrieval time. Retro is excluded by name, optional configured ID and captured review identity. Apply requires explicit candidate approval and rejects a changed name/ID instead of silently rerouting. That manual path remains available; the enabled automatic pilot is described below. Broader task-kind synchronization remains planned.
 
 Owner preference: routine GitHub PR opens/comments/review requests are handled in GitHub and should not duplicate work in Todoist; routine Google Cloud terms updates also produce no task. Deterministic sender/subject exclusions enforce these categories before model calls and again on apply. Marking those PR emails read is a separate Gmail operation, not completion of a Todoist obligation.
 
@@ -65,4 +65,4 @@ The manual [Drive brief](/architecture/planner-handoff.md) now reads current tas
 
 Optional manual [Retro review](/architecture/retro-feedback.md) now judges finite actions, reusable activities and broad goals from current candidate titles. A rowing session preserves the activity option, progress preserves the broad goal, and source recurrence always keeps future occurrences available. Specific supported finite completion is only a review suggestion; there is no completion/write integration.
 
-The opt-in automatic pilot now checks durable mappings, exact supported Gmail references and bounded semantic choices before creating source-supported tasks in existing themed projects. Retro is excluded by resolved identity; uncertain/Inbox routing stays review-only. No task fields, dates, labels or completion are changed. Source-time enablement and a rolling three-intent cap bound rollout. Open plus 30-day completed matching is bounded, not an all-time task inventory. The reviewed pilot was activated October 25 with a fresh source-time boundary and a real timer/publication check. Zero post-boundary sources were available, so useful live capture and broader lifecycle acceptance remain open. See docs/automatic-todoist-capture.md.
+The opt-in automatic pilot now checks durable mappings, exact supported Gmail references and bounded semantic choices before creating source-supported tasks in existing themed projects. Retro is excluded by resolved identity; uncertain/Inbox routing stays review-only. No task fields, dates, labels or completion are changed. Source-time enablement and a rolling three-intent cap bound rollout. Open plus 30-day completed matching is bounded, not an all-time task inventory. The reviewed pilot was activated October 25 with a fresh source-time boundary and a real timer/publication check. At activation zero post-boundary sources were available, so useful live capture and broader lifecycle acceptance remain open. See docs/automatic-todoist-capture.md.

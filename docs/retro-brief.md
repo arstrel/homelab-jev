@@ -35,4 +35,4 @@ For a finite task, specific supported feedback may yield **Possible completion â
 
 The review section shows feedback suggestions before task kinds, capped below 12,000 bytes with explicit omitted rows. The existing 24 KiB task section and 64 KiB whole-artifact limit still apply. Bound/unavailable/source gaps are visible and return exit 1 even if a degraded artifact was confirmed published; inspect `published` and coverage separately. Cancellation stops publication.
 
-See [publication and recovery](email-brief.md), [OpenSpec design](../openspec/changes/add-retro-planning-brief/design.md) and [verification evidence](retro-brief-evidence.md). Automatic reconciliation and actual scheduled planner retrieval remain future work.
+See [publication and recovery](email-brief.md), [OpenSpec design](../openspec/changes/add-retro-planning-brief/design.md) and [verification evidence](retro-brief-evidence.md). Automatic reconciliation remains future work. Actual scheduled planner retrieval is separately accepted in [the handoff evidence](scheduled-brief-evidence.md); that does not establish complete Retro coverage or useful matching quality.

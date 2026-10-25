@@ -1,5 +1,21 @@
 # Knowledge change log
 
+## 2026-10-25 delivery reconciliation
+
+Reconciled requirements, README and the parent OpenSpec checklist with the implemented collector/classifier/capture/publication/handoff slices. Recorded a strict zero-work collector timer pair at 20:17:17.791Z and 20:22:23.307Z, closing scoped catch-up/no-change observation; closed the already-verified Pages deployment/review tasks. Kept broad evaluation, corrections, useful capture, multi-obligation/lifecycle and full rollback acceptance open. The specific block-fit criterion remains distinct from accepted daily-consumer retrieval. Historical observations retain their original dates and outcomes.
+
+Reviewed the six original source-drift warnings before updating snapshots:
+
+- `architecture/mail-ingestion.md`: schema change adds the migration-0005 inference allowance; immutable evidence/manual-ingestion behavior is unchanged.
+- `operations/classification-evaluation.md`: parent tracking now reflects implemented typed choices and active pilot policy, while corrections/representative evaluation remain open.
+- `operations/mail-observation.md`: readiness now includes the allowance table; diagnostics remain read-only. Later timer evidence supersedes the old freshness gap.
+- `operations/okf-maintenance.md`: AGENTS.md adds mandatory Copilot review and the three-fix-loop limit. Recorded hosted-graph acceptance without inventing human knowledge verification.
+- `operations/secret-handling.md`: the publication runbook adds scheduled-handoff references; its private artifact and source-context restrictions remain. Public OKF hosting contains curated engineering knowledge only.
+- `operations/test-isolation.md`: the intentionally conflicting migration-journal fixture changes its expected count from six to seven for migration 0005; operational-data isolation is unchanged.
+
+Reviewed dependent concepts against the revised requirements/design/evidence and removed superseded present-tense summaries. Refreshed only those reviewed source snapshots. Meaningful-change timestamps advance for changed claims; existing review deadlines and all human-verification metadata remain untouched. No application behavior, runtime deployment, provider state or hosted Jev request changed.
+
+
 ## 2026-10-25 capture pilot activation
 
 Activated reviewed merged PR #25 on the publisher after a private backup, preserving the collector, schema, source mappings and lifetime allowance. Verified a real five-minute invocation and exact private Drive/capture-counter readback. No post-boundary sources were present, so no task-write or matching-quality acceptance is claimed. Recorded zero retrieval gaps separately from the remaining classification backlog and incomplete Retro coverage. Prepared a conditional header correction with a successful-create regression; that wording patch awaits review/merge. Updated relevant claims and source snapshots without changing review deadlines or human verification.

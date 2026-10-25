@@ -47,7 +47,7 @@ Only the generated self-contained HTML is uploaded, renamed to `index.html` in a
 
 The commands below remain available for local preview and unmerged edits.
 
-Deployment preparation on October 25 verified the generated graph at a local `/homelab-jev/` path: 30 concepts, 156 links, rendered graph and concept navigation. The repository token's Pages setup request returned HTTP 403, so the owner must select GitHub Actions in the Pages setting above (or grant the token Pages write permission). The hosted URL and deployment remain unverified until this workflow is merged and Pages is enabled.
+Deployment verification on October 25: PR #27 merged as `fadd9628bcca414892d712aba7748f6f63000590`. The owner enabled Pages and reran the workflow after the first attempt found Pages disabled; the repository token and connector lacked Actions write permission. [Workflow attempt 2](https://github.com/arstrel/homelab-jev/actions/runs/40229463150/attempts/2) succeeded. Independent public readback and browser inspection at 20:20 UTC confirmed HTTP 200, 30 concepts, 156 links, the rendered graph and working concept navigation. The hosted site is live; the setup instructions above are for future reconfiguration.
 
 ```sh
 nvm use 24

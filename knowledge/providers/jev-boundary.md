@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:50:05Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -48,14 +48,14 @@ x_jev_sources:
   - path: src/domain/automatic-capture.ts
     sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: docs/automatic-capture-evidence.md
-    sha256: 9087226c6d39f2948e756021225c5c373ae09f3ad59f510e6fc9b87066240a3f
+    sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
 ---
 
 # Jev adapter and judgment boundary
 
 The current TypeSafe AI SDK adapter checks model availability with a bounded read-only call, retries disabled and SDK logging disabled. `JEV_API_KEY` belongs only in local/runtime secret configuration.
 
-The explicit `mail:classify` preview asks independent kind, attention and lifecycle choices on complete stored evidence. Zod validates exact keys, enum choices, numeric probabilities/confidence, usage and returned model identity. Policy `mail-triage/v1` uses live-confirmed numeric model revision `jev-1.13.0`; mutable aliases are rejected. The initial setting is uncalibrated. Preview leaves storage/jobs/tasks unchanged. Matching and routing remain planned. No model output can extend project IDs, bypass manual overrides or request arbitrary tool execution.
+The explicit `mail:classify` preview asks independent kind, attention and lifecycle choices on complete stored evidence. Zod validates exact keys, enum choices, numeric probabilities/confidence, usage and returned model identity. Policy `mail-triage/v1` uses live-confirmed numeric model revision `jev-1.13.0`; mutable aliases are rejected. The initial setting is uncalibrated. Preview leaves storage/jobs/tasks unchanged. The preview itself does not match or route; those finite choices are implemented by the separate reviewed-task and automatic-capture adapters. No model output can extend project IDs, bypass manual overrides or request arbitrary tool execution.
 
 Only necessary subject/body/timestamp/direction state is sent, capped at 32 KiB without truncation; address lists, dedicated source IDs and attachment contents are omitted. Body text can contain private information. Calls have five-second timeouts, disabled retries/logging and shared cancellation/deadline bounds. Use [evaluation](/operations/classification-evaluation.md) to choose later thresholds, and follow [classification policy](/architecture/classification-policy.md).
 

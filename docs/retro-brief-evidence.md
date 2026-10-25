@@ -31,3 +31,5 @@ The final publication reported `published: true` with exit 1 because source cove
 The real Retro check returned 48,254 input / 6,950 output tokens, estimated $0.002027. Combined with both synthetic runs, this feature used 41 attempts and returned 76,674 input / 10,972 output tokens: approximately **$0.003220**, within the existing $2 allowance. Private read-back captures and provider payloads remain ignored local artifacts; no private feedback, titles or identifiers are committed here.
 
 Todoist/Retro tasks, Gmail, the installed collector, scheduled prompts and reset credits were not changed. Only the owned Drive artifact and its existing publication metadata were updated. Full source coverage, calibrated matching quality, automatic reconciliation and real scheduled planner consumption remain unverified future work.
+
+October 25 delivery reconciliation: the results above remain the October 22 Retro development/source evidence. Subsequent [scheduled handoff acceptance](scheduled-brief-evidence.md) establishes actual daily-consumer retrieval separately; full Retro coverage, a human-reviewed task-kind mapping and useful reconciliation quality remain open.

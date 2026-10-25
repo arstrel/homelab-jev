@@ -1,5 +1,7 @@
 # Five-minute collector evidence — October 21, 2026
 
+Current delivery is described in [requirements progress](product-requirements.md#progress-tracking). The October 21/22 observations below are historical; [October 25 catch-up/no-change acceptance](mail-observation-evidence.md#october-25-catch-up-and-no-change-acceptance) supersedes their collection-freshness gap.
+
 ## Delivery boundary
 
 The collector tooling wraps existing `mail:sync`; it introduces no new provider behavior, database migration or model call. Native activation requires a merged reviewed release. This report separates offline packaging/control checks from manual live collection and recurring-operation acceptance.

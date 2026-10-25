@@ -1,8 +1,10 @@
 # Tasks
 
+Reconciled October 25, 2026 against merged code, synthetic checks and dated operational evidence. Checked tasks meet their stated verification; open tasks may be partially implemented as described below. Historical proposals are the target, not current deployment status.
+
 ## 1. Application and connection foundation
 
-Complete this foundation before starting feature work in groups 2–6. Commands and hooks are implemented on the foundation branch; remaining account/authorization checks are tracked below and in [foundation evidence](../../../docs/foundation-evidence.md).
+Foundation implementation, provider grants and Git/CI gates are complete; see [foundation evidence](../../../docs/foundation-evidence.md).
 
 - [x] 1.1 Pin the Node 24 patch and approved direct packages, retain the three installed provider SDKs, and commit the npm lockfile; verify npm ci succeeds from a clean installation using the documented runtime.
 - [x] 1.2 Add the approved application/domain/adapter layout, strict ESM/NodeNext TypeScript configuration, tsx development entry point, and compiled CLI; verify application/tests/scripts type-check and compiled help/version run without credentials or network access.
@@ -20,27 +22,25 @@ Complete this foundation before starting feature work in groups 2–6. Commands 
 
 ## 2. Incremental Gmail synchronization
 
-The isolated [Gmail thread-evidence change](../add-gmail-thread-evidence/proposal.md), with its own [design](../add-gmail-thread-evidence/design.md) and [tasks](../add-gmail-thread-evidence/tasks.md), delivers 2.1 and the pure fingerprinting portion of 2.3. It ends at in-memory normalized evidence and a manual read-only preview. Durable evidence-version storage, queueing/checkpoint advancement (2.2), expired-cursor recovery (remaining 2.3), and scheduled/no-change freshness observation (2.4) remain here. This link does not mark any implementation complete.
-
 - [x] 2.1 Implement configurable recent-mail bootstrap and incoming/sent thread retrieval; verify fixtures cover read messages, sent replies, and older threads resurfacing through new mail.
-The separate [durable evidence ingestion change](../add-durable-mail-evidence/proposal.md) implements immutable evidence versions, exact job binding and atomic manual persistence. It delivers the storage prerequisite of 2.2; history pagination, durable retrieval retries and safe cursor advancement remain pending. Preview remains read-only; ingestion requires explicit database setup.
-
 - [x] 2.2 Implement paginated history ingestion and durable pending jobs before checkpoint advancement; verify crash and classification-failure tests retain every fetched change.
-
-The [incremental sync change](../add-incremental-mail-sync/proposal.md) implements manual resumable bootstrap/history and a durable retrieval backlog. Its discovery frontier means IDs are safely queued; complete evidence freshness advances separately after retrieval drains. Exact evidence/jobs and work acknowledgement commit together. The [recovery change](../add-mail-sync-recovery/proposal.md) implements bounded recent/mapped recovery, preservation of known work and explicit history-gap reporting. The real observation pilot in 2.4 remains pending; synthetic no-change tests are not a live rollout report.
 - [x] 2.3 Implement expired-cursor recovery and source fingerprinting; verify repeated runs and read-state-only changes do not generate new processing obligations.
-- [ ] 2.4 Document bootstrap/recovery behavior and deliver an observation-run report; verify a second no-change run advances sync freshness without redundant Jev calls.
+- [x] 2.4 Document bootstrap/recovery behavior and deliver an observation-run report; verify a second no-change run advances sync freshness without redundant Jev calls.
+
+Delivery evidence: [sync/recovery runbook](../../../docs/mail-sync.md), [retrieval repair](../../../docs/automatic-mail-evidence.md) and the [October 25 no-change timer pair](../../../docs/mail-observation-evidence.md#october-25-catch-up-and-no-change-acceptance). Task 2.4 now has complete scoped collection plus a later zero-work freshness advance. Expired-cursor recovery remains synthetically tested; no live expiry was manufactured.
 
 ## 3. Jev decisions and evaluation
 
-- [ ] 3.1 Implement narrow typed questions, allowed-project choices, candidate matching, and explicit unknown outcomes; verify responses are validated and hostile email text cannot add a destination or action outside policy.
+- [x] 3.1 Implement narrow typed questions, allowed-project choices, candidate matching, and explicit unknown outcomes; verify responses are validated and hostile email text cannot add a destination or action outside policy.
 - [ ] 3.2 Add per-decision thresholds, model/policy versioning, and correction recording; verify corrections preserve original results and numeric/date operations run in code.
-- [ ] 3.3 Implement source-based task title templates and review fallback for complex wording; verify titles refer to supported actions and complex messages do not invent subtasks.
+- [x] 3.3 Implement source-based task title templates and review fallback for complex wording; verify titles refer to supported actions and complex messages do not invent subtasks.
 - [ ] 3.4 Evaluate roughly 100–200 representative corrected messages, keeping a held-out portion; deliver missed-action, incorrect-capture, routing, review-rate, latency, and cost results with documented threshold choices before enabling automatic capture.
+
+Delivery: typed kind/attention/lifecycle judgments, bounded source-title/project/existing-task choices and explicit unknowns are implemented; see [triage](../../../docs/mail-triage.md), [reviewed task flow](../../../docs/email-tasks.md), [capture policy](../../../docs/automatic-todoist-capture.md) and their synthetic regressions. Task 3.2 remains open for corrections; model/policy identity and provisional thresholds already exist. Task 3.4 remains open: the owner-approved narrow create-only pilot uses provisional 0.95 thresholds and does not satisfy the original pre-capture representative-evaluation requirement.
 
 ## 4. Todoist obligation reconciliation
 
-- [ ] 4.1 Implement project/task synchronization, refreshable destination IDs, and Retro exclusion; verify current projects are recognized and archived destinations fall back to review.
+- [x] 4.1 Implement project/task synchronization, refreshable destination IDs, and Retro exclusion; verify current projects are recognized and archived destinations fall back to review.
 - [ ] 4.2 Implement mapping-first, reference-based, and Jev-assisted matching; verify cross-thread matches and multiple distinct obligations in one thread with fixtures.
 - [ ] 4.3 Implement durable task-creation intents, source markers, and ambiguous-response reconciliation; verify injected timeouts and overlapping attempts create at most one task per obligation.
 - [ ] 4.4 Implement automatic themed-project capture and Inbox review candidates with source links; verify FYI/noise produce no tasks and one controlled live capture lands in its intended project.
@@ -48,33 +48,41 @@ The [incremental sync change](../add-incremental-mail-sync/proposal.md) implemen
 - [ ] 4.6 Add waiting/review visibility and sourced resolution suggestions; verify a sent reply can mark waiting, approval alone cannot complete a task, and unknown dates remain unset.
 - [ ] 4.7 Document task ownership, label conventions, correction behavior, and replay recovery; verify the documented workflow against controlled mapped tasks without editing unrelated tasks.
 
+Delivery: current bounded project/task reads and Retro exclusion are [implemented and live-read verified](../../../docs/todoist-brief-evidence.md). The [active create-only pilot](../../../docs/automatic-capture-evidence.md) adds exact-reference/semantic matching, durable intents/links, current-source checks and preserved remote fields. Tasks 4.2–4.7 remain open for their broader criteria: multiple obligations per conversation, ambiguous-write resolution, an actionable Inbox/review workflow and useful live capture, per-field correction tracking, waiting/lifecycle updates and full recovery acceptance. Current mapped-task replay suppression and create-only field preservation are implemented, not merely planned.
+
 ## 5. Retro and planning inventory
 
-- [ ] 5.1 Read Retro tasks and relevant comments as feedback; verify originals remain unchanged and broad accomplishment reports produce specific candidates with uncertainty.
+- [x] 5.1 Read Retro tasks and relevant comments as feedback; verify originals remain unchanged and broad accomplishment reports produce specific candidates with uncertainty.
 - [ ] 5.2 Record a reviewed mapping of finite actions, reusable options, and broad goals from current Todoist inventory; verify rowing remains reusable and certification guidance produces bounded next steps.
-- [ ] 5.3 Document how the planner consumes feedback and reconciliation suggestions; verify fixtures cover a reported setup accomplishment with several still-open tasks without blanket completion.
+- [x] 5.3 Document how the planner consumes feedback and reconciliation suggestions; verify fixtures cover a reported setup accomplishment with several still-open tasks without blanket completion.
+
+Delivery: [Retro context and optional typed review](../../../docs/retro-brief.md) read tasks/comments, preserve originals and conservatively distinguish finite actions from reusable options/goals. [Synthetic and live evidence](../../../docs/retro-brief-evidence.md) supports 5.1/5.3. Task 5.2 remains open: live task-kind results were unverified model choices, not a human-reviewed inventory mapping. Complete Retro coverage and useful reconciliation quality are not claimed.
 
 ## 6. Drive publication and scheduled-task handoff
 
-- [ ] 6.1 Implement the Markdown snapshot contract and dedicated stable Drive file; verify generation IDs, source/task links, sync timestamps, failures, and freshness-only publication on a no-new-mail cycle.
-- [ ] 6.2 Implement recoverable publication and configurable freshness checks; verify failed publication leaves prior metadata intact and stale snapshots trigger explicit fallback behavior.
+- [x] 6.1 Implement the Markdown snapshot contract and dedicated stable Drive file; verify generation IDs, source/task links, sync timestamps, failures, and freshness-only publication on a no-new-mail cycle.
+- [x] 6.2 Implement recoverable publication and configurable freshness checks; verify failed publication leaves prior metadata intact and stale snapshots trigger explicit fallback behavior.
 - [x] 6.3 Save the existing Daily Inbox Digest and Daily Life Plan instructions and draft updated handoff instructions; verify each actual task context can retrieve the latest snapshot generation and live Todoist items before applying the updates.
-
-The [scheduled handoff slice](../schedule-brief-handoff/proposal.md) preserves private prompt backups and appends verified instructions after exact-file/live-source probes. See [operational evidence](../../../docs/scheduled-brief-evidence.md); actual next-timer acceptance and the existing planner Drive-save limitation remain open.
 - [ ] 6.4 Integrate Todoist inventory, waiting/review states, Retro, and calendar block themes into daily-task instructions; verify a Home & Admin example selects fitting actions and leaves optional inventory optional.
-- [ ] 6.5 Document file ownership and rollback of the scheduled-task prompts; verify worker publication cannot overwrite existing plan/digest/retro artifacts and prior generated plans are not treated as completion evidence.
+- [x] 6.5 Document file ownership and rollback of the scheduled-task prompts; verify worker publication cannot overwrite existing plan/digest/retro artifacts and prior generated plans are not treated as completion evidence.
+
+Delivery: [publication/recovery](../../../docs/email-brief.md) and [scheduled handoff evidence](../../../docs/scheduled-brief-evidence.md) cover the stable owned file, generation/readback, cache replay, failure metadata, prompt backups and live-source precedence. The October 23 timer runs plus October 25 approved full-JSON repair complete the isolated handoff slice. Task 6.4 remains open for its specific Home & Admin block/optional-inventory acceptance example; routine retrieval success does not itself establish that scenario.
 
 ## 7. Five-minute operation
 
-- [ ] 7.1 Add the one-shot launchd definition with explicit runtime, compiled release entry point, environment path, five-minute cadence, and a dedicated-connection PostgreSQL advisory lock; verify an overlapping invocation skips writes and lock ownership is released on exit.
+- [x] 7.1 Add the one-shot launchd definition with explicit runtime, compiled release entry point, environment path, five-minute cadence, and a dedicated-connection PostgreSQL advisory lock; verify an overlapping invocation skips writes and lock ownership is released on exit.
 - [ ] 7.2 Implement coordinated bounded provider retries, cycle deadlines, graceful termination, failure diagnostics, and pending-work recovery; verify rate-limit, expired-credential, host interruption, and restart scenarios preserve pending work and close database connections with sanitized output.
-- [ ] 7.3 Document start/stop, retention, diagnosis, and restart procedures; verify stopping preserves mappings and resuming processes pending work without duplicate tasks.
-- [ ] 7.4 Add reviewed-commit release preparation and an immutable compiled release directory with a stable pointer; verify runtime/commit recording and pointer switching without making production depend on the editable checkout.
+- [x] 7.3 Document start/stop, retention, diagnosis, and restart procedures; verify stopping preserves mappings and resuming processes pending work without duplicate tasks.
+- [x] 7.4 Add reviewed-commit release preparation and an immutable compiled release directory with a stable pointer; verify runtime/commit recording and pointer switching without making production depend on the editable checkout.
 - [ ] 7.5 Document and exercise explicit migration deployment, schema-compatible code rollback, and database recovery on an isolated environment; verify the previous release can be restored when compatible and no user tasks or source mappings are deleted.
+
+Delivery: [collector controls and immutable packaging](../../../deploy/README.md), [activation evidence](../../../docs/mail-worker-evidence.md), [publisher operations](../../../deploy/brief-refresh.md) and [coordinated classifier/capture activation](../../../docs/automatic-capture-evidence.md) support the checked tasks. Task 7.2 has bounded retries/deadlines/ownership-loss tests but still needs the full cross-provider interruption matrix. Task 7.5 has explicit migrations, private backups and synthetic upgrade/repair checks; a complete isolated backup-restore/release rollback rehearsal remains open.
 
 ## 8. End-to-end rollout evidence
 
-- [ ] 8.1 Run the five-minute observation pilot and document chosen defaults and measured limitations; verify real sync freshness and zero Todoist/Gmail writes in observation mode.
+- [x] 8.1 Run the five-minute observation pilot and document chosen defaults and measured limitations; verify real sync freshness and zero Todoist/Gmail writes in observation mode.
 - [ ] 8.2 Activate controlled automatic capture and complete a reply/waiting/manual-completion lifecycle; verify project routing, source linkage, correction preservation, and replay suppression end to end.
 - [ ] 8.3 Observe one real Daily Inbox Digest and one Daily Life Plan run using the integration; verify latest-generation retrieval, appropriate block recommendations, and clear degraded-source reporting.
 - [ ] 8.4 Exercise disable/re-enable and prompt rollback without deleting user tasks; deliver a release evidence report linking requirement scenarios to checks and list any remaining limitations before closing this change.
+
+Delivery: collection-only [observation](../../../docs/mail-worker-evidence.md) and the [later no-change pair](../../../docs/mail-observation-evidence.md#october-25-catch-up-and-no-change-acceptance) support 8.1 without claiming an account-wide mutation audit. Both real daily runs consumed matching current generations and live sources; that narrow acceptance is [complete](../../../docs/scheduled-brief-evidence.md). Task 8.3 remains open only for the separately unverified block-fit recommendation criterion, also tracked by 6.4. Useful capture and the complete reply/waiting/completion lifecycle (8.2), disable/re-enable/prompt rollback exercise and final release report (8.4) remain open.
