@@ -4,3 +4,4 @@
 - [x] 1.2 Implement capped source-time-bounded capture, matching and strict typed review outcomes using existing intents/mappings/allowance; verify synthetic domain/application/adapter regressions and disposable PostgreSQL replay/cap behavior.
 - [x] 1.3 Wire explicit publisher opt-in, document activation/disable and ownership limits, and update relevant knowledge with validated links/provenance.
 - [x] 1.4 Run required quality gates, open a PR and inspect Copilot reviews with at most three fix loops; record remaining activation/quality boundaries.
+- [x] 1.5 Activate the reviewed pilot with a fresh source-time boundary and stable Retro exclusion, verify a real timer run and exact owned-file readback, record coverage limits, and correct the capture/no-write summary with a regression.

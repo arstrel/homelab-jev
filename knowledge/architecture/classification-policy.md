@@ -41,7 +41,7 @@ x_jev_sources:
   - path: docs/email-task-pilot.md
     sha256: 8089ef62743ecc604a5bd820424ccb1fba9fce65230f5e5e3b4b45ad6b67749b
   - path: src/domain/email-brief.ts
-    sha256: 6d0919c76180ed5192a304028b75ad55f9a3fc1025d4c1b50be2c8a5a46da7b4
+    sha256: 79fda7c5e18a320cf9826caa82ae869a8bdce327b19a48e676203c46695667c5
   - path: src/application/email-brief.ts
     sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: docs/email-brief.md
@@ -67,7 +67,7 @@ x_jev_sources:
   - path: src/application/capture-mail.ts
     sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
   - path: docs/automatic-todoist-capture.md
-    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
+    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
 
 # Typed classification and evidence policy

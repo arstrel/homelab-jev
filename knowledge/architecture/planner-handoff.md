@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:27:08Z
+  at: 2026-10-25T19:30:09Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -26,7 +26,7 @@ x_jev_sources:
   - path: docs/product-requirements.md
     sha256: 8aee3e08be20666e36dffa7a46b8a80acd682b76f6413ececc431fd63f9c46e7
   - path: src/domain/email-brief.ts
-    sha256: 6d0919c76180ed5192a304028b75ad55f9a3fc1025d4c1b50be2c8a5a46da7b4
+    sha256: 79fda7c5e18a320cf9826caa82ae869a8bdce327b19a48e676203c46695667c5
   - path: src/application/email-brief.ts
     sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: src/adapters/postgres/email-brief.ts
@@ -56,9 +56,9 @@ x_jev_sources:
   - path: docs/automatic-mail-classification.md
     sha256: 6ed7e95d4dfe5a520a837ad8c62aac969e6ff7674e8ed071a4de86ffee2de9ce
   - path: docs/automatic-capture-evidence.md
-    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
+    sha256: 9087226c6d39f2948e756021225c5c373ae09f3ad59f510e6fc9b87066240a3f
   - path: docs/automatic-todoist-capture.md
-    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
+    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
 
 # Drive snapshot and planner freshness
@@ -91,4 +91,4 @@ The October 22 scheduled-handoff rollout activates cached-only five-minute publi
 
 The automatic classification upgrade adds --classify-pending before cached publication. The display and Retro paths remain --max-new 0; preprocessing has separate request/token counters and a durable $2 lifetime cap. The merged template is now active, while prior scheduled handoff evidence describes the initial cached-only rollout. See docs/automatic-mail-classification.md.
 
-The merged PR #23 classifier was activated and verified on a genuine October 25 timer cycle, with independent readback of the exact owned Drive file. Retrieval was complete at observation; classification and Retro gaps remained explicit. Opt-in task capture adds per-source processing history and cycle counts/review/failure/cap/ambiguity disclosures to the same artifact. Historical matching never establishes current completion; live Todoist remains authoritative. Capture is not yet deployed. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.
+The merged PR #23 classifier was activated and verified on a genuine October 25 timer cycle, with independent readback of the exact owned Drive file. Retrieval was complete at observation; classification and Retro gaps remained explicit. Opt-in task capture adds per-source processing history and cycle counts/review/failure/cap/ambiguity disclosures to the same artifact. Historical matching never establishes current completion; live Todoist remains authoritative. Capture was enabled on October 25; a genuine timer generation and exact owned-file/counter readback passed with zero eligible new sources. The follow-up template correction removes the blanket no-write claim from capture-enabled documents; that wording patch is not yet deployed. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.

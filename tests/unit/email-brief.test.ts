@@ -435,6 +435,22 @@ it("discloses capture review and uncertain writes without treating a historical 
   expect(text).toContain("uncertain outcome. Creation stopped");
   expect(text).toContain("approved lifetime spending limit");
 });
+it("reports successful capture without contradicting it with the old no-write claim", () => {
+  const doc = {
+    generation: briefGeneration,
+    generatedAt: briefTime,
+    since: briefTime,
+    until: briefTime,
+    eligible: 0,
+    status: briefStatus(),
+    entries: [],
+  };
+  const captured = renderEmailBrief({ ...doc, captureRun: { created: 1 } });
+  expect(captured).toContain("1 created");
+  expect(captured).toContain("existing tasks are not edited or completed");
+  expect(captured).not.toContain("No tasks were created or completed.");
+  expect(renderEmailBrief(doc)).toContain("No tasks were created or completed.");
+});
 it.each([
   ["--max-conversations", "21"],
   ["--max-new", "-1"],

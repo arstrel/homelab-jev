@@ -51,7 +51,7 @@ x_jev_sources:
   - path: src/application/email-brief.ts
     sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: src/domain/email-brief.ts
-    sha256: 6d0919c76180ed5192a304028b75ad55f9a3fc1025d4c1b50be2c8a5a46da7b4
+    sha256: 79fda7c5e18a320cf9826caa82ae869a8bdce327b19a48e676203c46695667c5
   - path: src/cli-email-brief.ts
     sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: src/adapters/drive-brief.ts

@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:27:08Z
+  at: 2026-10-25T19:30:09Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -44,7 +44,7 @@ x_jev_sources:
   - path: src/adapters/todoist-capture.ts
     sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
   - path: docs/automatic-todoist-capture.md
-    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
+    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
 
 # Existing project routing and task kinds
@@ -65,4 +65,4 @@ The manual [Drive brief](/architecture/planner-handoff.md) now reads current tas
 
 Optional manual [Retro review](/architecture/retro-feedback.md) now judges finite actions, reusable activities and broad goals from current candidate titles. A rowing session preserves the activity option, progress preserves the broad goal, and source recurrence always keeps future occurrences available. Specific supported finite completion is only a review suggestion; there is no completion/write integration.
 
-The opt-in automatic pilot now checks durable mappings, exact supported Gmail references and bounded semantic choices before creating source-supported tasks in existing themed projects. Retro is excluded by resolved identity; uncertain/Inbox routing stays review-only. No task fields, dates, labels or completion are changed. Source-time enablement and a rolling three-intent cap bound rollout. Open plus 30-day completed matching is bounded, not an all-time task inventory. Capture awaits a merged reviewed release and explicit activation; broader lifecycle work remains planned. See docs/automatic-todoist-capture.md.
+The opt-in automatic pilot now checks durable mappings, exact supported Gmail references and bounded semantic choices before creating source-supported tasks in existing themed projects. Retro is excluded by resolved identity; uncertain/Inbox routing stays review-only. No task fields, dates, labels or completion are changed. Source-time enablement and a rolling three-intent cap bound rollout. Open plus 30-day completed matching is bounded, not an all-time task inventory. The reviewed pilot was activated October 25 with a fresh source-time boundary and a real timer/publication check. Zero post-boundary sources were available, so useful live capture and broader lifecycle acceptance remain open. See docs/automatic-todoist-capture.md.

@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-25 capture pilot activation
+
+Activated reviewed merged PR #25 on the publisher after a private backup, preserving the collector, schema, source mappings and lifetime allowance. Verified a real five-minute invocation and exact private Drive/capture-counter readback. No post-boundary sources were present, so no task-write or matching-quality acceptance is claimed. Recorded zero retrieval gaps separately from the remaining classification backlog and incomplete Retro coverage. Prepared a conditional header correction with a successful-create regression; that wording patch awaits review/merge. Updated relevant claims and source snapshots without changing review deadlines or human verification.
+
 ## 2026-10-25 bounded Todoist capture
 
 Activated merged PR #23 after private backup/migration and verified genuine recurring classification/publication plus exact owned-file readback. Recorded zero retrieval gaps at observation separately from incomplete classification/Retro context. Added an opt-in create-only capture pilot with exact-reference/bounded semantic matching, preserved user fields/mapped completion, strict review outcomes, source-time admission and a three-intent daily cap. A two-request live shadow produced none/review and zero Todoist writes. Reviewed relevant claims/source snapshots; retained draft/unverified status and review deadlines. Capture awaits merge and activation; general lifecycle and calibrated evaluation remain open.

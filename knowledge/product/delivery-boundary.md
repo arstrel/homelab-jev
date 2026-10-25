@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:28:39Z
+  at: 2026-10-25T19:30:09Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -56,9 +56,9 @@ x_jev_sources:
   - path: src/application/capture-mail.ts
     sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
   - path: docs/automatic-capture-evidence.md
-    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
+    sha256: 9087226c6d39f2948e756021225c5c373ae09f3ad59f510e6fc9b87066240a3f
   - path: docs/automatic-todoist-capture.md
-    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
+    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
 
 # Implemented foundation and planned release
@@ -91,4 +91,4 @@ The manual brief now includes recent Retro task/comment context and optional typ
 
 The separate cached-only publisher now refreshes the owned Drive artifact every five minutes with zero Jev calls, and both existing daily prompts have an additive freshness/fallback handoff. This does not enable automatic classification or reconciliation. October 23 daily runs verified exact generation retrieval, live-source authority and saved canonical artifacts. The owner-approved October 25 digest JSON repair and full readback close the isolated handoff slice; broader rollout requirements remain open. See [planner handoff](/architecture/planner-handoff.md).
 
-October 25 update: merged PR #23 is active for both native jobs after backup/migration. A real recurring classification/publication and independent owned-file readback passed, with zero current retrieval gaps at observation and explicit incomplete classification/Retro coverage. The opt-in create-only Todoist capture pilot is implemented for review, with exact-reference/bounded semantic matching and preserved user fields/mapped completion. It awaits merge and activation; useful live capture, calibrated evaluation, waiting/lifecycle updates and general reconciliation remain open. See docs/automatic-capture-evidence.md.
+October 25 update: merged PR #23 is active for both native jobs after backup/migration. A real recurring classification/publication and independent owned-file readback passed, with zero current retrieval gaps at observation and explicit incomplete classification/Retro coverage. The opt-in create-only Todoist capture pilot is implemented and active after the reviewed PR #25 merge, with exact-reference/bounded semantic matching and preserved user fields/mapped completion. A real timer/owned-file readback passed with no post-boundary sources; useful live capture, calibrated evaluation, waiting/lifecycle updates and general reconciliation remain open. See docs/automatic-capture-evidence.md.
