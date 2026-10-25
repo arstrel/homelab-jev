@@ -12,10 +12,12 @@
 
 ## 3. Controlled operational evidence
 
-- [ ] 3.1 For an explicitly authorized operational session, privately verify the selected target/backup and any required existing migration deployment, capture baseline and bounded manual sync/status runs, and publish only sanitized observations; verify live catch-up plus a later strict no-change run before completing this task or parent 2.4, otherwise record incomplete/failed evidence and leave both open.
+- [x] 3.1 For an explicitly authorized operational session, privately verify the selected target/backup and any required existing migration deployment, capture baseline and bounded manual sync/status runs, and publish only sanitized observations; verify live catch-up plus a later strict no-change run before completing this task or parent 2.4, otherwise record incomplete/failed evidence and leave both open.
 
 ## 4. Integration acceptance
 
 - [x] 4.1 Run the full offline and disposable PostgreSQL gates and review the final diff/report against the capability scenarios; verify scheduled operation, classifier quality and live recovery are not claimed without evidence, no new migration is introduced and normal Git/CI gates remain enforced.
 
 Planning creates no runtime changes or live authorization. Tooling can be delivered with task 3.1 pending when no operational session has been authorized or live acceptance remains incomplete; report that state explicitly rather than marking the change complete.
+
+October 25 reconciliation: the historical manual sessions remain incomplete as originally recorded. Later retrieval repair, coordinated activation and the strict no-change timer pair now satisfy the combined live acceptance; see [the dated evidence](../../../docs/mail-observation-evidence.md#october-25-catch-up-and-no-change-acceptance). Live expiry recovery and classifier quality are not claimed.

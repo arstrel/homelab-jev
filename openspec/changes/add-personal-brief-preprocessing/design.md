@@ -2,11 +2,11 @@
 
 ## Context
 
-See [proposal.md](proposal.md) for motivation and scope. The workspace has OpenSpec, AGENTS.md, `.nvmrc` targeting Node 24, and an ESM npm package with the TypeSafe AI, Todoist, and Google SDKs installed, but no application code or tests. The repository is `arstrel/homelab-jev`. The user has provided environment variable names for Jev and PostgreSQL; secret values have not been inspected. Existing Docker containers were observed using PostgreSQL 17 Alpine and Redis 7 Alpine; application connectivity remains to be verified.
+See [proposal.md](proposal.md) for motivation and scope. At the October 4 baseline, the workspace had OpenSpec, AGENTS.md, Node 24 and SDK dependencies but no application code/tests. As of October 25, the foundation, collection, classification, Drive publication and daily handoff are deployed, with a bounded create-only capture pilot enabled. PostgreSQL connectivity and independent worker grants have been verified. The repository is `arstrel/homelab-jev`; [current delivery/evidence](../../../docs/product-requirements.md#progress-tracking) and [tasks](tasks.md) distinguish implemented slices from the target design below.
 
 The user approved Node 24 with launchd, Drizzle with pg, the folder structure and package choices below, short-lived branches with required PR CI, full offline checks before commit, PostgreSQL tests before push and in CI, and fully staged application/configuration changes. Bun and Kysely were considered; Node and Drizzle were selected for this project. These are agreed choices, while the pilot defaults called out below remain tunable.
 
-On October 4, 2026, Todoist inspection found seven themed projects, Inbox, Retro, no sections, and an `Assistant` label. Tasks include finite actions, reusable activity options, and broad goals. The daily scheduled chats already produce Markdown artifacts in Drive, but the current prompts and reliable latest-snapshot retrieval still need a targeted integration check.
+On October 4, 2026, Todoist inspection found seven themed projects, Inbox, Retro, no sections, and an `Assistant` label. Tasks include finite actions, reusable activity options, and broad goals. The existing daily chats now have a verified additive handoff; actual October 23 timer retrieval plus the October 25 canonical JSON repair close that isolated integration slice. Specific block-fit acceptance and the broader lifecycle remain unfinished.
 
 ## Goals / Non-Goals
 
@@ -22,7 +22,9 @@ On October 4, 2026, Todoist inspection found seven themed projects, Inbox, Retro
 
 ## Decisions
 
-### 1. One TypeScript worker scheduled every five minutes
+### 1. Native TypeScript processing every five minutes
+
+Implemented deployment uses separate one-shot collector and publisher LaunchAgents, each on a reviewed immutable release with its own ownership lock. The publisher optionally classifies pending evidence and performs create-only capture before publication. This preserves the collector's independent pacing/recovery. The general cycle and reconciliation policies below describe the remaining target as well as implemented behavior; they do not assert that every stage is delivered.
 
 Use Node.js 24 and TypeScript, using the official TypeSafe SDK and supported Google/Todoist APIs. Use a one-shot launchd job with explicit working directory, Node binary, environment-file path, and five-minute cadence. This avoids the older system Node encountered during setup. Pin the same reviewed Node patch in development, CI, and deployment during foundation work. A PostgreSQL advisory lock prevents overlapping runs. Use bounded retries and process pending work on startup; a timer is not a delivery guarantee while the mini is offline.
 
@@ -32,7 +34,7 @@ Alternatives: hourly polling is too stale for the approved cadence; Gmail push/P
 
 ### 2. Incremental ingestion with durable pending work
 
-Bootstrap a bounded recent-mail window and retrieve relevant full threads; default is the last 30 days, configurable for the pilot. Include relevant incoming and sent messages, not just unread inbox mail. Use Gmail history for subsequent changes. The implemented manual synchronization separates two frontiers: commit discovered thread IDs to a durable retrieval backlog before advancing discovery progress, then atomically save complete evidence/jobs and acknowledge retrieval. Only an exhausted history observation with an empty backlog advances complete evidence freshness. Classification failures retain exact-bound jobs after discovery advances. Exhaust history pagination before saving its final anchor; intermediate pages preserve the original anchor and continuation. Automatic expired-cursor recovery now captures a fresh anchor, rescans a frozen recent window and a durable snapshot of all local mapped threads (a conservative superset of open obligations), then catches up history. It preserves prior work and identity under resumable limits, and reports the unreplayed history gap even after successful scoped recovery. See change `add-mail-sync-recovery`; scheduled deployment and the live observation report remain pending.
+Bootstrap a bounded recent-mail window and retrieve relevant full threads; default is the last 30 days, configurable for the pilot. Include relevant incoming and sent messages, not just unread inbox mail. Use Gmail history for subsequent changes. The implemented manual synchronization separates two frontiers: commit discovered thread IDs to a durable retrieval backlog before advancing discovery progress, then atomically save complete evidence/jobs and acknowledge retrieval. Only an exhausted history observation with an empty backlog advances complete evidence freshness. Classification failures retain exact-bound jobs after discovery advances. Exhaust history pagination before saving its final anchor; intermediate pages preserve the original anchor and continuation. Automatic expired-cursor recovery now captures a fresh anchor, rescans a frozen recent window and a durable snapshot of all local mapped threads (a conservative superset of open obligations), then catches up history. It preserves prior work and identity under resumable limits, and reports the unreplayed history gap even after successful scoped recovery. See change `add-mail-sync-recovery`; scheduled deployment and scoped no-change freshness acceptance are now recorded in the collection evidence; live expired-cursor recovery remains unobserved.
 
 A message or changed thread is processed only when its relevant source fingerprint or decision-policy version changes. Read-state and our own label changes alone do not create new obligations. An unseen older thread can be fetched when a new reply makes it relevant; full inbox backfill remains a later change.
 

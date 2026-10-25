@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T14:53:12.375Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -21,7 +21,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/retro-feedback/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: 8aee3e08be20666e36dffa7a46b8a80acd682b76f6413ececc431fd63f9c46e7
+    sha256: a5069d9ab2ebc61ee4aacdb855e90be35208537a22b8e5dd844d94a762f00d15
   - path: openspec/changes/add-personal-brief-preprocessing/specs/retro-feedback/spec.md
     sha256: 6dbc33bf41d370c7822aac9b680dbeb82120944abeb56dbc6cfe898c41e15e51
   - path: src/domain/retro.ts
@@ -33,9 +33,9 @@ x_jev_sources:
   - path: src/application/review-retro.ts
     sha256: 18a777d202fc3f64612316601ad6b77df0767796c5626e36851b94524bfa4976
   - path: docs/retro-brief.md
-    sha256: a4c8f75490b5390265db0e922edd6834e401b1c9654a7c1ec1246d8fd81c96bd
+    sha256: f3fa753e6f571145da24462484639f6375d92db0c997e0c3561fd8360e1f6ce9
   - path: docs/retro-brief-evidence.md
-    sha256: 078d68a8fdb76a6c9d588819586191fade8f6ea535dbcbae24341fc8e9cec354
+    sha256: c4a537b431f04fdb62de90594b2f6a30d2fc11e000ed4af6ecfda0b68c0b57ce
 ---
 
 # Retro interpretation and reusable inventory
@@ -54,6 +54,6 @@ The manual publisher reads recent open/completed Retro tasks and bounded comment
 
 Explicit --retro-review asks pinned Jev finite choices for task kind, one supplied task, relationship and an exact excerpt. Each required choice must meet provisional 0.85 confidence; the setting is uncalibrated. Ambiguous, conflicting, low-confidence and foreign-author evidence remains uncertain. Reusable activities, broad goals and source-recurring work stay available/open. Output is only a human-review suggestion: no task mutation, inferred date or generated action is accepted.
 
-Review uses at most 50 displayed current task candidates and ten source records, within the same new-call cap and deadline as email triage. Full serialized requests are bounded to 32 KiB. Source context is refreshed on every publication; interpretations are ephemeral and explicit repeat review spends new calls. Context-only replay replaces them with not-requested state. Automatic reconciliation and scheduled planner acceptance remain planned. See the repository runbook docs/retro-brief.md and its source snapshots.
+Review uses at most 50 displayed current task candidates and ten source records, within the same new-call cap and deadline as email triage. Full serialized requests are bounded to 32 KiB. Source context is refreshed on every publication; interpretations are ephemeral and explicit repeat review spends new calls. Context-only replay replaces them with not-requested state. Automatic reconciliation remains planned. Actual daily-consumer retrieval is separately accepted after the October 23 timer runs and October 25 canonical repair; this does not establish complete Retro coverage or useful matching quality. See the repository runbook docs/retro-brief.md and its source snapshots.
 
 The approved live check reviewed ten feedback records against 43 current task titles in the same private Drive artifact. All ten remained uncertain below the provisional threshold; this establishes bounded transport/publication and conservative review, not matching accuracy. The source scan covered twelve tasks and comments on ten, omitting two records. A zero-inference context publication was verified before the final Retro-focused review, which deliberately omitted new email inference. See the sanitized evidence recorded in docs/retro-brief-evidence.md.

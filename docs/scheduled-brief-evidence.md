@@ -2,6 +2,8 @@
 
 Operational verification started October 22, 2026. This report distinguishes source publication, manual chat checks, scheduler test execution and actual timer-triggered daily consumption.
 
+Current isolated handoff acceptance is complete after the [October 25 approved canonical repair](#october-25-approved-canonical-repair). Earlier failed probes and the October 23 malformed-record finding below are historical, not current blockers. Block-fit quality and the full lifecycle remain separate parent acceptance items.
+
 ## Existing-context probes
 
 Before prompt changes, Daily Inbox Digest and Daily Life Plan independently retrieved the exact private owned Drive file and matching generation. Both read 43 current open Todoist tasks across nine active projects including Retro; the worker displays eight non-Retro projects. Life Plan also read current Calendar commitments with complete pagination. Both identified publication older than 15 minutes, unknown complete Gmail freshness, deliberately omitted email selection and incomplete Retro coverage. All uncertain Retro matches stayed advisory; reusable activities and broad goals were preserved.

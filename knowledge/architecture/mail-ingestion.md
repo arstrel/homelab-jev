@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:57:51Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-16T23:00:00Z
 x_jev_delivery: implemented
 sources:
@@ -25,7 +25,7 @@ x_jev_sources:
   - path: src/adapters/postgres/mail-evidence.ts
     sha256: 1acf970e497c75f58aedbf3fe832b4d8a20e3b0d5588cb38bf12056ed1a46d51
   - path: src/adapters/postgres/schema.ts
-    sha256: 24dbe743ecb812b02c3250cf7315edd142c4dfdecbec1edfe65396f3766c39f5
+    sha256: 072baf9d636dc10659c4cb1501973534164388c2c58565d6b5ac89b2462218a8
   - path: docs/mail-ingestion.md
     sha256: 5fb67c4759c404bc599c53b606fa5c94bec7c2cb20e0e06ffb1719b8898defb6
   - path: migrations/0002_durable_mail_evidence.sql
@@ -42,4 +42,4 @@ Partial conversations are reported without a version or job; another manual run 
 
 Payloads contain private mail; database access/backups need mailbox-level care. No automatic garbage collection exists and job references block deletion. Operational migration/ingestion has not been performed by implementation tests. See [privacy](/operations/secret-handling.md), [migrations](/operations/database-migrations.md) and [test isolation](/operations/test-isolation.md).
 
-A separate [manual sync command](mail-sync.md) now adds resumable history discovery and durable retrieval retries. It reuses the evidence transaction for atomic acknowledgement, while the older manual ingestion command retains its original recent-sample contract.
+A separate [sync command](mail-sync.md), now scheduled by the collector, adds resumable history discovery and durable retrieval retries. It reuses the evidence transaction for atomic acknowledgement, while manual ingestion retains its original recent-sample contract. The shared schema now also contains the migration-0005 inference allowance used by publisher classification/capture; this addition does not change immutable evidence or exact job binding, and manual ingestion still makes no Jev call.

@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T19:30:09Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -22,7 +22,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/worker-operations/spec.md
 x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
-    sha256: 57608a033d0e0b7e39ae997a387239b8b34ae35720ffcf68f2039cdb06fec00d
+    sha256: 98b91697539d06bf087cdef36597cf2a73dad4b69edaf7e377005215cb7334c6
   - path: openspec/changes/add-personal-brief-preprocessing/specs/worker-operations/spec.md
     sha256: cb573cbb85a6a53ad61363014df299c6f4eea8b6707a48b6aeb1d99b639e0408
   - path: deploy/README.md
@@ -38,23 +38,21 @@ x_jev_sources:
   - path: src/application/capture-mail.ts
     sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
   - path: docs/automatic-capture-evidence.md
-    sha256: 9087226c6d39f2948e756021225c5c373ae09f3ad59f510e6fc9b87066240a3f
+    sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
   - path: docs/automatic-todoist-capture.md
     sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
 
-# Five-minute processing cycle
+# The five-minute processing cycle
 
-The approved runtime is a native Node one-shot job launched every five minutes by launchd on the Mac mini. No live Gmail push webhook is needed. [Deployment tooling](/operations/native-releases.md) implements the collection-only launcher; the complete processing cycle below remains planned. Activation and recurring acceptance require their own evidence.
+Two native one-shot LaunchAgents run every five minutes on the Mac mini: a paced collector and a separate publisher. Both execute reviewed compiled releases independently of the editable checkout. No Gmail push webhook or extra task inventory is required.
 
-A cycle acquires a dedicated PostgreSQL advisory lock, discovers Gmail changes, durably records source versions and jobs, classifies pending work, reconciles Todoist, interprets relevant Retro evidence, and publishes the Drive snapshot. An overlapping run skips safely. Never return a connection holding the lock to a shared pool.
+The collector holds its dedicated PostgreSQL ownership session, discovers/queues Gmail changes and atomically saves complete evidence, exact-bound jobs and acknowledgement. Discovery progress and complete-evidence freshness are separate. Bounded expired-cursor recovery covers a recent window and mapped conversations; its unreplayed-history gap remains explicit.
 
-Provider failures must preserve pending work and report real freshness gaps. Bound calls, retries and total run time; graceful termination releases the lock and retains retryable state.
+The active publisher holds publisher ownership while classifying up to ten current due conversations under the durable lifetime allowance. Optional capture then selects up to five recent classified sources under the shared manual-writer lock, checks current projects/tasks, matches known obligations and admits at most three creation intents per rolling day. Existing task fields remain untouched; ambiguous writes stop blind retries.
 
-Follow [Gmail checkpoints](gmail-checkpoints.md), [remote write safety](remote-write-safety.md), [planner handoff](planner-handoff.md), and [native releases](/operations/native-releases.md).
+Publication reacquires publisher ownership separately, refreshes current Todoist/Retro context and writes/readbacks the same private Drive artifact. It reuses saved email judgments; Retro inference remains explicit/manual. Capture counters describe the current invocation, and historical mappings are not live completion authority. The CLI orders these stages; it is not one atomic transaction or one continuous lock across every stage.
 
-Manual [incremental synchronization](mail-sync.md) implements collection with exclusive session ownership and durable retries. The optional launcher reuses that command and lock rather than introducing another processing loop. A separate publisher refreshes the owned Drive brief and current Todoist/Retro context; its initially cached-only rollout is now upgraded with bounded pending classification. General reconciliation remains planned.
+Dedicated locks skip overlap, remote calls stay outside SQL transactions, deadlines/cancellation bound provider work and unfinished work remains durable. October 25 activation and subsequent no-change collector reports establish scoped deployment/freshness acceptance, not perpetual availability or useful-capture accuracy.
 
-The automatic classification upgrade adds an opt-in pending-mail stage to the separate publisher. It processes at most ten due current jobs, uses a durable lifetime allowance and then refreshes cached publication with live source context. General reconciliation remains planned. The merged template was activated after a coordinated release/migration upgrade, as recorded below. See docs/automatic-mail-classification.md.
-
-On October 25, merged PR #23 was activated for both native jobs after backup and migration 0005. A genuine recurring run classified ten conversations and published the owned artifact; collection reported discovery caught up and zero retrieval gaps at that observation. This does not imply complete classification or Retro coverage. The bounded capture pilot was activated at 19:21 UTC on October 25 and its real timer/publication wiring passed with no post-boundary sources selected: it follows classification inside publisher ownership, shares the manual writer lock and lifetime inference allowance, and stops after one successful task creation. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.
+General per-field correction tracking, review resolution, multiple obligations per thread and reply/waiting/completion lifecycle remain planned. See [release operations](/operations/native-releases.md), [classification](classification-policy.md), [write safety](remote-write-safety.md) and [delivery](/product/delivery-boundary.md).

@@ -1,6 +1,6 @@
 # Jev personal brief preprocessing
 
-Created: October 4, 2026. Updated: October 18, 2026. Status: section 1 foundation, manual retrieval/ingestion and incremental sync with bounded cursor recovery are implemented; classification and rollout remain planned.
+Created: October 4, 2026. Updated: October 25, 2026. Status: five-minute collection, automatic classification, private Drive publication and daily-task handoff are deployed; a bounded create-only Todoist capture pilot is enabled. Calibration and full obligation reconciliation remain unfinished. See [progress tracking](#progress-tracking) for evidence and limits.
 
 ## Product outcome
 
@@ -67,15 +67,17 @@ Email classification, obligation capture/matching, Todoist routing, Retro-aware 
 
 Gmail label writes, automatic completion based solely on model inference, calendar writes, whole-inbox historical cleanup, newsletter/article enrichment, homelab alert triage, general archive search, and additional providers are later changes. The approved architecture leaves room for these without making them prerequisites for the daily-brief loop.
 
-## Proposed implementation defaults
+## Implementation choices and pilot limits
 
 Node 24, launchd, Drizzle with pg, the folder/package choices, and the Git/testing gates above are user-confirmed. Bun and Kysely were considered; Node and Drizzle were selected for this project. Their configuration and foundation work are specified in [the design](../openspec/changes/add-personal-brief-preprocessing/design.md) ; the section 1 foundation is implemented.
 
-Remaining planning defaults: isolated PostgreSQL storage; a configurable 30-day initial mail window; `jev-current.md` addressed by stable Drive file ID; a configurable 15-minute stale-input cutoff; source-based task title templates; waiting/review metadata conventions; an observation pilot before automatic capture. Model version and thresholds are selected using evaluation results.
+Implemented choices include isolated PostgreSQL bookkeeping, a configurable 30-day initial mail window followed by incremental history, `jev-current.md` addressed by stable Drive identity, a 15-minute publication cutoff in the installed handoff, and source-supported task titles. The active publisher classifies up to ten current conversations per cycle within a durable $2 lifetime allowance. Optional capture considers up to five recent classified conversations, admits at most three task creations per rolling 24 hours, and preserves existing task fields. It supports one obligation per conversation and bounded matching against open/recent-completed tasks.
+
+Pinned `jev-1.13.0` and provisional capture confidence thresholds of 0.95 are implemented pilot policy, not results of the representative evaluation below. The owner-approved narrow pilot was enabled before the original broad evaluation/rollout acceptance was met; that requirement remains open. Uncertain automatic candidates are recorded for review rather than automatically added to Inbox. Durable review resolution, corrections and waiting/lifecycle metadata remain unfinished.
 
 The user has provided these configuration names: `JEV_API_KEY`, `DB_URL`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD`. The design uses DB_URL when present and the individual database fields as a fallback. Secret values are excluded from documents, logs, tracked files, and test fixtures; offline and database tests supply independent test configuration.
 
-The worker requires its own Google and Todoist authorization in addition to the existing Jev key. Current ChatGPT connections do not automatically authorize a separate background process. Verify actual scheduled-task access and latest-file retrieval before enabling the handoff.
+The worker uses independently configured Google and Todoist authorization in addition to the Jev key. Current ChatGPT connections do not authorize that background process. Actual daily-task retrieval and live-source access were verified separately; see [scheduled handoff evidence](scheduled-brief-evidence.md).
 
 ## Acceptance and measurement
 
@@ -93,10 +95,21 @@ Measure missed actions, incorrect captures, routing corrections, review rate, la
 
 ## Progress tracking
 
-Manual [durable ingestion](mail-ingestion.md) retains immutable complete mail evidence and exact-bound pending jobs, providing the storage foundation for incremental sync. No operational migration, scheduled ingestion, classifier or task capture is implied.
+The table records delivery as of October 25, not a continuing health guarantee. Historical session reports retain their original gaps; later acceptance is linked explicitly.
 
-[Manual incremental sync](mail-sync.md) resumes bootstrap/history discovery and durably retries failed retrievals. Discovery progress can advance after IDs are queued, while successful evidence freshness waits for that backlog to drain. Expired history now triggers bounded resumable recovery over a new recent window and all locally mapped conversations, followed by history catch-up. This conservatively includes open obligations without a Todoist dependency. Reports retain an explicit unreplayed-history gap. A real scheduled observation pilot remains pending.
+| Area | Implemented / observed | Remaining acceptance |
+| --- | --- | --- |
+| Foundation | Pinned Node/TypeScript, Drizzle/pg, deterministic hooks, isolated PostgreSQL and required CI; [foundation evidence](foundation-evidence.md) | Maintain the existing gates |
+| Gmail | Native five-minute collection, immutable exact-bound evidence, paced reads, durable retries and bounded expired-cursor recovery. [October 25 retrieval repair](automatic-mail-evidence.md) cleared the configured scope; [subsequent no-change timer pair](mail-observation-evidence.md#october-25-catch-up-and-no-change-acceptance) advanced freshness without new versions/jobs | Live expired-cursor recovery remains synthetic-only; future mail can create new gaps |
+| Classification | Typed validated judgments, owner exclusions, saved decisions and automatic pending-job processing; [recurring activation](automatic-capture-evidence.md#merged-classifier-activation) verified | Representative held-out quality evaluation, correction recording and calibrated thresholds |
+| Todoist | Current project/task reads, Retro exclusion, source-supported manual proposals, exact/bounded semantic matching and create-only automatic pilot; [activation](automatic-capture-evidence.md#capture-activation-after-pr-25) verified | Useful live capture/matching, durable review resolution, ambiguous-write reconciliation, multiple obligations per thread and lifecycle updates |
+| Retro | Bounded task/comment context and optional typed suggestions; [live publication](retro-brief-evidence.md) verified without task mutation | Complete source coverage, human-reviewed task-kind mapping and useful reconciliation quality |
+| Drive / daily routines | Stable private snapshot, recovery/readback and source-gap reporting. [October 23 clock-triggered retrieval and October 25 canonical JSON repair](scheduled-brief-evidence.md) accepted | Specific calendar-block/optional-inventory acceptance example and broader lifecycle rollout |
+| Operations | Immutable collector/publisher releases, five-minute cadence, locking and documented disable/restart paths; [collector](mail-worker-evidence.md) and [publisher](automatic-capture-evidence.md) observations | Full cross-provider interruption/rollback rehearsal and complete lifecycle release report |
+| OKF | Curated engineering bundle and [public hosted graph](https://arstrel.github.io/homelab-jev/), verified October 25 after PR #27 | Concept review deadlines and draft/unverified status still apply |
 
-The canonical implementation checklist is [tasks.md](../openspec/changes/add-personal-brief-preprocessing/tasks.md). Its eight numbered groups are the delivery milestones, and each task includes verification evidence. Complete the expanded application/testing/Git foundation in group 1 before feature work. Check a box only after its stated verification succeeds. Preserve task-level evidence during implementation and summarize it in a release report.
+At capture activation no post-boundary sources were available, so zero task writes proved enablement and publication wiring only. No useful live task-creation acceptance is claimed. Fresh publication is also separate from complete Gmail, classification and Retro coverage.
+
+The canonical implementation checklist is [tasks.md](../openspec/changes/add-personal-brief-preprocessing/tasks.md). Check a box only when its full stated verification is supported. Partial items have delivery notes explaining what exists and what remains; completed slice changes do not automatically complete broader parent tasks.
 
 The [proposal](../openspec/changes/add-personal-brief-preprocessing/proposal.md) defines scope, the [design](../openspec/changes/add-personal-brief-preprocessing/design.md) defines the approach, and the [six capability specs](../openspec/changes/add-personal-brief-preprocessing/specs/) define behavior. These delta specs describe the target system; they are not evidence that it is already running. Archive the change after implementation and verification to establish the durable specs under `openspec/specs/`.

@@ -9,23 +9,23 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-25T20:01:54Z"
+  at: 2026-10-25T20:32:10Z
 stale_after: "2026-11-10T02:21:58Z"
 x_jev_delivery: implemented
 sources:
   - id: s3
-    resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/AGENTS.md
+    resource: https://github.com/arstrel/homelab-jev/blob/fadd9628bcca414892d712aba7748f6f63000590/AGENTS.md
     title: AGENTS.md
   - id: okf-spec
     resource: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md
     title: Google OKF v0.2 specification
 x_jev_sources:
   - path: docs/okf-adoption.md
-    sha256: 5f176e0e73ec5f9a2fb3a29ba311590a79e142d121d54f061f196a8e0533e881
+    sha256: e8a140bb6b505e817fa21de21104077082756223dfd83125e4e4558c15ab05f1
   - path: scripts/okf.ts
     sha256: 525c8880983c124e38e27a5be56c4a1d5d7926e92c59c858e939d8a4bd87f947
   - path: AGENTS.md
-    sha256: 4e8f7731cd6631bdcf819b01eeb984384188e175eb8b839ccebca62b69884af3
+    sha256: 814ef8b121d6c5b51a98d949561d8e50a682f42caccb9f5524d06c1cb355cf00
 ---
 
 # OKF selection and maintenance policy
@@ -38,6 +38,8 @@ Every concept currently starts `draft` and `unverified`. `generated` records aut
 
 Run `npm run okf:check`, `npm run okf:build`, or `npm run okf:visualize`. `npm run check` includes structural and local publication checks. Graph nodes are concepts; indexes/logs are navigation. Relationships are standard Markdown links and prose, not an invented typed-edge extension. Do not label existing deterministic functions as attested computations without an executor, receipts and actual attester.
 
-The [hosted graph](https://arstrel.github.io/homelab-jev/) publishes the public bundle through GitHub Pages after merges to `main`. PRs build the same self-contained viewer without deploying it. The first publication needs the workflow merged and GitHub Actions selected as the Pages source. The deployment artifact contains only the generated HTML; hosting adds no human verification and retains source-drift warnings. Local commands remain available for unmerged changes.
+The [hosted graph](https://arstrel.github.io/homelab-jev/) publishes the public bundle through GitHub Pages after merges to `main`. PRs build the same self-contained viewer without deploying it. The first hosted deployment and concept navigation were verified October 25 after the owner enabled Pages and reran the merged workflow. The deployment artifact contains only the generated HTML; hosting adds no human verification and retains source-drift warnings. Local commands remain available for unmerged changes.
+
+AGENTS.md now also requires checking Copilot summaries, inline threads and conversation comments after a PR/push, resolving yellow/red findings, and stopping after three fix loops for an approach rethink. Passing CI or an absent review is not clean-review evidence. This requirement changes review procedure, not knowledge trust labels.
 
 See [secret boundaries](secret-handling.md), [development gates](development-gates.md), and [delivery boundary](/product/delivery-boundary.md).

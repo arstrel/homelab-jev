@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.729Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -30,7 +30,7 @@ sources:
     title: vitest.config.ts
 x_jev_sources:
   - path: tests/integration/mail-status.test.ts
-    sha256: 013f32313a277ed47c6c35ef4d11fd7c85c9a4fd3ea99a37d6ddd81448380efc
+    sha256: a44774afdb6ac90172546026bd26d1454634e176054068abf42b33b0cbbf50ca
   - path: tests/unit/mail-status.test.ts
     sha256: 94fcb2b4a492fe368522e6ae4a0ce95b28450a9884d28a6dec6b22b54d1a51c3
   - path: scripts/cli-smoke.ts
@@ -114,3 +114,5 @@ Brief publication tests use synthetic evidence, fixed judgments and MSW Drive re
 Read-only Todoist context uses synthetic SDK HTTP fixtures and controlled application reads to verify changed/moved/removed tasks without mutating live tasks. Tests cover exact-link associations, filtering, incomplete/failed reads and cached-only refresh without extra inference. Live verification separately publishes the private artifact; no private task data enters committed fixtures.
 
 Retro tests use invented feedback/task text and mocked completed-task/comment/Jev responses. They establish code behavior under supplied judgments, including preserved activities/goals, unknowns, malformed outputs, hostile source text and cap/deadline behavior. A separate bounded live development evaluation is not a held-out accuracy benchmark; no private feedback enters committed fixtures.
+
+The migration-0005 readiness regression now expects the extra inference-allowance migration before its intentionally conflicting journal row. This updates the synthetic expected journal count only; the disposable-database guard, read-only diagnostic checks and zero-live-provider policy are unchanged. Deployment/timer acceptance is recorded separately and is never a Git test gate.

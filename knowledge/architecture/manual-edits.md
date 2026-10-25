@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:27:08Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -21,7 +21,7 @@ sources:
     title: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
 x_jev_sources:
   - path: docs/product-requirements.md
-    sha256: 8aee3e08be20666e36dffa7a46b8a80acd682b76f6413ececc431fd63f9c46e7
+    sha256: a5069d9ab2ebc61ee4aacdb855e90be35208537a22b8e5dd844d94a762f00d15
   - path: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md
     sha256: d6bef852b7c90292aacb8707eb6b911c1203f710a127aae5d5fbe2c356532373
   - path: src/application/capture-mail.ts
@@ -34,12 +34,10 @@ x_jev_sources:
 
 # Preserve manual task changes
 
-Todoist is authoritative. Discover current task state before proposing worker updates. Preserve manual title, project, date, content, labels and completion changes according to the specified per-field override policy. Operate on mapped worker-owned tasks; never infer ownership from the `Assistant` label alone.
+Todoist is authoritative for task content, project, dates, descriptions, labels and completion. A label alone does not establish worker ownership. Generated plans and broad Retro statements are not task-completion evidence.
 
-A user move or edit must survive subsequent email replay. A completed or deleted task creates suppression evidence so unchanged source versions do not resurrect it. Respect a manually chosen project even when a later model judgment prefers another project.
+The active create-only capture pilot exposes current inventory reads and task creation, so it preserves every field of existing remote tasks. Persistent source mappings prevent recreation of mapped obligations after edits, completion or deletion. Links to existing user tasks record association without granting ownership or future update authority. Bounded matching is not an all-time guarantee for unmapped completed/deleted work.
 
-A sent reply may support a waiting state; inferred email resolution can produce a suggestion, never automatic completion in the first release. A calendar plan or a broad Retro statement does not prove a concrete task was finished.
+The broader target still requires recording user corrections and per-field overrides before lifecycle updates. A sent reply may support waiting; inferred resolution stays a sourced suggestion and never automatically completes a task. Those lifecycle/correction operations remain unimplemented, and parent 4.5 stays open for its full reconciliation acceptance despite the delivered create-only preservation.
 
-See [remote write safety](remote-write-safety.md), [project routing](/product/todoist-projects.md), and [Retro](retro-feedback.md).
-
-This capture pilot preserves all existing remote fields by exposing only inventory reads and task creation. Durable source mappings prevent recreation after edits, completion or deletion. Matches to existing user tasks are associations, explicitly recorded as not worker-owned; no future update authority follows from a link. General per-field override detection, waiting transitions and lifecycle writes remain planned. See the repository runbook docs/automatic-todoist-capture.md.
+See [write safety](remote-write-safety.md), [project routing](/product/todoist-projects.md), [Retro](retro-feedback.md) and the repository's automatic-todoist-capture runbook.

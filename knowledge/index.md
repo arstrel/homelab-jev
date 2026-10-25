@@ -4,7 +4,7 @@ okf_version: "0.2"
 
 # Jev knowledge
 
-A curated Open Knowledge Format v0.2 bundle. Start here, choose a group, inspect metadata and read the relevant concepts; then verify current source/specifications/tests. All concepts start draft and unverified. Delivery state distinguishes implemented foundations from planned behavior.
+A curated Open Knowledge Format v0.2 bundle. Start here, choose a group, inspect metadata and read the relevant concepts; then verify current source/specifications/tests. Concepts remain draft and unverified unless a real review is recorded. Delivery state distinguishes implemented processing, bounded active pilots and remaining acceptance.
 
 - [Product](product/index.md): outcomes, ownership, release boundary and project task kinds.
 - [Architecture](architecture/index.md): processing stages, invariants, uncertainty and handoff contracts.

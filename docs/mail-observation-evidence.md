@@ -1,5 +1,7 @@
 # Gmail observation evidence
 
+Current acceptance: the [October 25 catch-up/no-change observation](#october-25-catch-up-and-no-change-acceptance) supersedes the earlier incomplete sessions for parent 2.4. Earlier reports retain their original scope and outcomes.
+
 Status: **incomplete — paced collection works in the observed sample, evidence backlog remains**. The [latest session after PR #14](#paced-session-after-pr-14) completed 20 bounded runs / 400 retrieval attempts without a new provider error or throttle report. It added 351 complete versions/jobs, reaching 516 exact-bound pending jobs and 409 pending retrievals. The session stopped at its invocation cap. Evidence freshness remains null; parent task 2.4 and observation task 3.1 stay open. Follow the [manual observation procedure](mail-observation.md).
 
 ## Session record
@@ -154,3 +156,16 @@ The 26 new references were discovered without resetting the saved window. Queue 
 The executed collection command path made zero Jev calls and no Gmail/Todoist/Drive writes. This is supported by the command's capabilities and synthetic checks, not an independent audit of all account activity. No real conversation was sent to Jev in this session, and classification jobs were not consumed.
 
 Next action: resume the remaining queue in a later deliberate bounded session, retain saved retry dates, and diagnose persistent partial-body coverage before claiming completeness. Do not widen limits, discard work or mark partial bodies complete to pass acceptance. Parent 2.4 and observation 3.1 remain open; this report adds operational evidence without changing runtime policy.
+
+## October 25 catch-up and no-change acceptance
+
+The [October 25 retrieval repair](automatic-mail-evidence.md) cleared the configured collection scope. The [coordinated merged-release activation](automatic-capture-evidence.md#merged-classifier-activation) then installed the repaired collector with migration readiness, a private validated backup and real timer acceptance. Read-only log inspection during documentation reconciliation found this later pair of ordinary timer reports; neither routine was rerun to manufacture evidence.
+
+| Collector observation (UTC, October 25) | Queued references | Retrieval attempts | New versions / jobs | Pending / retrying | Discovery / complete evidence | Exit |
+| --- | --- | --- | --- | --- | --- | --- |
+| 20:17:17.791 | 0 | 0 | 0 / 0 | 0 / 0 | caught up / complete | 0 |
+| 20:22:23.307 | 0 | 0 | 0 / 0 | 0 / 0 | caught up / complete | 0 |
+
+Both discovery and evidence freshness advanced from 20:17:17.791Z to 20:22:23.307Z. Each report recorded zero downstream provider writes, no partial conversations and no failure reasons. With zero new evidence/jobs, collection introduced no redundant classification work; the collector has no Jev invocation capability. The separate publisher may still classify previously pending work, so these observations do not claim zero account-wide inference or other independently authorized effects.
+
+Together with the earlier bounded manual observations and October 25 catch-up/activation records, this closes parent 2.4 and the observation slice's 3.1. It also supports parent rollout task 8.1 as collection-only observation; it does not establish full classifier/capture rollout. Acceptance covers the configured bootstrap/history scope, not an all-time mailbox export or a continuing freshness guarantee. Live expired-cursor recovery remains unobserved; classifier quality, useful capture and the full lifecycle are separate acceptance items.

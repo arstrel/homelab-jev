@@ -4,20 +4,20 @@ Personal email preprocessing with TypeSafe AI's Jev: synchronize Gmail every fiv
 
 ## Planning documents
 
-- [Interactive flow and implementation status](https://www.tldraw.com/f/SdlFMrvVCtATHw1TUCpW3): the tldraw board covers the end-to-end flow, Gmail collection and ledger, reviewed task capture, and planned Drive/planner handoff. Boxes distinguish implemented capabilities (green), pending validation (orange), planned work (grey), existing systems (blue), and human decisions (purple). The diagram reflects merged PR #17; implemented manual commands do not imply unattended operation.
+- [Interactive flow diagram](https://www.tldraw.com/f/SdlFMrvVCtATHw1TUCpW3): historical PR #17 architecture snapshot. Its implementation colors predate current deployment; use [current progress](docs/product-requirements.md#progress-tracking) and the checklist for delivery status.
 - [Product requirements](docs/product-requirements.md): agreed outcomes, scope, system ownership, Todoist destinations, and acceptance criteria.
 - [OpenSpec proposal](openspec/changes/add-personal-brief-preprocessing/proposal.md): the initial release change.
 - [Architecture and design](openspec/changes/add-personal-brief-preprocessing/design.md): approved TypeScript structure and packages, runtime commands, testing/Git gates, synchronization, reconciliation, and deployment.
 - [Implementation checklist](openspec/changes/add-personal-brief-preprocessing/tasks.md): eight milestones with verifiable tasks.
 - [Capability specifications](openspec/changes/add-personal-brief-preprocessing/specs/): six behavior contracts with acceptance scenarios.
 
-Section 1 foundation, [Gmail evidence retrieval](docs/gmail-preview.md), [manual durable ingestion](docs/mail-ingestion.md), and [incremental sync with expired-cursor recovery](docs/mail-sync.md) are implemented, along with [read-only diagnostics and a bounded observation procedure](docs/mail-observation.md). The [live observation](docs/mail-observation-evidence.md) reached discovery catch-up and retained explicit evidence gaps. A [manual Jev triage preview](docs/mail-triage.md) inspects complete stored evidence without consuming jobs. The [manual Drive brief](docs/email-brief.md) saves and reuses typed judgments and publishes one source-linked private Markdown file. The [automatic classification upgrade](docs/automatic-mail-classification.md) processes pending mail within the approved lifetime budget before cached publication; activation requires its merged release and migration. Calibrated classification, reconciliation and the remaining release work remain planned. Use the checklist as the implementation progress record.
+Five-minute Gmail collection, [automatic classification](docs/automatic-mail-classification.md), private [Drive publication](docs/email-brief.md) and the [scheduled daily-task handoff](docs/scheduled-brief-evidence.md) are deployed. The [create-only Todoist capture pilot](docs/automatic-capture-evidence.md) is enabled with bounded matching and preserved user tasks. [Current progress](docs/product-requirements.md#progress-tracking) separates implementation, live acceptance and remaining work: useful real capture, calibration, review/correction handling and lifecycle reconciliation are still incomplete.
 
 Foundation: Node 24.21.0/TypeScript, Drizzle with pg, npm, Biome, Vitest/MSW, and Husky. Full offline checks run before commit, with fully staged validation inputs; PostgreSQL checks run before push and in PR CI. Required remote enforcement is tracked separately in the checklist. Bun is deferred to another project.
 
-The small [reviewed email task flow](docs/email-tasks.md) now proposes source-based titles and existing Todoist projects from up to ten stored conversations, and creates only explicitly approved candidates. Automatic capture and full reconciliation remain later milestones.
+The [manual reviewed task flow](docs/email-tasks.md) remains available for explicit candidate approval. Automatic capture is a separate enabled pilot; full reconciliation remains unfinished.
 
-[Five-minute collection tooling](deploy/README.md) installs the existing Gmail sync as a native launchd agent using an isolated compiled release. Use `npm run worker -- --help` for install/start/stop/status commands. Activation requires a merged release; [operational evidence](docs/mail-worker-evidence.md) distinguishes tooling from live scheduled acceptance.
+[Five-minute collection](deploy/README.md) runs as a native launchd agent using an isolated compiled release. Use `npm run worker -- --help` for install/start/stop/status commands. [Operational evidence](docs/mail-worker-evidence.md) records activation; later [catch-up/no-change evidence](docs/mail-observation-evidence.md#october-25-catch-up-and-no-change-acceptance) closes the former freshness gap.
 
 Publish a bounded email, Todoist and Retro brief after building:
 
@@ -48,7 +48,7 @@ The machine's Node 24 installation is `/Users/artem/.nvm/versions/node/v24.21.0/
 
 ## OKF knowledge
 
-Browse the [OKF knowledge graph](https://arstrel.github.io/homelab-jev/) on GitHub Pages. The site updates after merges to `main`; the first publication requires the Pages workflow to be merged and GitHub Actions selected as the repository's Pages source.
+Browse the [OKF knowledge graph](https://arstrel.github.io/homelab-jev/) on GitHub Pages. The site updates after merges to `main`; its first live deployment and concept navigation were verified October 25.
 
 Start at the [knowledge index](knowledge/index.md) for linked product rules, architecture invariants, provider contracts and runbooks. See [adoption and maintenance](docs/okf-adoption.md) for sources, coverage and SSH viewing.
 
@@ -60,4 +60,4 @@ This opens the local concept graph. Use `npm run okf:check` to validate and `npm
 
 The [regular brief refresh and scheduled-task handoff](docs/scheduled-brief-handoff.md) connects the private Drive context to existing daily routines. See [deployment](deploy/brief-refresh.md) and [verification evidence](docs/scheduled-brief-evidence.md).
 
-The [automatic Todoist capture pilot](docs/automatic-todoist-capture.md) adds optional matching and capped task creation while preserving existing tasks. The [deployment evidence](docs/automatic-capture-evidence.md) records the active classifier; capture requires its own reviewed release and explicit enablement.
+The [automatic Todoist capture pilot](docs/automatic-todoist-capture.md) adds optional matching and capped task creation while preserving existing tasks. The [deployment evidence](docs/automatic-capture-evidence.md) records classifier and capture activation, real timer checks and the still-unverified useful-capture outcome.

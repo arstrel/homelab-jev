@@ -1,5 +1,7 @@
 # Proposal
 
+Original release intent, October 4, 2026; delivery reconciled October 25. Collection, automatic classification, Drive publication and the daily handoff are deployed, and bounded create-only capture is active. The broad requirements below remain the target; see [current status](../../../docs/product-requirements.md#progress-tracking) and [task evidence](tasks.md) for completed and partial work. The narrow pilot does not close representative evaluation or full reconciliation acceptance.
+
 ## Why
 
 The Daily Inbox Digest and Daily Life Plan repeatedly interpret incoming mail and carry obligations forward, which can duplicate work and resurface stale items. Use Jev to preprocess changes continuously and keep actionable obligations in the user's existing Todoist projects so the daily planner can select relevant work for upcoming calendar blocks.
@@ -33,7 +35,7 @@ None. The project is greenfield and has no existing capability specs.
 
 ## Impact
 
-- New application code and operational configuration under `/Users/artem/source/jev`; none exists yet.
+- Application code and operational configuration under `/Users/artem/source/jev`; the foundation and deployed slices now exist, with broader reconciliation still in scope.
 - External dependencies: Gmail API, Google Drive API, Todoist API, and TypeSafe AI API. The worker needs its own Google and Todoist authorization; connected ChatGPT apps do not supply worker credentials.
 - Existing scheduled chats: Daily Inbox Digest and Daily Life Plan. Their actual latest-file retrieval and Todoist access must be demonstrated before enabling the handoff.
 - Existing PostgreSQL and optional Redis containers; deployment must preserve other homelab workloads.

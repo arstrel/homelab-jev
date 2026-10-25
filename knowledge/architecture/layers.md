@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:28:39Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -33,7 +33,7 @@ x_jev_sources:
   - path: src/domain/README.md
     sha256: 7d0d31f43ea8089296e0fa9e14ace8a7db2f1c3b627630082ed33a0499d2597c
   - path: openspec/changes/add-personal-brief-preprocessing/design.md
-    sha256: 57608a033d0e0b7e39ae997a387239b8b34ae35720ffcf68f2039cdb06fec00d
+    sha256: 98b91697539d06bf087cdef36597cf2a73dad4b69edaf7e377005215cb7334c6
   - path: src/application/ingest-mail.ts
     sha256: deccd11cf8e73ebca2276f8480adbe2f1843cf55cfeee29c4076b2b2beb67a18
   - path: src/application/sync-mail.ts
@@ -76,7 +76,7 @@ x_jev_sources:
 
 # Application boundaries and composition
 
-`src/cli.ts` is the composition root. Configuration is explicit. Application use cases depend on ports; adapters implement Google, Todoist, Jev and PostgreSQL I/O. `src/domain/` implements pure evidence fingerprints and reviewed email-task choices; general obligation matching, completion and freshness policy remain planned. Manual [Gmail preview](gmail-evidence.md) uses a reader port and shared budgets, with command composition in the CLI and its helper.
+`src/cli.ts` is the composition root. Configuration is explicit. Application use cases depend on ports; adapters implement Google, Todoist, Jev and PostgreSQL I/O. `src/domain/` implements pure fingerprints, typed classification, source-supported task choices, bounded matching and publication identity/rendering. Multi-obligation reconciliation and lifecycle writes remain planned. Manual [Gmail preview](gmail-evidence.md) uses a reader port and shared budgets, with command composition in the CLI and its helper.
 
 The small [reviewed task flow](/product/todoist-projects.md) has its own domain/application/CLI modules and SDK/PostgreSQL adapters. Preview has no write port. Apply revalidates explicit selections, holds a dedicated session lock and dispatches outside SQL transactions, then atomically settles the existing intent/link tables. No new framework, dependency, migration or background cycle is introduced.
 

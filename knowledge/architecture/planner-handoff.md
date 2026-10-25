@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T19:30:09Z
+  at: 2026-10-25T20:32:10Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -24,7 +24,7 @@ x_jev_sources:
   - path: openspec/changes/add-personal-brief-preprocessing/specs/brief-handoff/spec.md
     sha256: 6295d7a2e38f5233f274b976d54399a7176e35efb594338e1b1be5973a1fb778
   - path: docs/product-requirements.md
-    sha256: 8aee3e08be20666e36dffa7a46b8a80acd682b76f6413ececc431fd63f9c46e7
+    sha256: a5069d9ab2ebc61ee4aacdb855e90be35208537a22b8e5dd844d94a762f00d15
   - path: src/domain/email-brief.ts
     sha256: 79fda7c5e18a320cf9826caa82ae869a8bdce327b19a48e676203c46695667c5
   - path: src/application/email-brief.ts
@@ -48,7 +48,7 @@ x_jev_sources:
   - path: docs/todoist-brief-evidence.md
     sha256: a5a4c60b65336f51012956db6fa2ec942a1b8467fedd042a4235dd9ee06b643f
   - path: docs/retro-brief-evidence.md
-    sha256: 078d68a8fdb76a6c9d588819586191fade8f6ea535dbcbae24341fc8e9cec354
+    sha256: c4a537b431f04fdb62de90594b2f6a30d2fc11e000ed4af6ecfda0b68c0b57ce
   - path: src/cli-email-brief.ts
     sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: deploy/brief-refresh.md
@@ -56,7 +56,7 @@ x_jev_sources:
   - path: docs/automatic-mail-classification.md
     sha256: 6ed7e95d4dfe5a520a837ad8c62aac969e6ff7674e8ed071a4de86ffee2de9ce
   - path: docs/automatic-capture-evidence.md
-    sha256: 9087226c6d39f2948e756021225c5c373ae09f3ad59f510e6fc9b87066240a3f
+    sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
   - path: docs/automatic-todoist-capture.md
     sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
@@ -77,13 +77,13 @@ A separate LaunchAgent refreshes the existing owned file every five minutes; the
 
 The installed prompt appendix uses a 15-minute publication cutoff and checks source freshness independently. Actual scheduled retrieval must select the latest generation and current Todoist inventory, disclose stale/unavailable input and follow an explicit fallback. Calendar blocks help choose actions; they do not authorize writes or prove completion. Verify retrieval before changing prompts. See [personal brief loop](/product/personal-brief-loop.md), [uncertainty](uncertainty.md), and [Retro](retro-feedback.md).
 
-The authorized live sample published ten conversations (six Jev judgments, four owner exclusions), then replayed all ten cached decisions with zero new requests against the same private file. Independent read-back checked identity, generation and private sharing. The source snapshot still had retrieval gaps and null complete freshness; this proves publication/reuse only, not planner integration or classifier quality.
+The historical initial live sample published ten conversations (six Jev judgments, four owner exclusions), then replayed all ten cached decisions with zero new requests against the same private file. Independent read-back checked identity, generation and private sharing. The source snapshot still had retrieval gaps and null complete freshness; this proves publication/reuse only, not planner integration or classifier quality.
 
 The same manual brief now fetches current Todoist projects and open tasks on every publication. It groups escaped source titles, task links and existing due values, excluding Retro by configured identity or normalized name. Exact supported primary-account Gmail links on displayed open task descriptions add already-tracked annotations to email Action items; similar wording and absent links establish nothing. Descriptions remain local. Read interval, page caps, missing-project and display-size gaps are explicit; failed reads discard partial contents and publish unavailable context with exit 1. There is no separate database task inventory or new hosted judgment.
 
 ## Retro in the same manual artifact
 
-Recent read-only Retro feedback and optional typed review now appear in the same owned Drive file. A fixed seven-day source window includes completed tasks and bounded comments; timestamps describe provider records, not inferred activity dates. Source/candidate/display gaps remain explicit. --retro-review shares email's new-call allowance and publishes ephemeral finite task-kind/candidate/relation/excerpt choices, subject to conservative review rules. No task is completed or edited. Context-only replay refreshes sources with no new Retro inference and removes prior interpretations. Cached-only automatic publication is active; actual timer-triggered planner retrieval remains a separate acceptance check. See [Retro](retro-feedback.md).
+Recent read-only Retro feedback and optional typed review now appear in the same owned Drive file. A fixed seven-day source window includes completed tasks and bounded comments; timestamps describe provider records, not inferred activity dates. Source/candidate/display gaps remain explicit. --retro-review shares email's new-call allowance and publishes ephemeral finite task-kind/candidate/relation/excerpt choices, subject to conservative review rules. No task is completed or edited. Context-only replay refreshes sources with no new Retro inference and removes prior interpretations. Regular context refresh makes no new Retro inference; actual daily-consumer retrieval has since been accepted separately. See [Retro](retro-feedback.md).
 
 Approved live Retro verification confirmed the same private owned file, generation/content read-back and owner-only sharing. Ten records were reviewed against 43 current task titles; all remained uncertain and source coverage stayed explicitly incomplete. A zero-call source refresh preceded the final Retro-focused artifact, whose labelled verification scope deliberately omits new email selection/inference. This is publication evidence, not scheduled planner or semantic matching acceptance. See docs/retro-brief-evidence.md.
 
@@ -91,4 +91,4 @@ The October 22 scheduled-handoff rollout activates cached-only five-minute publi
 
 The automatic classification upgrade adds --classify-pending before cached publication. The display and Retro paths remain --max-new 0; preprocessing has separate request/token counters and a durable $2 lifetime cap. The merged template is now active, while prior scheduled handoff evidence describes the initial cached-only rollout. See docs/automatic-mail-classification.md.
 
-The merged PR #23 classifier was activated and verified on a genuine October 25 timer cycle, with independent readback of the exact owned Drive file. Retrieval was complete at observation; classification and Retro gaps remained explicit. Opt-in task capture adds per-source processing history and cycle counts/review/failure/cap/ambiguity disclosures to the same artifact. Historical matching never establishes current completion; live Todoist remains authoritative. Capture was enabled on October 25; a genuine timer generation and exact owned-file/counter readback passed with zero eligible new sources. The follow-up template correction removes the blanket no-write claim from capture-enabled documents; that wording patch is not yet deployed. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.
+The merged PR #23 classifier was activated and verified on a genuine October 25 timer cycle, with independent readback of the exact owned Drive file. Retrieval was complete at observation; classification and Retro gaps remained explicit. Opt-in task capture adds per-source processing history and cycle counts/review/failure/cap/ambiguity disclosures to the same artifact. Historical matching never establishes current completion; live Todoist remains authoritative. Capture was enabled on October 25; a genuine timer generation and exact owned-file/counter readback passed with zero eligible new sources. The PR #26 template correction is deployed and independently read back; capture-enabled documents now refer to capture outcomes instead of a blanket no-write claim. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.
