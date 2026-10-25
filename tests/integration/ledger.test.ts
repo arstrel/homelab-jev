@@ -7,6 +7,7 @@ import { testDatabaseUrl } from "../../scripts/test-database.js";
 import { connect } from "../../src/adapters/postgres/client.js";
 import { applyMigrations } from "../../src/adapters/postgres/migrate.js";
 import { repositories } from "../../src/adapters/postgres/repositories.js";
+import * as s from "../../src/adapters/postgres/schema.js";
 import { ids, instant } from "../fixtures/runtime.js";
 
 const client = connect(testDatabaseUrl(process.env));
@@ -55,68 +56,61 @@ describe("PostgreSQL ledger guarantees", () => {
       ).rows[0]?.n,
     ).toBe(6);
   });
-  it("durably ingests before checkpoint advancement and deduplicates replay", async () => {
-    await repo.ingest({ checkpoint, sources: [source], jobs: [job] });
-    await repo.ingest({
-      checkpoint: { ...checkpoint, historyId: "2" },
-      sources: [source],
-      jobs: [{ ...job, id: ids.classification }],
+  it("retains legacy raw status counts independently of classification eligibility", async () => {
+    expect(await repo.status()).toEqual({ checkpoints: 0, pendingJobs: 0, writeIntents: 0 });
+    await client.db.insert(s.checkpoints).values(checkpoint);
+    await client.db.insert(s.sources).values(source);
+    await client.db
+      .insert(s.pendingJobs)
+      .values([job, { ...job, id: ids.classification, fingerprint: "v2", state: "complete" }]);
+    await client.db.insert(s.writeIntents).values({
+      id: ids.intent,
+      destination: "todoist",
+      obligationKey: "reply",
+      requestId: ids.request,
+      state: "complete",
+      createdAt: instant,
     });
-    expect(await repo.pending()).toHaveLength(1);
-    expect((await repo.checkpoint("fixture"))?.historyId).toBe("2");
-  });
-  it("rolls back source writes and checkpoint on a failed job", async () => {
-    await repo.ingest({ checkpoint, sources: [source], jobs: [job] });
-    await expect(
-      repo.ingest({
-        checkpoint: { ...checkpoint, historyId: "bad" },
-        sources: [{ ...source, sourceId: "new" }],
-        jobs: [{ ...job, sourceId: "missing", id: ids.classification }],
-      }),
-    ).rejects.toThrow();
-    expect((await repo.checkpoint("fixture"))?.historyId).toBe("1");
-    expect((await client.pool.query("select count(*)::int as n from jev.sources")).rows[0]?.n).toBe(
-      1,
-    );
+    expect(await repo.status()).toEqual({ checkpoints: 1, pendingJobs: 1, writeIntents: 1 });
   });
   it("stores classifications, multi-source links and suppressions", async () => {
-    await repo.ingest({
-      checkpoint,
-      sources: [source, { ...source, sourceId: "message-2" }],
-      jobs: [job],
-    });
-    await repo.classify({
+    await client.db.insert(s.sources).values([source, { ...source, sourceId: "message-2" }]);
+    await client.db.insert(s.pendingJobs).values(job);
+    await client.db.insert(s.classifications).values({
       id: ids.classification,
       jobId: ids.job,
       modelVersion: "fixture-model",
       result: { attention: true, probability: 0.9 },
       createdAt: instant,
     });
-    await repo.link({
+    await client.db.insert(s.taskLinks).values({
       mailbox: "fixture",
       sourceId: "message-1",
       obligationKey: "reply",
       taskId: "fake-task",
     });
-    await repo.link({
+    await client.db.insert(s.taskLinks).values({
       mailbox: "fixture",
       sourceId: "message-2",
       obligationKey: "reply",
       taskId: "fake-task",
     });
     await expect(
-      repo.link({
+      client.db.insert(s.taskLinks).values({
         mailbox: "fixture",
         sourceId: "message-1",
         obligationKey: "reply",
         taskId: "duplicate",
       }),
     ).rejects.toThrow();
-    await repo.suppress({ obligationKey: "reply", reason: "completed", createdAt: instant });
-    expect(await repo.suppressed("reply")).toBe(true);
-    expect(await repo.suppressed("new-reply")).toBe(false);
+    await client.db
+      .insert(s.suppressions)
+      .values({ obligationKey: "reply", reason: "completed", createdAt: instant });
+    expect(await client.db.select().from(s.suppressions)).toEqual([
+      { obligationKey: "reply", reason: "completed", createdAt: instant },
+    ]);
   });
-  it("retains ambiguous intents across repository recreation and enforces request identity", async () => {
+  it("enforces durable write-intent identity", async () => {
     const intent = {
       id: ids.intent,
       destination: "todoist" as const,
@@ -124,13 +118,10 @@ describe("PostgreSQL ledger guarantees", () => {
       requestId: ids.request,
       createdAt: instant,
     };
-    await repo.intent(intent);
-    expect(await repositories(client).unresolvedIntents()).toHaveLength(1);
-    await expect(repo.intent({ ...intent, id: ids.classification })).rejects.toThrow();
-    await repo.settle(ids.intent, "ambiguous", { code: "timeout" });
-    expect(await repositories(client).unresolvedIntents()).toHaveLength(1);
-    await repo.settle(ids.intent, "complete", { taskId: "fake-task" });
-    expect(await repo.unresolvedIntents()).toHaveLength(0);
+    await client.db.insert(s.writeIntents).values(intent);
+    await expect(
+      client.db.insert(s.writeIntents).values({ ...intent, id: ids.classification }),
+    ).rejects.toThrow();
   });
   it("holds advisory locks on dedicated connections until release", async () => {
     const first = await client.pool.connect();

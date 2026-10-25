@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:28:39Z
+  at: 2026-10-25T21:08:29Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -27,7 +27,7 @@ x_jev_sources:
   - path: src/adapters/postgres/schema.ts
     sha256: 072baf9d636dc10659c4cb1501973534164388c2c58565d6b5ac89b2462218a8
   - path: src/adapters/postgres/repositories.ts
-    sha256: 3b180be48d0705cc565ec4b6e48293f83a3f1b1ef634c5d792675f69bc790414
+    sha256: 48905170dcad6aa08a86fc2629d2d9f870a5b3a461b6d2f82d5da12e278e1e4f
   - path: src/adapters/postgres/client.ts
     sha256: 42d0ab473c4468001ed4f8fe930a01ff44ca6403fe0c5c55203265f0d44694bf
   - path: src/adapters/postgres/mail-evidence.ts
@@ -50,7 +50,7 @@ x_jev_sources:
 
 Drizzle with pg defines the worker-owned `jev` schema. Checkpoints track mailbox cursors; sources track source fingerprints; pending jobs have unique source/fingerprint/policy-version identities. Classifications store typed-result and correction payloads. Task links map source obligations to Todoist IDs and override state. Suppressions record completed/deleted obligations. Write intents record destination, stable request UUID, state and outcome.
 
-Ingestion stores source changes, jobs and the checkpoint in one transaction. This gives a foundation for [checkpoint safety](gmail-checkpoints.md). Repositories also expose link, suppress, intent and settlement operations. These primitives do not yet implement the complete [remote write protocol](remote-write-safety.md).
+Production ingestion and sync use dedicated evidence/sync adapters for atomic writes and [checkpoint safety](gmail-checkpoints.md). The foundation `repositories` module now exposes only legacy raw status; its unused ingestion, classification, link, suppression, intent, settlement and test-only lookup methods were removed. Task and publication adapters retain their own [remote write protocol](remote-write-safety.md). Schema constraints and existing operational-adapter regressions remain covered with direct disposable fixtures.
 
 The pool uses bounded connection and statement timeouts. Remote API calls belong outside transactions. Ledger status counts rows, including all write intents; it is not a provider freshness report. Bounded pending-job classification is implemented as opt-in publisher preprocessing; reconciliation remains planned.
 
@@ -62,7 +62,7 @@ The separate [manual sync path](mail-sync.md) stores discovery phase/anchor/cont
 
 [Recovery](mail-recovery.md) adds durable mapped-target snapshots and recovery/gap metadata. Initialization atomically snapshots local mappings, promotes pending retrieval eligibility and advances state; stale revisions roll everything back. Final mapped-page queueing and target cleanup commit together. Recovery never clears immutable evidence, task identity or suppressions.
 
-DB-only [diagnostics](/operations/mail-observation.md) compare managed migration history and required structures without applying migrations, then read one read-only repeatable snapshot. Retrieval gaps and pending/unbound classification jobs are separate aggregates. No new schema or evidence store is added.
+DB-only [diagnostics](/operations/mail-observation.md) compare managed migration history and required structures without applying migrations, then read one read-only repeatable snapshot. Classification backlog includes only pending primary jobs bound to current source evidence, including deferred work; unbound legacy jobs are a separate diagnostic and superseded versions are excluded without deletion. Retrieval gaps remain independent. Legacy raw status is unchanged. No new schema or evidence store is added.
 
 Manual [brief publication](planner-handoff.md) reuses existing classifications and write intents without a migration. Its dedicated session lock is distinct from collection. Each saved exact-input judgment and bound-job completion share one transaction; remote calls occur outside transactions. One unique drive intent reserves the destination ID before creation and retains the prior successful generation/time through ambiguous updates. This is application-specific recovery, not a cross-service transaction or general reconciliation engine.
 

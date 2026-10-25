@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:27:08Z
+  at: 2026-10-25T21:08:29Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -18,8 +18,8 @@ sources:
     resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/src/adapters/postgres/schema.ts
     title: src/adapters/postgres/schema.ts
   - id: s2
-    resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/src/adapters/postgres/repositories.ts
-    title: src/adapters/postgres/repositories.ts
+    resource: https://github.com/arstrel/homelab-jev/blob/8c6a365d315ec11c2298bd7353255474ea69da50/src/adapters/postgres/email-tasks.ts
+    title: src/adapters/postgres/email-tasks.ts
   - id: s3
     resource: https://github.com/arstrel/homelab-jev/blob/e0a98c6ee1ea4179544967a51dbd42724a8a956f/src/adapters/todoist.ts
     title: src/adapters/todoist.ts
@@ -29,8 +29,6 @@ sources:
 x_jev_sources:
   - path: src/adapters/postgres/schema.ts
     sha256: 072baf9d636dc10659c4cb1501973534164388c2c58565d6b5ac89b2462218a8
-  - path: src/adapters/postgres/repositories.ts
-    sha256: 3b180be48d0705cc565ec4b6e48293f83a3f1b1ef634c5d792675f69bc790414
   - path: src/adapters/todoist.ts
     sha256: 893a433a2878b505872f14719cced7bfede0521b4c505e203de0b9e1fda749a3
   - path: openspec/changes/add-personal-brief-preprocessing/specs/todoist-obligations/spec.md

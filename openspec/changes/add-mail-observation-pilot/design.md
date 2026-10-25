@@ -39,6 +39,8 @@ Return `schemaVersion: mail-status/v1`, checked time, readiness, phase, configur
 
 `retrying` means attempts greater than zero, including not-yet-due work. `nextRetryAt` means the earliest future availability among failed retrievals, not when a scheduler will execute. Failure keys come from the application whitelist (`MailFailure` plus `partial-body`); collapse any other stored text into `unknown-failure`. Classification jobs remain separate: their presence does not invalidate complete Gmail evidence. Report stored timestamps; do not create an inferred healthy/fresh flag or reuse the proposed planner stale cutoff here.
 
+Classification `pendingJobs` counts pending jobs whose exact evidence binding matches the current source fingerprint, using the classifier's mailbox/source/evidence join. It includes future-deferred current work, so it is a backlog count rather than a due-now count. Superseded versions and unbound legacy rows do not inflate it; `unboundPendingJobs` independently counts pending legacy rows lacking an evidence binding. Observation never deletes or completes these rows. The legacy `status` command retains raw row counts. Its foundation repository exposes only the production `status()` operation; obsolete test-only ingestion, mutation and lookup methods are removed, with schema-constraint fixtures written directly in disposable tests.
+
 Illustrative output only, with incomplete mail retrieval:
 
 ```json

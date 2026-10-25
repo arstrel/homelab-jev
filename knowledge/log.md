@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-25 current backlog and foundation cleanup
+
+`mail:status` now counts pending primary jobs bound to current source evidence, matching classifier identity while retaining deferred work. Unbound legacy jobs are reported separately; superseded rows remain stored and legacy raw `status` is unchanged. Removed unused foundation mutations/lookups and retained only production raw status. Direct disposable fixtures preserve schema-constraint coverage; active ingestion/sync/task adapters retain transaction and replay checks. Updated ledger/checkpoint/observation claims and replaced obsolete mutation provenance with the actual sync/task adapters. Reviewed only changed source snapshots, preserving review deadlines and human-verification metadata. These corrections await merged-release deployment; no live counts or provider effects are claimed.
+
 ## 2026-10-25 idle capture reads
 
 Capture now selects local work and checks evidence/exclusions/classification confidence before loading Todoist inventory. Empty or entirely locally ineligible batches make no capture provider calls; eligible records reuse one initial inventory, retaining fresh inventory/evidence checks before semantic linking or creation. Reviewed the changed use case, capture runbook and unit tests against dependent concepts; their ownership, privacy, admission and release boundaries remain unchanged. Refreshed only those three reviewed source snapshots, preserving all review deadlines and human-verification metadata. Synthetic regressions cover idle/unavailable providers, local outcomes, shared inventory and pre-write freshness. The fix awaits merged-release deployment; brief publication still refreshes its own Todoist context.

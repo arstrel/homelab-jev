@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T20:32:10Z
+  at: 2026-10-25T21:08:29Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -30,7 +30,7 @@ sources:
     title: vitest.config.ts
 x_jev_sources:
   - path: tests/integration/mail-status.test.ts
-    sha256: a44774afdb6ac90172546026bd26d1454634e176054068abf42b33b0cbbf50ca
+    sha256: 32990ad6bfa6cfb0c9026b13ad8570d5d0a62ca5d40a529d2263721dc497f8e0
   - path: tests/unit/mail-status.test.ts
     sha256: 94fcb2b4a492fe368522e6ae4a0ce95b28450a9884d28a6dec6b22b54d1a51c3
   - path: scripts/cli-smoke.ts
@@ -100,6 +100,8 @@ Sync fixtures now exercise resumable discovery, bootstrap overlap, partial retri
 Recovery fixtures cover stage-by-stage restarts, a 101-thread mapped snapshot, older/missing/partial mail, history catch-up, repeated expiry caps, preserved backoff, stale initialization/final-page rollback and populated 0004 failure/repair. Read-state replay preserves evidence/job identity. These results establish synthetic recovery behavior only.
 
 Observation tests verify read-only transaction enforcement, schema readiness without setup, coherent aggregates across concurrent commits, observation during held sync ownership, and sanitized connection loss. Fixture initialization inserts typed sync state directly; it does not race teardown of an unnecessary setup ownership session against the test's lock acquisition. Disposable schema resets and backend termination remain confined to the validated test database. The compiled DB-only diagnostic uses a fake failing driver with network access denied; live pilot acceptance is never a Git gate.
+
+Current-backlog fixtures retain superseded and unbound rows, compare selection with the actual classifier adapter, include deferred current jobs and verify zero backlog after current work completes. Foundation schema-constraint fixtures use direct test inserts after removal of unused production helpers; active ingestion/sync/task adapters retain their transactional/replay regressions. No live database count is inferred from these tests.
 
 Triage tests use synthetic conversations, fixed results and MSW for malformed answers, hostile-state boundaries, cancellation and timeout/no-retry contracts. Disposable PostgreSQL tests select exact historical versions, preserve legacy gaps and detect corrupt evidence while leaving jobs/results unchanged. Credentialed Jev checks are explicit separate operations; deterministic gates never send real mail to Jev or claim measured classifier quality.
 

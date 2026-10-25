@@ -24,11 +24,14 @@ Only normal `DB_URL`/`DB_*` configuration is required. The command rejects optio
 | `retrievals.pending` / `.due` / `.retrying` | All remaining retrievals / availability at or before checked time / attempts greater than zero |
 | `retrievals.nextRetryAt` | Earliest future availability among failed retrievals, not a promised execution time |
 | `retrievals.failures` | Counts under fixed failure names; unrecognized text becomes `unknown-failure` |
-| `classification.pendingJobs` / `.unboundPendingJobs` | Pending processing jobs and those lacking exact evidence bindings; separate from retrieval completeness |
+| `classification.pendingJobs` | Pending primary-mailbox jobs bound to the current source fingerprint, including deferred retries; excludes superseded versions and unbound legacy jobs |
+| `classification.unboundPendingJobs` | Separate count of pending primary-mailbox legacy jobs lacking an exact evidence binding; not included in `pendingJobs` |
 | `readOnly` / `providerCalls` | True and zero for this command path |
 | `reason` | `database-unavailable` on failed reads, otherwise null |
 
 `schemaState: ready` exits 0 even when work remains or sync is uninitialized. Missing migrations exit 2; incompatible/unavailable storage exits 1. Invalid arguments/configuration use the existing sanitized CLI error path and exit 1. No provider freshness/health conclusion follows from exit 0. Non-ready measurements are null, never invented zeros.
+
+Classification backlog uses the classifier's current-source/evidence identity rule, without its due-time filter: deferred current jobs remain backlog until processed. Superseded rows are retained for history, not counted as actionable work. The legacy `status` command still reports raw pending ledger rows across mailboxes. Historical observation reports made before this correction retain their original raw counts; they are not current backlog measurements.
 
 Readiness compares bundled SQL hashes/timestamps with the managed migration journal and checks required table/column presence in Jev-owned schemas. A valid older prefix requires migration; conflicting/newer history or an unmanaged/incomplete schema is incompatible. These checks are not an exhaustive corruption or permission audit. Do not repair or remove journal records to make status pass.
 

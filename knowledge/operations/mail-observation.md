@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T20:32:10Z
+  at: 2026-10-25T21:08:29Z
 stale_after: "2026-11-18T02:37:00Z"
 x_jev_delivery: implemented
 sources:
@@ -20,11 +20,11 @@ x_jev_sources:
   - path: src/application/mail-status.ts
     sha256: 285b3acb725850d9eb4e79409564f4c73978b933433ae5224e3d39bdfb584733
   - path: src/adapters/postgres/mail-status.ts
-    sha256: 589afa11025780e47d01cb6ac6051e71b365c635dabd26488c49c3b3a6646cb9
+    sha256: d7671524c8b0a60891ee1263ea38f375c7b55727652af500f467c1e4dbb36c6d
   - path: src/domain/mail-status.ts
     sha256: 968f9c84f9c5643ffc3ec0bd6bd035d9b5b792654929f33ea4d198a22c02d252
   - path: docs/mail-observation.md
-    sha256: c90734a42b29772097e9177ad38f98ba4d4d5814299c28dc704335309a3d90d3
+    sha256: 8d149e6cb65c14ba01355f438e6502d18885f511ea9bc1ed063b1f442858a935
   - path: docs/mail-observation-evidence.md
     sha256: d615805f16343946e8ce577d78149780f5ac4b6fd77e2040c6af518b3a85ea71
 ---
@@ -33,7 +33,7 @@ x_jev_sources:
 
 The implemented `mail:status` diagnostic needs database configuration only. A read-only repeatable transaction checks managed migration history/structures and reads whitelisted aggregates. It uses no sync ownership lock, provider client, migration function or message payload. Missing/failed measurements remain unknown, not zero; successful observation is not a provider-health result.
 
-Schema readiness now includes the inference-allowance table introduced by migration 0005. The new schema does not grant diagnostics write authority. Pending classification counts include all pending ledger rows, including superseded versions that the current classifier will not select; they are not an exact executable-backlog measurement.
+Schema readiness includes the inference-allowance table introduced by migration 0005; diagnostics retain no write authority. Classification `pendingJobs` now counts only pending primary jobs bound to current source evidence, following the classifier's identity join. Deferred current jobs remain backlog even before they are due. Superseded versions are excluded without deletion; `unboundPendingJobs` separately counts pending legacy rows lacking an exact binding, outside `pendingJobs`. Legacy `status` retains raw ledger counts, and earlier dated reports keep their original semantics. This reporting correction awaits merged-release deployment.
 
 Retrieval counts, future retry time and stored discovery/evidence frontiers remain separate from classification/task freshness. Status never advances a frontier. Unknown failure text becomes a fixed category. Expired-history gaps remain visible after bounded scoped recovery.
 
