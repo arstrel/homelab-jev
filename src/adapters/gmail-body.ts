@@ -101,14 +101,16 @@ function addresses(input: string): Address[] {
 function attachment(part: Part): boolean {
   return !!part.filename || /^attachment(?:\s*;|$)/i.test(value(part, "content-disposition"));
 }
-function select(part: Part): Part[] | null {
+function select(part: Part, preferHtml = false): Part[] | null {
   if (attachment(part)) return [];
   const mime = part.mimeType.toLowerCase();
   if (mime === "text/plain" || mime === "text/html") return [part];
   if (mime === "multipart/alternative") {
-    const choices = part.parts.map(select);
+    const choices = part.parts.map((child) => select(child, preferHtml));
     return (
-      choices.find((choice) => choice?.some((p) => p.mimeType.toLowerCase() === "text/plain")) ??
+      choices.find((choice) =>
+        choice?.some((p) => p.mimeType.toLowerCase() === (preferHtml ? "text/html" : "text/plain")),
+      ) ??
       choices.find((choice) => choice && choice.length > 0) ??
       (choices.includes(null) ? null : [])
     );
@@ -117,7 +119,7 @@ function select(part: Part): Part[] | null {
   if (mime.startsWith("multipart/")) {
     const selected: Part[] = [];
     for (const child of part.parts) {
-      const choice = select(child);
+      const choice = select(child, preferHtml);
       if (choice === null) return null;
       selected.push(...choice);
     }
@@ -146,15 +148,16 @@ function attachments(part: Part): AttachmentMetadata[] {
   return part.parts.flatMap(attachments);
 }
 const truncated = "JEV_HTML_COVERAGE_LIMIT";
-export async function normalizeBody(
+async function normalizeRepresentation(
   messageId: string,
   payload: Part,
   budget: MailBudget,
   getTextPart: (messageId: string, attachmentId: string) => Promise<unknown>,
   metadata: AttachmentMetadata[],
+  preferHtml = false,
 ): Promise<MailBody> {
   try {
-    const selected = select(payload);
+    const selected = select(payload, preferHtml);
     if (selected === null) return { status: "unsupported" };
     if (!selected.length) {
       return metadata.length &&
@@ -186,7 +189,8 @@ export async function normalizeBody(
               baseElements: { selectors: [], returnDomByDefault: true },
               limits: {
                 maxInputLength: budget.limits.maxBodyBytes,
-                maxDepth: budget.limits.maxDepth,
+                // HTML table layouts are much deeper than MIME envelopes.
+                maxDepth: 200,
                 maxChildNodes: 10_000,
                 ellipsis: truncated,
               },
@@ -224,6 +228,43 @@ export async function normalizeBody(
       return { status: "unavailable" };
     return { status: "unsupported" };
   }
+}
+
+export async function normalizeBody(
+  messageId: string,
+  payload: Part,
+  budget: MailBudget,
+  getTextPart: (messageId: string, attachmentId: string) => Promise<unknown>,
+  metadata: AttachmentMetadata[],
+): Promise<MailBody> {
+  const preferred = await normalizeRepresentation(
+    messageId,
+    payload,
+    budget,
+    getTextPart,
+    metadata,
+  );
+  if (preferred.status === "complete" || preferred.status === "empty") return preferred;
+  // MIME alternatives are different representations of the same body. A broken
+  // plain representation must not hide a complete HTML alternative. Mixed
+  // sections and encrypted siblings remain mandatory in both selections.
+  const plain = select(payload);
+  const html = select(payload, true);
+  if (
+    !plain ||
+    !html ||
+    (plain.length === html.length && plain.every((part, i) => part === html[i]))
+  )
+    return preferred;
+  const alternate = await normalizeRepresentation(
+    messageId,
+    payload,
+    budget,
+    getTextPart,
+    metadata,
+    true,
+  );
+  return alternate.status === "complete" || alternate.status === "empty" ? alternate : preferred;
 }
 
 export async function normalizeThread(

@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-25 automatic mail preprocessing
+
+Prepared bounded pending-email classification with a durable lifetime allowance and repaired separate HTML layout depth bounds. Updated only relevant architecture claims and source snapshots, retaining review deadlines and draft status. Recurring activation remains a separate merged-release upgrade; do not mistake implementation/live diagnostics for timer acceptance.
+
 ## 2026-10-22
 
 Added bounded recent Retro context and explicit finite-choice human-review suggestions to the manual Drive brief. Reviewed source, privacy, budget, preservation and delivery claims with their relevant snapshots; preserved draft/unverified state and original review deadlines. Automatic reconciliation and scheduled planner acceptance remain planned.

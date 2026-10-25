@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T15:00:34.395Z
+  at: 2026-10-25T17:01:28Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -28,9 +28,9 @@ x_jev_sources:
   - path: src/domain/email-brief.ts
     sha256: 8ce409f2ead0df548d76472e94994940913ebcc21549e10d642da992987be9fa
   - path: src/application/email-brief.ts
-    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
+    sha256: 6c9b2f4d528095c31db200a8ca3e9837b14c80ee9d33197c29d3561111bb84fd
   - path: src/adapters/postgres/email-brief.ts
-    sha256: 21166686962ee9a41f1c7dcc9e240072887895023ef34e5d5869786a6be615ce
+    sha256: ccafbe1d5d1161e3237605c40b6d611ace180484f49b227395ffcd712ec1272c
   - path: src/adapters/drive-brief.ts
     sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
   - path: docs/email-brief.md
@@ -49,6 +49,12 @@ x_jev_sources:
     sha256: a5a4c60b65336f51012956db6fa2ec942a1b8467fedd042a4235dd9ee06b643f
   - path: docs/retro-brief-evidence.md
     sha256: 078d68a8fdb76a6c9d588819586191fade8f6ea535dbcbae24341fc8e9cec354
+  - path: src/cli-email-brief.ts
+    sha256: 18f3605fb0c39827e98d19f140a185b79c962269aa0c3d73051e676575510374
+  - path: deploy/brief-refresh.md
+    sha256: 37c9a450d9019298e9dad24dfb917cf120eb1ee6eff7f2e1e46400a8cc140980
+  - path: docs/automatic-mail-classification.md
+    sha256: a01b30b6e55c7f81b1d1f4d332b7833955a236b90ab3b577e97e494310d323a0
 ---
 
 # Drive snapshot and planner freshness
@@ -78,3 +84,5 @@ Recent read-only Retro feedback and optional typed review now appear in the same
 Approved live Retro verification confirmed the same private owned file, generation/content read-back and owner-only sharing. Ten records were reviewed against 43 current task titles; all remained uncertain and source coverage stayed explicitly incomplete. A zero-call source refresh preceded the final Retro-focused artifact, whose labelled verification scope deliberately omits new email selection/inference. This is publication evidence, not scheduled planner or semantic matching acceptance. See docs/retro-brief-evidence.md.
 
 The October 22 scheduled-handoff rollout activates cached-only five-minute publication and appends the same freshness/source-authority contract to the existing prompts after private backups. The email scheduler test retained actual generation provenance. The first planner test did not; a repeat with clarified reporting returned the current publisher generation, while retaining a null exact fetch time and direct-source fallback. The existing planner could not save its updated daily artifact through the connected Drive operation and reported that gap. October 23 daily runs independently saved all three canonical artifacts and used matching publisher generations; the earlier planner save limitation did not recur in that run. The owner-approved October 25 repair removed only orphaned duplicate lines outside named fields; the complete canonical Run record now parses and the full document matched independent readback. This closes the isolated handoff acceptance while broader classification/reconciliation requirements remain open. The repository report docs/scheduled-brief-evidence.md distinguishes these surfaces.
+
+The automatic classification upgrade adds --classify-pending before cached publication. The display and Retro paths remain --max-new 0; preprocessing has separate request/token counters and a durable $2 lifetime cap. The template change is prepared for merged-release activation, while prior scheduled handoff evidence describes the cached-only rollout. See docs/automatic-mail-classification.md.

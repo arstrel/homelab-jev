@@ -53,7 +53,7 @@ describe("PostgreSQL ledger guarantees", () => {
           "select count(*)::int as n from jev_migrations.__drizzle_migrations",
         )
       ).rows[0]?.n,
-    ).toBe(5);
+    ).toBe(6);
   });
   it("durably ingests before checkpoint advancement and deduplicates replay", async () => {
     await repo.ingest({ checkpoint, sources: [source], jobs: [job] });

@@ -36,6 +36,13 @@
       "when": 1792370091366,
       "tag": "0004_mail_sync_recovery",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792947395141,
+      "tag": "0005_inference_allowance",
+      "breakpoints": true
     }
   ]
 }

@@ -29,3 +29,9 @@ Code rollback remains additive-schema compatible: stop sync, revert the release 
 Migration 0004 adds defaulted recovery metadata, expands the phase constraint and creates `mail_recovery_targets`. Existing history anchors, backlog retry state and ledger rows remain intact. Apply explicitly before using automatic recovery; this implementation has not applied it to the operational database. The disposable populated 0003 upgrade test verifies failed DDL rollback, repaired/repeated application and preserved mappings/retries; prior upgrade regressions remain pinned to their original migrations.
 
 Stop sync before code rollback. The previous synchronizer cannot interpret `recovery-bootstrap` or `recovery-mapped`: finish recovery to a compatible `history` state before using that binary's sync command, or keep sync stopped until the recovery-capable release is restored. Retain the additive schema, targets and backlog. Preview/ingestion remain compatible; never delete recovery state to force compatibility.
+
+## Inference allowance upgrade
+
+Migration 0005 creates only `jev.inference_budgets`, with integer nanodollar balances and constraints that prevent negative balances or spending beyond the $2 ceiling. The first automatic inference seeds the stable allowance with a $0.01 previous-usage provision. No mailbox rows, jobs or existing publication identity are rewritten. See [automatic classification](automatic-mail-classification.md).
+
+Both native jobs must use a migration-aware merged release after application: older status readers reject a newer journal. Stop both before migration, take a private database backup, apply explicitly and resume the upgraded jobs. Disable new inference by removing the publisher's `--classify-pending` flag; retain the compatible runtime, table and spending history. Do not delete or reset the allowance during rollback. This feature does not apply the operational migration before review/merge.

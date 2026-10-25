@@ -142,3 +142,82 @@ it("skips an overlapping publisher while allowing collection's distinct lock", a
   });
   expect(await database.exclusive(async () => "released")).toBe("released");
 });
+
+it("drains pending evidence independently of display, defers failures and skips superseded versions", async () => {
+  await mailEvidenceStore(client).persistEvidence([submission()]);
+  await database.exclusive(async (session) => {
+    const first = (await session.pending(new Date(briefTime), 10))[0];
+    if (!first) throw new Error("fixture");
+    await session.defer(first, new Date("2026-10-12T00:00:00Z"));
+    expect(await session.pending(new Date(briefTime), 10)).toEqual([]);
+    expect(
+      (await client.pool.query("select attempts from jev.pending_jobs")).rows[0]?.attempts,
+    ).toBe(1);
+    const changed = submission();
+    changed.jobId = randomUUID();
+    const message = changed.evidence.messages[0];
+    if (!message) throw new Error("fixture");
+    message.subject = "New version";
+    changed.observation.observedAt = "2026-10-11T14:00:00.000Z";
+    await mailEvidenceStore(client).persistEvidence([changed]);
+    const pending = await session.pending(new Date("2026-10-13T00:00:00Z"), 10);
+    expect(pending.map((r) => r.jobId)).toEqual([changed.jobId]);
+    const current = pending[0];
+    if (!current?.conversation) throw new Error("fixture");
+    await session.save(current, {
+      policy: briefPolicy,
+      inputHash: briefInputHash(current.fingerprint, current.conversation.directions),
+      decision: { type: "jev", result: triageResponse() },
+    });
+    expect(await session.pending(new Date("2026-10-13T00:00:00Z"), 10)).toEqual([]);
+  });
+});
+it("preserves lifetime reservations across sessions and refuses overspending", async () => {
+  await client.pool.query("delete from jev.inference_budgets");
+  await database.exclusive(async (session) => {
+    expect(await session.reserveInference()).toBe(true);
+  });
+  // A process died after admission; its maximum charge remains durable.
+  await database.exclusive(async (session) => {
+    const before = (await client.pool.query("select used_nano from jev.inference_budgets")).rows[0]
+      ?.used_nano;
+    expect(before).toBe(10_000_000 + 64_000 * 42);
+    expect(await session.reserveInference()).toBe(true);
+    await session.settleInference(100);
+    await expect(session.settleInference(100)).rejects.toThrow("missing-reservation");
+    expect(
+      (await client.pool.query("select used_nano from jev.inference_budgets")).rows[0]?.used_nano,
+    ).toBe(before + 100 * 42);
+    await client.pool.query("update jev.inference_budgets set used_nano=2000000000-100");
+    expect(await session.reserveInference()).toBe(false);
+    expect(
+      (await client.pool.query("select used_nano from jev.inference_budgets")).rows[0]?.used_nano,
+    ).toBe(2000000000 - 100);
+    await expect(session.settleInference(64_001)).rejects.toThrow("invalid-usage");
+  });
+});
+
+it("prioritizes fresh jobs and continues beyond a bounded first selection", async () => {
+  for (let i = 0; i < 3; i++) {
+    const item = submission();
+    item.jobId = randomUUID();
+    item.evidence.source.threadId = `thread-${i}`;
+    item.availableAt = new Date(`2026-10-11T0${i}:00:00.000Z`);
+    await mailEvidenceStore(client).persistEvidence([item]);
+  }
+  await database.exclusive(async (session) => {
+    const first = await session.pending(new Date(briefTime), 2);
+    expect(first.map((r) => r.sourceId)).toEqual(["thread-2", "thread-1"]);
+    for (const record of first) {
+      if (!record.conversation) throw new Error("fixture");
+      await session.save(record, {
+        policy: briefPolicy,
+        inputHash: briefInputHash(record.fingerprint, record.conversation.directions),
+        decision: { type: "jev", result: triageResponse() },
+      });
+    }
+    expect((await session.pending(new Date(briefTime), 2)).map((r) => r.sourceId)).toEqual([
+      "thread-0",
+    ]);
+  });
+});

@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T16:14:17.896Z
+  at: 2026-10-25T17:01:28Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -29,6 +29,10 @@ x_jev_sources:
     sha256: d9cff016d5cd902a8459361782f5bfd918cbc687fecccd2f82beb973a977eb95
   - path: scripts/mail-worker.ts
     sha256: 87ff1739e86a7a02fa241e6a4b5253e0547d9ad39a5513c24314454ece280a4c
+  - path: src/application/classify-pending-mail.ts
+    sha256: 6724c301287e07d370fc003942d529ab720b4a6774bac54cbac76f92eea02d71
+  - path: deploy/brief-refresh.md
+    sha256: 37c9a450d9019298e9dad24dfb917cf120eb1ee6eff7f2e1e46400a8cc140980
 ---
 
 # Five-minute processing cycle
@@ -42,3 +46,5 @@ Provider failures must preserve pending work and report real freshness gaps. Bou
 Follow [Gmail checkpoints](gmail-checkpoints.md), [remote write safety](remote-write-safety.md), [planner handoff](planner-handoff.md), and [native releases](/operations/native-releases.md).
 
 Manual [incremental synchronization](mail-sync.md) implements collection with exclusive session ownership and durable retries. The optional launcher reuses that command and lock rather than introducing another processing loop. A separate five-minute cached-only publisher refreshes the owned Drive brief and current Todoist/Retro context with zero hosted inference. Persistent classification, reconciliation and full live rollout remain planned.
+
+The automatic classification upgrade adds an opt-in pending-mail stage to the separate publisher. It processes at most ten due current jobs, uses a durable lifetime allowance and then refreshes cached publication with live source context. Reconciliation and automatic task effects remain planned. The new template requires a coordinated merged-release/migration upgrade; this implementation alone does not claim recurring activation. See docs/automatic-mail-classification.md.

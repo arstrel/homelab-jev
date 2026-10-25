@@ -142,7 +142,7 @@ it("rejects unmanaged, conflicting, newer and structurally incomplete storage wi
   expect(
     (await client.pool.query("select count(*)::int as n from jev_migrations.__drizzle_migrations"))
       .rows[0]?.n,
-  ).toBe(6);
+  ).toBe(7);
   await reset();
   await applyMigrations(client);
   await client.pool.query("alter table jev.mail_sync_state drop column recovery_started_at");

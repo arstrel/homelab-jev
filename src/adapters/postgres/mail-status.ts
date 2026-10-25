@@ -13,6 +13,7 @@ import * as s from "./schema.js";
 
 const requiredTables = [
   s.checkpoints,
+  s.inferenceBudgets,
   s.classifications,
   s.mailEvidenceVersions,
   s.mailRecoveryTargets,

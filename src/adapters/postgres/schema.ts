@@ -225,3 +225,18 @@ export const writeIntents = jev.table(
     check("intent_destination", sql`${t.destination} in ('todoist','drive')`),
   ],
 );
+
+export const inferenceBudgets = jev.table(
+  "inference_budgets",
+  {
+    id: text("id").primaryKey(),
+    limitNano: integer("limit_nano").notNull(),
+    usedNano: integer("used_nano").notNull(),
+  },
+  (t) => [
+    check(
+      "inference_allowance",
+      sql`${t.usedNano} >= 0 and ${t.usedNano} <= ${t.limitNano} and ${t.limitNano} <= 2000000000`,
+    ),
+  ],
+);
