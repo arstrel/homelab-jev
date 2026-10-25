@@ -58,7 +58,9 @@ The [incremental sync change](../add-incremental-mail-sync/proposal.md) implemen
 
 - [ ] 6.1 Implement the Markdown snapshot contract and dedicated stable Drive file; verify generation IDs, source/task links, sync timestamps, failures, and freshness-only publication on a no-new-mail cycle.
 - [ ] 6.2 Implement recoverable publication and configurable freshness checks; verify failed publication leaves prior metadata intact and stale snapshots trigger explicit fallback behavior.
-- [ ] 6.3 Save the existing Daily Inbox Digest and Daily Life Plan instructions and draft updated handoff instructions; verify each actual task context can retrieve the latest snapshot generation and live Todoist items before applying the updates.
+- [x] 6.3 Save the existing Daily Inbox Digest and Daily Life Plan instructions and draft updated handoff instructions; verify each actual task context can retrieve the latest snapshot generation and live Todoist items before applying the updates.
+
+The [scheduled handoff slice](../schedule-brief-handoff/proposal.md) preserves private prompt backups and appends verified instructions after exact-file/live-source probes. See [operational evidence](../../../docs/scheduled-brief-evidence.md); actual next-timer acceptance and the existing planner Drive-save limitation remain open.
 - [ ] 6.4 Integrate Todoist inventory, waiting/review states, Retro, and calendar block themes into daily-task instructions; verify a Home & Admin example selects fitting actions and leaves optional inventory optional.
 - [ ] 6.5 Document file ownership and rollback of the scheduled-task prompts; verify worker publication cannot overwrite existing plan/digest/retro artifacts and prior generated plans are not treated as completion evidence.
 

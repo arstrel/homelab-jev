@@ -1,6 +1,6 @@
 # Five-minute Gmail collector
 
-The deployment tooling schedules the existing bounded `mail:sync` command every five minutes. It reads Gmail and writes collection evidence/progress to PostgreSQL. Classification, Todoist capture, Gmail changes and Drive publication stay manual or planned. No Redis service or database migration is added.
+The deployment tooling schedules the existing bounded `mail:sync` command every five minutes. It reads Gmail and writes collection evidence/progress to PostgreSQL. Classification, Todoist capture and Gmail changes stay manual or planned. A separate [cached-only brief refresh](brief-refresh.md) schedules private Drive publication independently. No Redis service or database migration is added.
 
 ## Install after merge
 
