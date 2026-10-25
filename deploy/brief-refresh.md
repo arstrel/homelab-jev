@@ -63,7 +63,7 @@ launchctl bootout "gui/$(id -u)/com.arstrel.jev.brief-refresh"
 # Resume using enable + bootstrap above.
 ```
 
-Stopping preserves the artifact and ledger; after 15 minutes consumers label the old publication stale and use their original direct-source routine. To disable inference, stop this publisher, remove `--classify-pending` from its private plist, validate and resume the same migration-aware release. Restoring an old release requires schema compatibility; do not downgrade past migration 0005. Do not overwrite collector configuration or reverse migrations automatically. Keep private logs and rotate them during stopped-worker maintenance; no automatic retention service is added.
+Stopping preserves the artifact and ledger; after 15 minutes consumers label the old publication stale and use their original direct-source routine. To disable inference, stop this publisher, remove `--classify-pending` and also `--capture-tasks` if enabled from its private plist, validate and resume the same migration-aware release. Restoring an old release requires schema compatibility; do not downgrade past migration 0005. Do not overwrite collector configuration or reverse migrations automatically. Keep private logs and rotate them during stopped-worker maintenance; no automatic retention service is added.
 
 Observe two automatic generations, including a five-minute timer invocation after the initial load. Independently read back the exact owned file, matching generation and current source context. Keep source gaps visible. Actual scheduled daily consumption is a separate acceptance check recorded in [evidence](../docs/scheduled-brief-evidence.md).
 

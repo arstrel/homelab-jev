@@ -243,6 +243,10 @@ it("selects only recent classified current evidence for capture and persists ter
     expect(records).toHaveLength(1);
     const record = records[0];
     if (!record) throw new Error("fixture");
+    const retryAt = new Date(Date.parse(briefTime) + 3_600_000);
+    await session.record(record, "failed", retryAt);
+    expect(await session.select(since, new Date(briefTime))).toEqual([]);
+    expect(await session.select(since, retryAt)).toHaveLength(1);
     await session.record(record, "review", null);
     expect(await session.select(since, new Date(briefTime))).toEqual([]);
   });

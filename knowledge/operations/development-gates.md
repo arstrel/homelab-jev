@@ -51,7 +51,7 @@ x_jev_sources:
   - path: tests/adapters/drive-brief.test.ts
     sha256: 237288c05bf0e8138f88e7819a0f58fac03ac0945eccfbe8aa0929abe93de7d8
   - path: tests/integration/email-brief.test.ts
-    sha256: c8cb22c564d46803352951d066e3d97d04e3fd856b7b8449fcf0fd62d1945355
+    sha256: 28cb97e6e507e2d572a243a705a2bf92fc2d1d720787ca06d5f09a503470734b
   - path: tests/unit/todoist-brief.test.ts
     sha256: 0fc3a577b5fc653deeb775573efda07b99c72fcf590ab006718fa4cc387b517c
   - path: tests/adapters/todoist-brief.test.ts
@@ -67,7 +67,7 @@ x_jev_sources:
   - path: tests/adapters/gmail.test.ts
     sha256: 451a0241d05e52ad39055b9d01bf38fb8fbb52db7629099132215c6179ee4c03
   - path: tests/unit/automatic-capture.test.ts
-    sha256: 790b3752bf8409aeddbe71fba74f304b2ed2b02dabd53431de826f8895501e3d
+    sha256: 778530bf872e27e35e01c489d0f2f6e63ca6d9324fd0923c147e53580ab128ee
   - path: tests/adapters/automatic-capture.test.ts
     sha256: 664d8747eceb2401e16411506c251bec242809a700c2b88f24f727ee5e6a8da2
 ---

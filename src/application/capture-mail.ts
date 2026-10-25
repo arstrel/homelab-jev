@@ -128,7 +128,19 @@ export async function captureMail(
     }
     await deps.allowance.settleInference(answer.usage.input_tokens);
     report.inputTokens += answer.usage.input_tokens;
-    const current = await session.current(record.sourceId);
+    let fresh: CaptureInventory | undefined;
+    let current: Awaited<ReturnType<CaptureSession["current"]>>;
+    try {
+      if (answer.type === "candidate" || answer.type === "matched")
+        fresh = await remote.inventory(now);
+      // Read after the final provider call so changed mail cannot authorize a write.
+      current = await session.current(record.sourceId);
+    } catch (error) {
+      if (budget.signal.aborted) throw error;
+      report.failed++;
+      await session.record(record, "failed", new Date(now.getTime() + 3_600_000), answer);
+      break;
+    }
     if (
       !current ||
       fingerprint(current.evidence) !== record.fingerprint ||
@@ -147,15 +159,7 @@ export async function captureMail(
     }
     // Inventory changes invalidate the duplicate/routing decision. Preserve user
     // edits and review the case rather than writing against stale model context.
-    const fresh = await remote.inventory(now);
-    const latest = await session.current(record.sourceId);
-    if (
-      inventoryHash(fresh) !== inventoryHash(inventory) ||
-      !latest ||
-      fingerprint(latest.evidence) !== record.fingerprint ||
-      captureHash(record.fingerprint, latest.directions) !==
-        captureHash(record.fingerprint, conversation.directions)
-    ) {
+    if (!fresh || inventoryHash(fresh) !== inventoryHash(inventory)) {
       report.review++;
       await session.record(record, "review", null, answer);
       continue;

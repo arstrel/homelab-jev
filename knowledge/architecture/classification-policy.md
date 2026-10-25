@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:50:05Z
+  at: 2026-10-25T19:01:38Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -55,7 +55,7 @@ x_jev_sources:
   - path: src/adapters/postgres/email-brief.ts
     sha256: 480be952ed744105755a955e58e636d77d0269bb54d198f5a8a2b99764009e19
   - path: docs/automatic-mail-classification.md
-    sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
+    sha256: 6ed7e95d4dfe5a520a837ad8c62aac969e6ff7674e8ed071a4de86ffee2de9ce
   - path: src/cli-email-brief.ts
     sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: tests/unit/scheduled-email-brief.test.ts
@@ -65,9 +65,9 @@ x_jev_sources:
   - path: src/adapters/jev-capture.ts
     sha256: e2753f6ca0a71258c4b0cce39826dea29704d081d2d58fce5165aee8f3908ed9
   - path: src/application/capture-mail.ts
-    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
+    sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
   - path: docs/automatic-todoist-capture.md
-    sha256: 8b231fe4d9887c93c92d96acf48e44265440bdababbf7fb783e8b23aed761cc6
+    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
 ---
 
 # Typed classification and evidence policy
@@ -99,3 +99,5 @@ The opt-in capture pilot adds finite existing-task matching to source-supported 
 Low-confidence negative eligibility (none/resolved) also remains review-only; it cannot silently become a terminal no-action result.
 
 Complete-request validation precedes inference allowance reservation. Deterministic oversized input is terminal review-only for that evidence version and costs no credit; dispatched ambiguous failures retain their charge.
+
+After paid inference, any non-cancellation inventory/evidence verification-read failure records a one-hour deferral and stops the batch before task admission. Successful inference usage is settled once; a read outage does not immediately repeat that paid judgment on the next timer tick.

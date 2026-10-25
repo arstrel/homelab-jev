@@ -47,7 +47,7 @@ x_jev_sources:
   - path: docs/email-brief.md
     sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
   - path: src/application/capture-mail.ts
-    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
+    sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
   - path: src/adapters/jev-capture.ts
     sha256: e2753f6ca0a71258c4b0cce39826dea29704d081d2d58fce5165aee8f3908ed9
   - path: src/adapters/todoist-capture.ts
