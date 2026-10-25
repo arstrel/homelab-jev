@@ -53,7 +53,7 @@ x_jev_sources:
   - path: src/adapters/todoist-capture.ts
     sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
   - path: docs/automatic-capture-evidence.md
-    sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
+    sha256: ba920263f6910dd41b2d633734aad3b5e7f40baeab0bc0da999b3acad7c1e242
 ---
 
 # Configuration and private-data boundaries

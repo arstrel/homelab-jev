@@ -6,3 +6,4 @@
 - [x] 1.4 Run required quality gates, open a PR and inspect Copilot reviews with at most three fix loops; record remaining activation/quality boundaries.
 - [x] 1.5 Activate the reviewed pilot with a fresh source-time boundary and stable Retro exclusion, verify a real timer run and exact owned-file readback, record coverage limits, and correct the capture/no-write summary with a regression.
 - [x] 1.6 Avoid capture inventory reads until selected email passes local eligibility checks; verify idle/review-only batches and retain fresh pre-write inventory validation.
+- [x] 1.7 Deploy merged PR #29/#30 fixes to both native jobs, preserving configuration and ledger history; verify an actual timer invocation and independent owned-file readback, and record aggregate deployment evidence with remaining coverage limits.

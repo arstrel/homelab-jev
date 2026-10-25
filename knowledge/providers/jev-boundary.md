@@ -48,7 +48,7 @@ x_jev_sources:
   - path: src/domain/automatic-capture.ts
     sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: docs/automatic-capture-evidence.md
-    sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
+    sha256: ba920263f6910dd41b2d633734aad3b5e7f40baeab0bc0da999b3acad7c1e242
 ---
 
 # Jev adapter and judgment boundary

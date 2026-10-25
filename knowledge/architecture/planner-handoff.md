@@ -56,7 +56,7 @@ x_jev_sources:
   - path: docs/automatic-mail-classification.md
     sha256: 6ed7e95d4dfe5a520a837ad8c62aac969e6ff7674e8ed071a4de86ffee2de9ce
   - path: docs/automatic-capture-evidence.md
-    sha256: 1bcd2644ec0a175fc173ab9c3fd52d1108de68ff9ab14a50e7de4913abb00c78
+    sha256: ba920263f6910dd41b2d633734aad3b5e7f40baeab0bc0da999b3acad7c1e242
   - path: docs/automatic-todoist-capture.md
     sha256: 4500e3552d9904b415ce7d8de25e2d8c4cb15c3920091013d98b01d8f7c2a4fe
 ---

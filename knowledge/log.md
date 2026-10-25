@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-25 merged-fix deployment
+
+Deployed merged release `9cc381556a9da99a203e2fbd0f0f2bc1a1f15324` to both native jobs, preserving configuration except release selection, environment bytes, capture boundary, allowance and migration history. Observed initial load and subsequent genuine timer invocations, then independently read back the exact private owned Drive generation at 21:26:56 UTC. Current classification backlog was 685 versus 701 raw pending rows; 16 superseded rows remained stored. Capture selected zero records and made no hosted capture requests or task effects; no live HTTP tracing is claimed. Complete current Todoist context and zero retrieval gaps remain distinct from incomplete Retro coverage and unfinished useful capture/quality/lifecycle acceptance. This supersedes the pending-deployment status in the earlier entries below. Reviewed relevant claims and source snapshots, preserving human verification and review deadlines.
+
 ## 2026-10-25 current backlog and foundation cleanup
 
 `mail:status` now counts pending primary jobs bound to current source evidence, matching classifier identity while retaining deferred work. Unbound legacy jobs are reported separately; superseded rows remain stored and legacy raw `status` is unchanged. Removed unused foundation mutations/lookups and retained only production raw status. Direct disposable fixtures preserve schema-constraint coverage; active ingestion/sync/task adapters retain transaction and replay checks. Updated ledger/checkpoint/observation claims and replaced obsolete mutation provenance with the actual sync/task adapters. Reviewed only changed source snapshots, preserving review deadlines and human-verification metadata. These corrections await merged-release deployment; no live counts or provider effects are claimed.

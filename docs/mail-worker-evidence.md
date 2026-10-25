@@ -46,3 +46,9 @@ A concurrent manual invocation skipped with zero retrieval attempts and exit 0. 
 The collector is active independently of the editable checkout. Full catch-up/no-change acceptance and the broader classification/reconciliation/publication cycle remain unfinished. Parent task 2.4 and overall rollout stay open. Follow [deployment](../deploy/README.md) and [observation](mail-observation.md).
 
 Jev calls/spend for this collection deliverable: zero.
+
+## PR #29/#30 release upgrade — October 25
+
+Both native jobs were upgraded to reviewed merged release `9cc381556a9da99a203e2fbd0f0f2bc1a1f15324` on Node 24.21.0, following green merged-commit CI. Private configuration/rollback copies were saved before activation. The collector installer and publisher replacement changed only release paths/revision metadata; their 300-second cadence, flags, environment, capture boundary and $2 allowance were preserved. No migration or ledger cleanup was performed.
+
+The collector's initial load invocation advanced complete-evidence freshness to **21:20:19.066 UTC**. The next actual timer invocation advanced it again to **21:25:24.308 UTC**. Both had zero retrieval attempts, pending/retrying retrievals, new versions/jobs or downstream writes, and exit 0. Launchd reported two completed invocations on the new release; the second was observed without a manual trigger. Both error logs remained empty. These observations supersede only the older release selection and scoped collection state, not broader lifecycle or recovery-quality criteria. See [publisher and owned-file verification](automatic-capture-evidence.md).
