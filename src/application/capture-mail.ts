@@ -35,7 +35,7 @@ export async function captureMail(
     session: CaptureSession;
     allowance: Pick<PendingMailSession, "reserveInference" | "settleInference">;
     remote: CaptureRemote;
-    judge: (q: CaptureQuestion, s: AbortSignal) => Promise<unknown>;
+    prepare: (q: CaptureQuestion) => (s: AbortSignal) => Promise<unknown>;
     budget: MailBudget;
     now: Date;
   },
@@ -97,16 +97,27 @@ export async function captureMail(
       }
       continue;
     }
+    let question: CaptureQuestion;
+    let invoke: (signal: AbortSignal) => Promise<unknown>;
+    try {
+      question = captureQuestion(conversation, inventory);
+      // Build and validate the complete adapter request before charging credit.
+      invoke = deps.prepare(question);
+    } catch (error) {
+      if (budget.signal.aborted) throw error;
+      report.review++;
+      await session.record(record, "review", null);
+      continue;
+    }
     let answer: ReturnType<typeof captureAnswer>;
     try {
-      const question = captureQuestion(conversation, inventory);
       budget.assertActive();
       if (!(await deps.allowance.reserveInference())) {
         report.budgetExhausted = true;
         break;
       }
       report.newRequests++;
-      const raw = await budget.read(() => deps.judge(question, budget.signal));
+      const raw = await budget.read(() => invoke(budget.signal));
       budget.assertActive();
       answer = captureAnswer(raw, question);
     } catch (error) {

@@ -5,7 +5,7 @@ import { emailTaskRequest } from "./jev-email-tasks.js";
 
 export function jevCapture(key: string) {
   const client = jevClient(key);
-  return (question: CaptureQuestion, signal: AbortSignal) => {
+  return (question: CaptureQuestion) => {
     const base = emailTaskRequest(question);
     const request = {
       ...base,
@@ -27,6 +27,6 @@ export function jevCapture(key: string) {
       },
     };
     if (Buffer.byteLength(JSON.stringify(request)) > 32_768) throw new Error("input-too-large");
-    return client.systemOne(request, { signal });
+    return (signal: AbortSignal) => client.systemOne(request, { signal });
   };
 }

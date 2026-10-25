@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:38:32Z
+  at: 2026-10-25T18:50:05Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -57,17 +57,17 @@ x_jev_sources:
   - path: docs/automatic-mail-classification.md
     sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
   - path: src/cli-email-brief.ts
-    sha256: 60851a6968994b4f983070dcab5c5a6d631b292344b5339323afdb6d6226254e
+    sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: tests/unit/scheduled-email-brief.test.ts
     sha256: 2003a6d13f08af3ee07d194863a69435d1dd4d260c7cbf503608e2809188c5df
   - path: src/domain/automatic-capture.ts
     sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: src/adapters/jev-capture.ts
-    sha256: c24f33370498ddf03285d6bf32d90abcc790e20241cf6526db72453205608a0d
+    sha256: e2753f6ca0a71258c4b0cce39826dea29704d081d2d58fce5165aee8f3908ed9
   - path: src/application/capture-mail.ts
-    sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
+    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
   - path: docs/automatic-todoist-capture.md
-    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
+    sha256: 8b231fe4d9887c93c92d96acf48e44265440bdababbf7fb783e8b23aed761cc6
 ---
 
 # Typed classification and evidence policy
@@ -97,3 +97,5 @@ Scheduled preprocessing now verifies managed storage readiness while holding pub
 The opt-in capture pilot adds finite existing-task matching to source-supported eligibility/title/project selection. At most 100 open/recent-completed task titles enter a bounded request. Unknowns, contradictory choices, Inbox routing and confidence below 0.95 remain review-only. This provisional pilot cutoff is not calibrated accuracy or completion of the parent evaluation requirement. Code owns source-time admission, live inventory recheck, project IDs, the daily cap and all writes. See docs/automatic-todoist-capture.md.
 
 Low-confidence negative eligibility (none/resolved) also remains review-only; it cannot silently become a terminal no-action result.
+
+Complete-request validation precedes inference allowance reservation. Deterministic oversized input is terminal review-only for that evidence version and costs no credit; dispatched ambiguous failures retain their charge.

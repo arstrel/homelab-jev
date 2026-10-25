@@ -117,7 +117,7 @@ export async function runEmailBrief(
                     budget,
                     env.TODOIST_RETRO_PROJECT_ID?.trim(),
                   ),
-                  judge: jevCapture(key ?? ""),
+                  prepare: jevCapture(key ?? ""),
                   budget,
                   now: new Date(),
                 }),

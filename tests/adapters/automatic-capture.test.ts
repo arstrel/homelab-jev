@@ -152,7 +152,21 @@ it("sends finite existing-task choices and titles without provider IDs or descri
       });
     }),
   );
-  expect(await jevCapture("fake")(q, new AbortController().signal)).toMatchObject({
+  expect(await jevCapture("fake")(q)(new AbortController().signal)).toMatchObject({
     answers: { existing: { choice: "none" } },
   });
+});
+it("rejects the complete oversized request during preparation before any API call", () => {
+  const q = captureQuestion(taskConversation(), {
+    projects: taskProjects.slice(0, 2),
+    tasks: Array.from({ length: 40 }, (_, i) => ({
+      id: `task-${i}`,
+      projectId: "home",
+      title: `Task ${i}: ${"x".repeat(288)}`,
+      completed: false,
+      sourceIds: [],
+    })),
+  });
+  expect(Buffer.byteLength(JSON.stringify(q))).toBeLessThan(32_768);
+  expect(() => jevCapture("fake")(q)).toThrow("input-too-large");
 });

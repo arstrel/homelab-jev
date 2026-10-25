@@ -58,6 +58,7 @@ function setup() {
     settleInference: vi.fn(async () => {}),
   };
   const judge = vi.fn(async () => response());
+  const prepare = vi.fn(() => judge);
   const budget = new MailBudget();
   budgets.push(budget);
   const run = () =>
@@ -65,16 +66,17 @@ function setup() {
       session,
       remote,
       allowance,
-      judge,
+      prepare,
       budget,
       now: new Date("2026-10-11T12:00:00Z"),
     });
-  return { record, conversation, session, inventory, remote, allowance, judge, run };
+  return { record, conversation, session, inventory, remote, allowance, judge, prepare, run };
 }
 it("creates one source-supported task through durable admission and settles shared inference usage", async () => {
   const s = setup();
   expect(await s.run()).toMatchObject({ created: 1, newRequests: 1, ambiguous: false });
   expect(s.allowance.reserveInference).toHaveBeenCalledBefore(s.judge);
+  expect(s.prepare).toHaveBeenCalledBefore(s.allowance.reserveInference);
   expect(s.session.reserve).toHaveBeenCalledWith(
     expect.objectContaining({ projectId: "home", sourceId: "t-boiler" }),
     3,
@@ -159,6 +161,18 @@ it("refuses to spend without allowance", async () => {
   s.allowance.reserveInference.mockResolvedValue(false);
   expect(await s.run()).toMatchObject({ budgetExhausted: true, newRequests: 0 });
   expect(s.judge).not.toHaveBeenCalled();
+  expect(s.remote.create).not.toHaveBeenCalled();
+});
+it("keeps deterministic full-request validation failures review-only without reserving credit", async () => {
+  const s = setup();
+  s.prepare.mockImplementation(() => {
+    throw new Error("input-too-large");
+  });
+  expect(await s.run()).toMatchObject({ review: 1, failed: 0, newRequests: 0 });
+  expect(s.allowance.reserveInference).not.toHaveBeenCalled();
+  expect(s.allowance.settleInference).not.toHaveBeenCalled();
+  expect(s.judge).not.toHaveBeenCalled();
+  expect(s.session.record).toHaveBeenCalledWith(s.record, "review", null);
   expect(s.remote.create).not.toHaveBeenCalled();
 });
 it("retains ambiguous inference charges and defers failed work", async () => {

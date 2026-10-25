@@ -41,7 +41,7 @@ x_jev_sources:
   - path: deploy/brief-refresh.md
     sha256: 94128809110944b597666a5b17c25a39195a9cc8c4c5e7b6389000cc89c97507
   - path: docs/automatic-todoist-capture.md
-    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
+    sha256: 8b231fe4d9887c93c92d96acf48e44265440bdababbf7fb783e8b23aed761cc6
 ---
 
 # Native Node releases and scheduling

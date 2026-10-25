@@ -44,7 +44,7 @@ x_jev_sources:
   - path: src/adapters/todoist-capture.ts
     sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
   - path: docs/automatic-todoist-capture.md
-    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
+    sha256: 8b231fe4d9887c93c92d96acf48e44265440bdababbf7fb783e8b23aed761cc6
 ---
 
 # Existing project routing and task kinds

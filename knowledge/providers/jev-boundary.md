@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:27:08Z
+  at: 2026-10-25T18:50:05Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -44,7 +44,7 @@ x_jev_sources:
   - path: src/domain/retro-review.ts
     sha256: 750a144c5d8cf6df1e99d7b7115c6afa1b394e11323c49c354c3700eb4477148
   - path: src/adapters/jev-capture.ts
-    sha256: c24f33370498ddf03285d6bf32d90abcc790e20241cf6526db72453205608a0d
+    sha256: e2753f6ca0a71258c4b0cce39826dea29704d081d2d58fce5165aee8f3908ed9
   - path: src/domain/automatic-capture.ts
     sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: docs/automatic-capture-evidence.md
@@ -66,3 +66,5 @@ The manual [Drive brief](/architecture/planner-handoff.md) now reuses these tria
 Explicit manual Retro review adds finite task-kind, task/relation and source-excerpt choices on pinned jev-1.13.0. It sends selected Retro text and current candidate task titles, omitting dedicated IDs, task descriptions and attachments. Full serialized requests are limited to 32 KiB, with strict returned model/answer/criterion/probability/usage validation. Attempts share the publisher's cap/deadline; retries remain disabled. Interpretations are ephemeral, and repeated explicit review is charged again. Conservative uncalibrated 0.85 gating yields human-review suggestions only. See [Retro](/architecture/retro-feedback.md).
 
 Automatic pending classification now runs under the persistent lifetime allowance. The opt-in capture adapter reuses the pinned task question, adds one finite existing-task choice, and sends only email evidence, allowed project context and up to 100 task-title/completed hints under the complete 32 KiB request bound. Provider IDs and task descriptions stay local. Strict answer validation and provisional 0.95 gating permit review or bounded creation; the shared allowance is reserved before inference and ambiguous usage remains charged. A two-request read-only shadow check returned none/review and made zero Todoist writes. This is contract evidence, not a quality benchmark. See docs/automatic-capture-evidence.md.
+
+Capture request preparation builds and bounds the complete SDK request before the application reserves allowance. Only the returned invocation performs hosted inference. Deterministic preparation failures are visible review cases without spending or hourly retries.

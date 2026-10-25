@@ -37,7 +37,7 @@ x_jev_sources:
   - path: docs/email-tasks.md
     sha256: 3df102bf99fba1b700d31d9635ce5d3c77cb8e3ea4b1aaa923350b24271019a3
   - path: src/cli-email-brief.ts
-    sha256: 60851a6968994b4f983070dcab5c5a6d631b292344b5339323afdb6d6226254e
+    sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: src/application/email-brief.ts
     sha256: 1b5ac51f57c8411e7bf5d48e2249ccf039214ffd856e99be1724d70e6cf98963
   - path: src/adapters/todoist-brief.ts
@@ -47,9 +47,9 @@ x_jev_sources:
   - path: docs/email-brief.md
     sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
   - path: src/application/capture-mail.ts
-    sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
+    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
   - path: src/adapters/jev-capture.ts
-    sha256: c24f33370498ddf03285d6bf32d90abcc790e20241cf6526db72453205608a0d
+    sha256: e2753f6ca0a71258c4b0cce39826dea29704d081d2d58fce5165aee8f3908ed9
   - path: src/adapters/todoist-capture.ts
     sha256: 73f5770bd2ceb8d8f74f0e9bbfa4730c012187defc625ca344771d4336f74dba
   - path: docs/automatic-capture-evidence.md

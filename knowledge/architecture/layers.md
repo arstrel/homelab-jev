@@ -53,7 +53,7 @@ x_jev_sources:
   - path: src/domain/email-brief.ts
     sha256: 6d0919c76180ed5192a304028b75ad55f9a3fc1025d4c1b50be2c8a5a46da7b4
   - path: src/cli-email-brief.ts
-    sha256: 60851a6968994b4f983070dcab5c5a6d631b292344b5339323afdb6d6226254e
+    sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: src/adapters/drive-brief.ts
     sha256: 808826c574c8867edfee2ef3aabc700d739a4f6f7dc82f0b6200159c458277b6
   - path: src/adapters/postgres/email-brief.ts
@@ -67,7 +67,7 @@ x_jev_sources:
   - path: src/application/review-retro.ts
     sha256: 18a777d202fc3f64612316601ad6b77df0767796c5626e36851b94524bfa4976
   - path: src/application/capture-mail.ts
-    sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
+    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
   - path: src/domain/automatic-capture.ts
     sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: src/adapters/postgres/automatic-capture.ts

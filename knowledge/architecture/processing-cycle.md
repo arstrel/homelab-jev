@@ -34,13 +34,13 @@ x_jev_sources:
   - path: deploy/brief-refresh.md
     sha256: 94128809110944b597666a5b17c25a39195a9cc8c4c5e7b6389000cc89c97507
   - path: src/cli-email-brief.ts
-    sha256: 60851a6968994b4f983070dcab5c5a6d631b292344b5339323afdb6d6226254e
+    sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: src/application/capture-mail.ts
-    sha256: 182ee519a613a3e87adee05bdba8f86dca632348dd12b47679c1276dc2259573
+    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
   - path: docs/automatic-capture-evidence.md
     sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
   - path: docs/automatic-todoist-capture.md
-    sha256: fcdfa9ddc123dc963b3968d753d9a0273f2060f289eb2c4eba3e681f776074ab
+    sha256: 8b231fe4d9887c93c92d96acf48e44265440bdababbf7fb783e8b23aed761cc6
 ---
 
 # Five-minute processing cycle

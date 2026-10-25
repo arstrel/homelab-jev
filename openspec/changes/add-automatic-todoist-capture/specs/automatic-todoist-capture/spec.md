@@ -5,7 +5,7 @@ Capture a bounded number of useful recent email obligations into existing Todois
 ## ADDED Requirements
 
 ### Requirement: Explicit bounded automatic admission
-The system SHALL require explicit enablement and a source-time boundary, examine at most five current conversations per cycle, and admit at most three new Todoist creation intents in a rolling 24-hour window. Shared lifetime inference admission SHALL precede hosted calls.
+The system SHALL require explicit enablement and a source-time boundary, examine at most five current conversations per cycle, and admit at most three new Todoist creation intents in a rolling 24-hour window. The complete hosted request SHALL be validated before shared lifetime inference admission, which SHALL precede hosted calls. Deterministic input failures SHALL remain review-only until input changes without reserving inference credit.
 
 #### Scenario: Historical backlog or exhausted cap
 - **WHEN** source evidence predates enablement or the creation allowance is exhausted
