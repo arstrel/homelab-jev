@@ -8,6 +8,7 @@ import { briefDatabase } from "./adapters/postgres/email-brief.js";
 import { mailStatusReader } from "./adapters/postgres/mail-status.js";
 import { todoistBrief } from "./adapters/todoist-brief.js";
 import { todoistRetro } from "./adapters/todoist-retro.js";
+import { classifyPendingMail } from "./application/classify-pending-mail.js";
 import {
   type BriefOptions,
   publishEmailBrief,
@@ -21,10 +22,11 @@ export function briefOptions(args: readonly string[]): BriefOptions {
   for (let i = 0; i < args.length; i++) {
     const flag = args[i],
       value = args[i + 1];
-    if (flag === "--retro-review") {
+    if (flag === "--retro-review" || flag === "--classify-pending") {
       if (seen.has(flag)) throw new ConfigurationError(["brief:publish options"]);
       seen.add(flag);
-      o.retroReview = true;
+      if (flag === "--classify-pending") o.classifyPending = true;
+      else o.retroReview = true;
       continue;
     }
     if (
@@ -58,12 +60,33 @@ export async function runEmailBrief(
   const auth = googleAuth(env);
   const key = env.JEV_API_KEY?.trim();
   const todoistToken = env.TODOIST_API_TOKEN?.trim();
-  if (options.maxNew && !key) throw new ConfigurationError(["JEV_API_KEY"]);
+  if ((options.maxNew || options.classifyPending) && !key)
+    throw new ConfigurationError(["JEV_API_KEY"]);
   const client = connect(url);
   try {
-    return await publishEmailBrief(options, {
-      database: briefDatabase(client),
-      status: mailStatusReader(client),
+    const database = briefDatabase(client);
+    const status = mailStatusReader(client);
+    let preprocessing:
+      | Awaited<ReturnType<typeof classifyPendingMail>>
+      | { overlapping: true }
+      | { failed: number }
+      | undefined;
+    if (options.classifyPending) {
+      try {
+        preprocessing = (await database.exclusive(async (session, ownership) => {
+          const combinedSignal = AbortSignal.any([signal, ownership]);
+          combinedSignal.throwIfAborted();
+          if ((await status.read(new Date())).schemaState !== "ready")
+            throw new Error("schema-not-ready");
+          return classifyPendingMail(session, jevTriage(key ?? ""), new Date(), combinedSignal);
+        })) ?? { overlapping: true };
+      } catch {
+        preprocessing = { failed: 1 };
+      }
+    }
+    const report = await publishEmailBrief(options, {
+      database,
+      status,
       triage: jevTriage(key ?? "unused-cached-only"),
       ...(key ? { retroJudge: jevRetro(key) } : {}),
       drive: (budget) => driveBrief(auth, budget),
@@ -77,6 +100,17 @@ export async function runEmailBrief(
       clock: { now: () => new Date(), id: randomUUID },
       signal,
     });
+    return {
+      ...report,
+      ...(preprocessing ? { preprocessing } : {}),
+      exitCode:
+        report.exitCode ||
+        (preprocessing &&
+        (("failed" in preprocessing && preprocessing.failed) ||
+          ("budgetExhausted" in preprocessing && preprocessing.budgetExhausted))
+          ? 1
+          : 0),
+    };
   } finally {
     await client.close();
   }

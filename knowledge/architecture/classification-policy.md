@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.706Z
+  at: 2026-10-25T17:34:46Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -43,13 +43,23 @@ x_jev_sources:
   - path: src/domain/email-brief.ts
     sha256: 8ce409f2ead0df548d76472e94994940913ebcc21549e10d642da992987be9fa
   - path: src/application/email-brief.ts
-    sha256: 14cefe6cfebfe20a1cafcc99e26f6cba0cc4926060826587ec92d6d64bc2240e
+    sha256: 6c9b2f4d528095c31db200a8ca3e9837b14c80ee9d33197c29d3561111bb84fd
   - path: docs/email-brief.md
     sha256: f8e2fe1ef14a906ebaf8a5313acfc012ccae207bcc400acf9c75fbbeb464e038
   - path: src/domain/retro-review.ts
     sha256: 750a144c5d8cf6df1e99d7b7115c6afa1b394e11323c49c354c3700eb4477148
   - path: src/application/review-retro.ts
     sha256: 18a777d202fc3f64612316601ad6b77df0767796c5626e36851b94524bfa4976
+  - path: src/application/classify-pending-mail.ts
+    sha256: 6724c301287e07d370fc003942d529ab720b4a6774bac54cbac76f92eea02d71
+  - path: src/adapters/postgres/email-brief.ts
+    sha256: f03f365c18795f7a5e0583a3d5b8d9b97ddc5246db7851a44806596ff298ee66
+  - path: docs/automatic-mail-classification.md
+    sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
+  - path: src/cli-email-brief.ts
+    sha256: 27e0097c16ecb2c393c1cdcc20cc8f3bf520fc479555f77de831388fc653c18c
+  - path: tests/unit/scheduled-email-brief.test.ts
+    sha256: c3ddcdb1435b994cc6fa4c5d60da3beeccaf593a0da5a8169a60b9f43d30e4dd
 ---
 
 # Typed classification and evidence policy
@@ -71,3 +81,7 @@ See [Jev adapter](/providers/jev-boundary.md), [evaluation](/operations/classifi
 The manual [Drive brief](planner-handoff.md) now saves successful typed triage and deterministic owner exclusions using exact evidence/direction/model/policy identity. Saving a judgment and completing its exact-bound job is atomic. Unchanged publication reuses saved decisions; invalid/provider failures do not complete jobs. Waiting has priority over attention; unknowns and resolution suggestions appear as review cases. This bounded email artifact does not complete parent classification/corrections/evaluation or authorize automatic capture.
 
 The manual [Retro review](retro-feedback.md) now implements bounded finite task-kind and specific candidate/relation/excerpt choices under retro-review/v1. Unknown/contradictory/low-confidence choices remain uncertain. A provisional 0.85 threshold is uncalibrated and authorizes only source-linked review suggestions. Code preserves reusable/recurring work and broad goals; no task effects are connected. Full matching and calibrated automatic reconciliation remain planned.
+
+The optional scheduled --classify-pending path processes up to ten due current jobs before cached publication, independently of display membership. Exact decisions and owner exclusions reuse the existing save contract; failures defer one hour. A persistent $2 lifetime allowance reserves maximum request cost before inference and retains ambiguous charges. It creates no tasks and does not calibrate automatic capture. Activation requires the merged runtime and migration. See docs/automatic-mail-classification.md.
+
+Scheduled preprocessing now verifies managed storage readiness while holding publisher ownership before selecting jobs, reserving inference cost or saving decisions. Non-ready or unreadable storage prevents preprocessing; publication retains its independent readiness check. See src/cli-email-brief.ts and the scheduled composition regressions.

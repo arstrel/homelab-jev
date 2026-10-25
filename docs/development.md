@@ -71,6 +71,12 @@ Start a short-lived branch from updated main, commit after offline checks, push 
 
 Main now requires both named GitHub Actions checks with administrator enforcement and up-to-date branches. A controlled failing PR verified merge blocking. A fine-grained GitHub token needs repository-scoped Workflows read/write to publish workflow changes and Administration read/write to configure branch protection. Actual evidence and remaining connection prerequisites are recorded in [foundation evidence](foundation-evidence.md).
 
+### Copilot review gate
+
+After opening a PR and after every push, inspect Copilot's summary, inline threads and conversation comments against the current changes. Fix yellow/medium/warning and red/high/error findings and run appropriate regression checks before pushing. CI success alone does not mean review is complete; pending/absent reviews remain pending. A summary that omits duplicate comments does not resolve carried-forward findings. Explain evidence for an incorrect or blocked finding explicitly.
+
+Use at most **three fix loops per PR**: one batch of fixes, a push, then Copilot re-review is one loop. The initial review and documentation-only pushes do not add loops. Record `Copilot-Fix-Loop: N/3` in fix commit trailers so the count survives later sessions. If findings remain after loop three, stop before another patch cycle, reconsider the root cause and approach, and present a simpler or materially different design to the user. Do not restart the count in a replacement PR.
+
 Update direct packages intentionally with exact versions and the lockfile. Review `npm audit`, upstream release notes, generated SQL changes and the relevant SDK/database tests. Never run blind `npm audit fix --force`; it currently suggests unrelated older major versions of OpenSpec/Drizzle. Dependency findings and limitations are recorded in the evidence report. Review coverage to choose meaningful new behavior tests; no arbitrary global percentage replaces scenario checks.
 
 ## OKF context

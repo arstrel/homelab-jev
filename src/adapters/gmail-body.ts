@@ -101,12 +101,13 @@ function addresses(input: string): Address[] {
 function attachment(part: Part): boolean {
   return !!part.filename || /^attachment(?:\s*;|$)/i.test(value(part, "content-disposition"));
 }
-function select(part: Part): Part[] | null {
+function select(part: Part, rejected: ReadonlySet<Part>): Part[] | null {
   if (attachment(part)) return [];
+  if (rejected.has(part)) return null;
   const mime = part.mimeType.toLowerCase();
   if (mime === "text/plain" || mime === "text/html") return [part];
   if (mime === "multipart/alternative") {
-    const choices = part.parts.map(select);
+    const choices = part.parts.map((child) => select(child, rejected));
     return (
       choices.find((choice) => choice?.some((p) => p.mimeType.toLowerCase() === "text/plain")) ??
       choices.find((choice) => choice && choice.length > 0) ??
@@ -117,7 +118,7 @@ function select(part: Part): Part[] | null {
   if (mime.startsWith("multipart/")) {
     const selected: Part[] = [];
     for (const child of part.parts) {
-      const choice = select(child);
+      const choice = select(child, rejected);
       if (choice === null) return null;
       selected.push(...choice);
     }
@@ -146,15 +147,18 @@ function attachments(part: Part): AttachmentMetadata[] {
   return part.parts.flatMap(attachments);
 }
 const truncated = "JEV_HTML_COVERAGE_LIMIT";
-export async function normalizeBody(
+async function normalizeRepresentation(
   messageId: string,
   payload: Part,
   budget: MailBudget,
   getTextPart: (messageId: string, attachmentId: string) => Promise<unknown>,
   metadata: AttachmentMetadata[],
+  rejected: Set<Part>,
+  cache: Map<Part, { text: string; bytes: number }>,
 ): Promise<MailBody> {
+  let activePart: Part | undefined;
   try {
-    const selected = select(payload);
+    const selected = select(payload, rejected);
     if (selected === null) return { status: "unsupported" };
     if (!selected.length) {
       return metadata.length &&
@@ -166,12 +170,24 @@ export async function normalizeBody(
     let decodedSize = 0;
     for (const part of selected) {
       budget.assertActive();
+      activePart = part;
+      const cached = cache.get(part);
+      if (cached) {
+        if (cached.bytes > budget.limits.maxBodyBytes - decodedSize)
+          throw new MailReadError("too-large");
+        decodedSize += cached.bytes;
+        texts.push(cached.text);
+        continue;
+      }
       if ((part.body?.size ?? 0) > budget.limits.maxBodyBytes - decodedSize)
         throw new MailReadError("too-large");
       const body = part.body?.attachmentId
         ? parse(bodySchema, await getTextPart(messageId, part.body.attachmentId))
         : part.body;
-      if (!body || (body.data === undefined && body.size !== 0)) return { status: "unavailable" };
+      if (!body || (body.data === undefined && body.size !== 0)) {
+        rejected.add(part);
+        return { status: "unavailable" };
+      }
       const bytes = base64(body.data ?? "", budget.limits.maxBodyBytes - decodedSize);
       // Gmail can understate size; retain the check for a possible short read.
       if (body.size !== undefined && body.size > bytes.length)
@@ -186,7 +202,8 @@ export async function normalizeBody(
               baseElements: { selectors: [], returnDomByDefault: true },
               limits: {
                 maxInputLength: budget.limits.maxBodyBytes,
-                maxDepth: budget.limits.maxDepth,
+                // HTML table layouts are much deeper than MIME envelopes.
+                maxDepth: 200,
                 maxChildNodes: 10_000,
                 ellipsis: truncated,
               },
@@ -199,9 +216,11 @@ export async function normalizeBody(
               ],
             })
           : decoded;
-      if (text.includes(truncated)) return { status: "too-large" };
+      if (text.includes(truncated)) throw new MailReadError("too-large");
+      cache.set(part, { text, bytes: bytes.length });
       texts.push(text);
     }
+    activePart = undefined;
     const text = texts.join("\n\n").replace(/\r\n?/g, "\n");
     budget.reserveBody(Math.max(decodedSize, Buffer.byteLength(text)));
     return { status: text.length ? "complete" : "empty", text };
@@ -213,6 +232,7 @@ export async function normalizeBody(
         error.reason === "rate-limited")
     )
       throw error;
+    if (activePart) rejected.add(activePart);
     if (error instanceof MailReadError && error.reason === "too-large")
       return { status: "too-large" };
     if (
@@ -223,6 +243,37 @@ export async function normalizeBody(
     )
       return { status: "unavailable" };
     return { status: "unsupported" };
+  }
+}
+
+export async function normalizeBody(
+  messageId: string,
+  payload: Part,
+  budget: MailBudget,
+  getTextPart: (messageId: string, attachmentId: string) => Promise<unknown>,
+  metadata: AttachmentMetadata[],
+): Promise<MailBody> {
+  const rejected = new Set<Part>();
+  const cache = new Map<Part, { text: string; bytes: number }>();
+  let firstFailure: MailBody | undefined;
+  // Reject only the failed leaf. Each alternative container independently keeps
+  // its preferred valid representation, including valid siblings. Cache good
+  // parts so retries do not reread external text or double-count evidence bytes.
+  while (true) {
+    budget.assertActive();
+    const previous = rejected.size;
+    const result = await normalizeRepresentation(
+      messageId,
+      payload,
+      budget,
+      getTextPart,
+      metadata,
+      rejected,
+      cache,
+    );
+    if (result.status === "complete" || result.status === "empty") return result;
+    firstFailure ??= result;
+    if (rejected.size === previous || select(payload, rejected) === null) return firstFailure;
   }
 }
 

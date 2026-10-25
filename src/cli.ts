@@ -7,7 +7,7 @@ import { status } from "./application/status.js";
 import { databaseUrl, diagnostic } from "./config.js";
 
 const help =
-  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:status\n       jev mail:tasks preview [--offset 10]\n       jev mail:tasks apply <file> --approve 1,3\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev mail:sync [--days 30] [--max-pages 5] [--max-threads 20]\n       jev mail:classify [--max-jobs 5] [--model jev-1.13.0]\n       jev brief:publish [--max-conversations 10] [--days 7] [--max-new 10] [--retro-review]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
+  "Jev preprocessing\nUsage: jev <status|db:check|db:migrate|connections>\n       jev mail:status\n       jev mail:tasks preview [--offset 10]\n       jev mail:tasks apply <file> --approve 1,3\n       jev mail:preview [--days 30] [--max-threads 20]\n       jev mail:ingest [--days 30] [--max-threads 20]\n       jev mail:sync [--days 30] [--max-pages 5] [--max-threads 20]\n       jev mail:classify [--max-jobs 5] [--model jev-1.13.0]\n       jev brief:publish [--max-conversations 10] [--days 7] [--max-new 10] [--retro-review] [--classify-pending]\n       jev --help | --version\nCycle processing is scheduled for Sections 2–7 and is not yet available.\nLoad credentials explicitly: node --env-file=.env dist/cli.js <command>";
 async function main() {
   const [command, ...extra] = process.argv.slice(2);
   if (command === "mail:status") {

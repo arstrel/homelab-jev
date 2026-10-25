@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T04:10:40.938Z
+  at: 2026-10-25T17:11:09Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -25,7 +25,7 @@ sources:
     title: src/adapters/postgres/client.ts
 x_jev_sources:
   - path: src/adapters/postgres/schema.ts
-    sha256: 24dbe743ecb812b02c3250cf7315edd142c4dfdecbec1edfe65396f3766c39f5
+    sha256: 072baf9d636dc10659c4cb1501973534164388c2c58565d6b5ac89b2462218a8
   - path: src/adapters/postgres/repositories.ts
     sha256: 3b180be48d0705cc565ec4b6e48293f83a3f1b1ef634c5d792675f69bc790414
   - path: src/adapters/postgres/client.ts
@@ -37,7 +37,9 @@ x_jev_sources:
   - path: src/adapters/postgres/mail-sync.ts
     sha256: da9949dd1e99d00b259c27dbfe9b6b1f73522b2a2aa8bb45273d987cd4e24b77
   - path: src/adapters/postgres/email-brief.ts
-    sha256: 21166686962ee9a41f1c7dcc9e240072887895023ef34e5d5869786a6be615ce
+    sha256: f03f365c18795f7a5e0583a3d5b8d9b97ddc5246db7851a44806596ff298ee66
+  - path: src/application/classify-pending-mail.ts
+    sha256: 6724c301287e07d370fc003942d529ab720b4a6774bac54cbac76f92eea02d71
 ---
 
 # PostgreSQL processing ledger
@@ -46,7 +48,7 @@ Drizzle with pg defines the worker-owned `jev` schema. Checkpoints track mailbox
 
 Ingestion stores source changes, jobs and the checkpoint in one transaction. This gives a foundation for [checkpoint safety](gmail-checkpoints.md). Repositories also expose link, suppress, intent and settlement operations. These primitives do not yet implement the complete [remote write protocol](remote-write-safety.md).
 
-The pool uses bounded connection and statement timeouts. Remote API calls belong outside transactions. Ledger status counts rows, including all write intents; it is not a provider freshness report. Pending-job scheduling and reconciliation are future use cases.
+The pool uses bounded connection and statement timeouts. Remote API calls belong outside transactions. Ledger status counts rows, including all write intents; it is not a provider freshness report. Bounded pending-job classification is implemented as opt-in publisher preprocessing; reconciliation remains planned.
 
 Manual [durable ingestion](mail-ingestion.md) now stores immutable complete conversation payloads keyed by mailbox/thread/fingerprint and binds jobs to exact versions. Composite foreign keys prevent mismatched bindings; an UPDATE-rejection trigger protects stored payloads. Latest observations live separately on source rows. Replays and overlapping batches deduplicate versions/jobs; older evidence remains available to its original job. Legacy unbound jobs return missing evidence until their exact version is recovered. This is processing storage, not another task UI.
 
@@ -59,3 +61,5 @@ The separate [manual sync path](mail-sync.md) stores discovery phase/anchor/cont
 DB-only [diagnostics](/operations/mail-observation.md) compare managed migration history and required structures without applying migrations, then read one read-only repeatable snapshot. Retrieval gaps and pending/unbound classification jobs are separate aggregates. No new schema or evidence store is added.
 
 Manual [brief publication](planner-handoff.md) reuses existing classifications and write intents without a migration. Its dedicated session lock is distinct from collection. Each saved exact-input judgment and bound-job completion share one transaction; remote calls occur outside transactions. One unique drive intent reserves the destination ID before creation and retains the prior successful generation/time through ambiguous updates. This is application-specific recovery, not a cross-service transaction or general reconciliation engine.
+
+The optional scheduled classifier reuses current exact-bound jobs and saved brief judgments. New `inference_budgets` stores one stable lifetime allowance in integer nanodollars: admission atomically reserves maximum request cost; valid usage settles once, while crashes and ambiguous failures retain the charge. Queue deferral uses existing attempts/available-at fields. This is a small local spending ledger, with provider calls outside transactions. See docs/automatic-mail-classification.md.

@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T04:14:23Z
+  at: 2026-10-25T17:34:46Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -27,9 +27,13 @@ x_jev_sources:
   - path: src/adapters/gmail.ts
     sha256: 87224a07d772828108d8ce67b295a22a1656802327116f63a750c280bafca0ae
   - path: src/adapters/gmail-body.ts
-    sha256: ac91de4980dc81ce69b679d311abeb8d528579ded41a9bbfcd35081fed88e480
+    sha256: 564b6c74ee666f0abfdf62ef13dd9b82d080df3594c2a53d835fa7e8485d7042
   - path: docs/gmail-preview.md
-    sha256: 5b4a16300c1aa2fb5346dc4a83d8ecdfa1f166d503627fb08fbb218a0f4e0c87
+    sha256: 282e6eaa1fea787e4b31906bfd5590131a707e1d6edd820d37bc28274ef0609a
+  - path: docs/automatic-mail-classification.md
+    sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
+  - path: tests/adapters/gmail.test.ts
+    sha256: 451a0241d05e52ad39055b9d01bf38fb8fbb52db7629099132215c6179ee4c03
 ---
 
 # Bounded Gmail conversation evidence
@@ -40,7 +44,7 @@ The Gmail adapter validates identities/timestamps, decodes supported primary tex
 
 Preview, ingestion and incremental sync share whole-thread eligibility: any non-draft Spam/Trash message excludes the conversation. Recent-window discovery additionally requires a recent non-draft message; history and mapped recovery can retain older threads.
 
-Actual decoded bytes enforce body limits independently of provider size metadata. Live diagnosis found complete UTF-8 bodies slightly longer than Gmail's declared count; normalization now retains all delivered text in that case. Shorter-than-declared bodies remain unsupported as possible truncation. Inline and separately stored text use the same check; transport, fatal decoding and actual-byte bounds remain enforced.
+Actual decoded bytes enforce body limits independently of provider size metadata. Live diagnosis found complete UTF-8 bodies slightly longer than Gmail's declared count; normalization now retains all delivered text in that case. Shorter-than-declared representations remain unsupported as possible truncation; a complete HTML MIME alternative can supply the body without accepting that short representation. Inline and separately stored text use the same check; transport, fatal decoding and actual-byte bounds remain enforced.
 
 Pure v1 fingerprints cover complete normalized material, with canonical message/address/attachment order. Labels, read state, observation time, history IDs and decision policy are excluded. Partial bodies receive no complete fingerprint. A thread is evidence, not necessarily one obligation. See [layers](layers.md), [checkpoint safety](gmail-checkpoints.md), [uncertainty](uncertainty.md), and [private-data boundaries](/operations/secret-handling.md).
 
@@ -49,3 +53,7 @@ The bounded live sample retrieved 20 conversations, with 17 complete bodies and 
 The reader also exposes bounded profile/history operations for [manual sync](mail-sync.md). Preview still performs no persistent writes; history-expired is a distinct fixed category from a missing full thread.
 
 Gmail request starts now use one invocation-local queue with a 1.5-second minimum gap. Structured HTTP 429 or known HTTP 403 rate-limit reasons stop the reader as `rate-limited`; body normalization preserves the signal. Preview stops new selection after throttling while retaining already-started successful evidence. Waiting shares cancellation/deadline limits. Other clients/processes are outside this pacing scope.
+
+HTML conversion now has an independent 200-level DOM limit; MIME nesting stays at 20. Ordinary email table layouts previously hit the shared shallow depth bound and were retried indefinitely. Byte and child-node truncation limits remain enforced. Complete alternatives preserve mandatory mixed sections and encrypted gaps. The October 25 bounded live retry cleared all 101 pending retrievals and advanced actual evidence freshness; recurring rollout remains a merged-release step. See docs/automatic-mail-evidence.md for scope and counts.
+
+MIME recovery rejects only failed text leaves and reselects each alternative container independently, preserving already-valid plain siblings and required mixed sections. Successfully decoded parts are cached per message; retries do not reread external text or reserve evidence bytes twice. Mixed independently recoverable alternatives and exact byte-accounting regressions cover the PR review correction.

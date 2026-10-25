@@ -301,7 +301,7 @@ it("rejects excessive nesting, message counts and attachment metadata", async ()
   await expect(missing.mail.readThreadEvidence("t-boiler")).rejects.toThrow("invalid-data");
 });
 it("detects HTML depth truncation and aggregate byte limits", async () => {
-  const html = `${"<div>".repeat(25)}keep${"</div>".repeat(25)}`;
+  const html = `${"<div>".repeat(205)}keep${"</div>".repeat(205)}`;
   const deep = setup(single(textPart(html, "text/html")));
   expect((await deep.mail.readThreadEvidence("t-boiler")).evidence.messages[0]?.body.status).toBe(
     "too-large",
@@ -547,4 +547,113 @@ it("preserves unread inline calendar metadata without interpreting or fetching i
     { partId: "1", filename: "", mimeType: "text/calendar", size: 20 },
   ]);
   expect(read.evidence.coverage.attachmentContents).toBe("not-read");
+});
+
+it("reads ordinary deeply nested HTML without relaxing MIME or byte bounds", async () => {
+  const html = `${"<table><tr><td>".repeat(15)}keep all text${"</td></tr></table>".repeat(15)}`;
+  const { mail } = setup(single(textPart(html, "text/html")));
+  const read = await mail.readThreadEvidence("t-boiler");
+  expect(read.evidence.coverage.messageBodies).toBe("complete");
+  expect(read.evidence.messages[0]?.body).toEqual({ status: "complete", text: "keep all text" });
+});
+
+it("uses complete HTML alternative when preferred plain data appears short, preserving mixed sections", async () => {
+  const { mail } = setup(
+    single({
+      mimeType: "multipart/mixed",
+      parts: [
+        {
+          mimeType: "multipart/alternative",
+          parts: [
+            textPart("Short", "text/plain", {
+              body: { size: 8, data: Buffer.from("Short").toString("base64url") },
+            }),
+            textPart("<p>Complete alternative</p>", "text/html"),
+          ],
+        },
+        textPart("Required mixed section"),
+      ],
+    }),
+  );
+  const read = await mail.readThreadEvidence("t-boiler");
+  expect(read.evidence.messages[0]?.body).toEqual({
+    status: "complete",
+    text: "Complete alternative\n\nRequired mixed section",
+  });
+  expect(read.evidence.coverage.messageBodies).toBe("complete");
+});
+it("does not turn two incomplete MIME alternatives into complete coverage", async () => {
+  const { mail } = setup(
+    single({
+      mimeType: "multipart/alternative",
+      parts: [
+        textPart("short", "text/plain", { body: { size: 100, data: "eA" } }),
+        textPart(`${"<div>".repeat(205)}truncated${"</div>".repeat(205)}`, "text/html"),
+      ],
+    }),
+  );
+  expect((await mail.readThreadEvidence("t-boiler")).evidence.coverage.messageBodies).toBe(
+    "partial",
+  );
+});
+
+it("recovers independent alternatives while preserving valid plain siblings", async () => {
+  const short = (mime: string) => textPart("short", mime, { body: { size: 100, data: "eA" } });
+  const { mail } = setup(
+    single({
+      mimeType: "multipart/mixed",
+      parts: [
+        {
+          mimeType: "multipart/alternative",
+          parts: [short("text/plain"), textPart("<p>Recovered first section</p>", "text/html")],
+        },
+        {
+          mimeType: "multipart/alternative",
+          parts: [textPart("Valid plain sibling"), short("text/html")],
+        },
+        textPart("Required mixed section"),
+      ],
+    }),
+  );
+  const read = await mail.readThreadEvidence("t-boiler");
+  expect(read.evidence.coverage.messageBodies).toBe("complete");
+  expect(read.evidence.messages[0]?.body).toEqual({
+    status: "complete",
+    text: "Recovered first section\n\nValid plain sibling\n\nRequired mixed section",
+  });
+});
+it("does not reread valid external siblings or double-charge bytes during alternative recovery", async () => {
+  const expected = "Valid external sibling\n\nRecovered section";
+  const { mail } = setup(
+    single({
+      mimeType: "multipart/mixed",
+      parts: [
+        {
+          mimeType: "multipart/alternative",
+          parts: [
+            textPart("", "text/plain", { body: { size: 22, attachmentId: "valid-sibling" } }),
+            textPart("Invalid sibling HTML", "text/html", { body: { size: 100, data: "eA" } }),
+          ],
+        },
+        {
+          mimeType: "multipart/alternative",
+          parts: [
+            textPart("short", "text/plain", { body: { size: 100, data: "eA" } }),
+            textPart("<p>Recovered section</p>", "text/html"),
+          ],
+        },
+      ],
+    }),
+    { maxEvidenceBytes: 22 + Buffer.byteLength("<p>Recovered section</p>") },
+  );
+  const external = vi.fn(() =>
+    HttpResponse.json({
+      size: 22,
+      data: Buffer.from("Valid external sibling").toString("base64url"),
+    }),
+  );
+  server.use(http.get(`${root}/messages/m2/attachments/valid-sibling`, external));
+  const read = await mail.readThreadEvidence("t-boiler");
+  expect(read.evidence.messages[0]?.body).toEqual({ status: "complete", text: expected });
+  expect(external).toHaveBeenCalledOnce();
 });

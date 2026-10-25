@@ -36,6 +36,7 @@ export interface BriefSession {
     since: string,
     until: string,
     limit: number,
+    jobId?: string,
   ): Promise<{ eligible: number; records: BriefRecord[] }>;
   save(record: BriefRecord, saved: SavedBriefDecision): Promise<void>;
   destination(): Promise<BriefPublication | undefined>;
@@ -57,6 +58,7 @@ export interface BriefOptions {
   days: number;
   maxNew: number;
   retroReview?: boolean;
+  classifyPending?: boolean;
 }
 export function validateBriefOptions(o: BriefOptions) {
   if (
@@ -69,7 +71,9 @@ export function validateBriefOptions(o: BriefOptions) {
     !Number.isInteger(o.maxNew) ||
     o.maxNew < 0 ||
     o.maxNew > 20 ||
-    (o.retroReview !== undefined && typeof o.retroReview !== "boolean")
+    (o.retroReview !== undefined && typeof o.retroReview !== "boolean") ||
+    (o.classifyPending !== undefined && typeof o.classifyPending !== "boolean") ||
+    (o.classifyPending && (o.maxNew !== 0 || o.retroReview))
   )
     throw new Error("Invalid brief options");
 }

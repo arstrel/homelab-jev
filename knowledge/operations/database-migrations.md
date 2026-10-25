@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-19T02:37:45.638672Z
+  at: 2026-10-25T17:11:09Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -28,9 +28,9 @@ sources:
     title: migrations/0001_ambiguous_squadron_sinister.sql
 x_jev_sources:
   - path: src/adapters/postgres/mail-status.ts
-    sha256: 9b1727c55fc209fb80796d1a35d8af51f89ddbe17345d92057970b551634ff7b
+    sha256: 589afa11025780e47d01cb6ac6051e71b365c635dabd26488c49c3b3a6646cb9
   - path: docs/migrations.md
-    sha256: 6f3ba78d1c7947636f3e5dfb0b0caa4abae30f3864383b446338f92699660ef2
+    sha256: fcead5afc6bebede5a1c38ef1005b18aa3f22d5ecde40f8a8b3ce524aa6527b2
   - path: src/adapters/postgres/migrate.ts
     sha256: 8782971aeeddc143c47abf5eb86b892bfcaeedf5e141f36fff704ca6a1fbc147
   - path: migrations/0000_romantic_longshot.sql
@@ -41,6 +41,8 @@ x_jev_sources:
     sha256: aa7e4e79bcedf00c1ca435e227f52ea347095fa0343a113575fc7638193f3e9d
   - path: migrations/0003_incremental_mail_sync.sql
     sha256: ad163f99b79099d404b78b786be6ca90f81a127125362f4dbfb9888dfae8ec36
+  - path: migrations/0005_inference_allowance.sql
+    sha256: 127a7539e012bbf26f95fb31c072ee0c39ed298080032eb8fb530a16f45ab826
 ---
 
 # Explicit database migrations
@@ -58,3 +60,5 @@ Migration 0003 adds sync state and a retrieval backlog without changing the lega
 Migration 0004 adds recovery metadata, expands phases and creates mapped-target snapshots. Existing expired states receive the history-gap flag. A populated 0003-to-0004 failure/repair test preserves anchors, retry state, exact evidence and task links. Stop sync before rollback: the prior synchronizer cannot interpret active recovery phases. Finish recovery to compatible history state before invoking its sync command, or keep sync stopped until restoring recovery-capable code. Preserve the additive schema and pending work. See [recovery](/architecture/mail-recovery.md).
 
 `mail:status` now diagnoses missing, compatible older, conflicting/newer or structurally incomplete managed storage without setup or repair. Unknown measurements remain null. A ready journal/column check is not a complete corruption audit or proof of provider freshness. See [manual observation](mail-observation.md).
+
+Migration 0005 adds only the inference allowance table for bounded automatic email preprocessing. It leaves mailbox state, jobs, evidence and publication identity intact. Both collector and publisher require a coordinated merged-release upgrade because older status readers reject a newer journal. Apply explicitly after stopping both jobs and taking a private backup; keep the new runtime and allowance history when disabling inference. Operational application remains pending merge. See docs/automatic-mail-classification.md.

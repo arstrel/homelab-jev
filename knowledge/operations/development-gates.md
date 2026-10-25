@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T13:58:41.725Z
+  at: 2026-10-25T17:34:46Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -33,7 +33,7 @@ x_jev_sources:
   - path: scripts/git-gate.ts
     sha256: d319d4731259e12a306add4853a84c0e4f5691b4bcd56d8e0ba5386010adde12
   - path: docs/development.md
-    sha256: 8fb74e564a1b84d188dd79909103426efe1e04d191f0069e86bebcd3b2f522b0
+    sha256: 1478d49d072015f571ea9a146ce62f5e020c30f3f547b48f40169318af39524f
   - path: scripts/cli-smoke.ts
     sha256: fbb9104380a5cc53a3d3d161777f2aa61be56c3db5df28a5f10e039037e9d3f4
   - path: tests/unit/email-tasks.test.ts
@@ -60,6 +60,12 @@ x_jev_sources:
     sha256: 4440613731c443784f92ed29d569af7eb74207efbaa83ada6ecb99c55021fadf
   - path: tests/adapters/todoist-retro.test.ts
     sha256: cf0159e31f571bf09e0f1af893787af53926f8309e254b74dd73f784ead06225
+  - path: AGENTS.md
+    sha256: 814ef8b121d6c5b51a98d949561d8e50a682f42caccb9f5524d06c1cb355cf00
+  - path: tests/unit/scheduled-email-brief.test.ts
+    sha256: c3ddcdb1435b994cc6fa4c5d60da3beeccaf593a0da5a8169a60b9f43d30e4dd
+  - path: tests/adapters/gmail.test.ts
+    sha256: 451a0241d05e52ad39055b9d01bf38fb8fbb52db7629099132215c6179ee4c03
 ---
 
 # Node development and Git gates
@@ -89,3 +95,5 @@ The manual [Drive brief](/architecture/planner-handoff.md) adds offline cache/ca
 Todoist-aware brief tests use synthetic paginated project/task responses, changed/removed task state, due fields, Retro filtering, exact-link boundaries, display limits and degraded/cancelled publication. Existing compiled CLI and disposable database regression gates remain required. Live task contents and Drive writes stay outside hooks/CI.
 
 Retro gates add synthetic SDK completed-task/comment pagination, source-window/author/cap cases, exact typed choices, conservative completion rules, shared-budget/cancellation and bounded rendering checks. Compiled CLI checks include --retro-review. Live synthetic model evaluation and private source publication remain explicit operations outside hooks/CI.
+
+Copilot review is a required PR workflow gate alongside CI: check summaries, inline threads and conversation comments on the current changes, and fix yellow/medium/warning and red/high/error findings. Keep at most three fix-and-review loops per PR, recorded with Copilot-Fix-Loop commit trailers. If findings remain after the third loop, stop patching and present a root-cause/design rethink before further work. Initial reviews and documentation-only pushes do not add fix loops; pending or absent review is not clean acceptance. See docs/development.md and AGENTS.md.
