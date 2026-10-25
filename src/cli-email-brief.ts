@@ -65,6 +65,7 @@ export async function runEmailBrief(
   const client = connect(url);
   try {
     const database = briefDatabase(client);
+    const status = mailStatusReader(client);
     let preprocessing:
       | Awaited<ReturnType<typeof classifyPendingMail>>
       | { overlapping: true }
@@ -72,21 +73,20 @@ export async function runEmailBrief(
       | undefined;
     if (options.classifyPending) {
       try {
-        preprocessing = (await database.exclusive((session, ownership) =>
-          classifyPendingMail(
-            session,
-            jevTriage(key ?? ""),
-            new Date(),
-            AbortSignal.any([signal, ownership]),
-          ),
-        )) ?? { overlapping: true };
+        preprocessing = (await database.exclusive(async (session, ownership) => {
+          const combinedSignal = AbortSignal.any([signal, ownership]);
+          combinedSignal.throwIfAborted();
+          if ((await status.read(new Date())).schemaState !== "ready")
+            throw new Error("schema-not-ready");
+          return classifyPendingMail(session, jevTriage(key ?? ""), new Date(), combinedSignal);
+        })) ?? { overlapping: true };
       } catch {
         preprocessing = { failed: 1 };
       }
     }
     const report = await publishEmailBrief(options, {
       database,
-      status: mailStatusReader(client),
+      status,
       triage: jevTriage(key ?? "unused-cached-only"),
       ...(key ? { retroJudge: jevRetro(key) } : {}),
       drive: (budget) => driveBrief(auth, budget),

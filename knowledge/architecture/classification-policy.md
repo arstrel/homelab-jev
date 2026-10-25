@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T17:01:28Z
+  at: 2026-10-25T17:34:46Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -55,7 +55,11 @@ x_jev_sources:
   - path: src/adapters/postgres/email-brief.ts
     sha256: f03f365c18795f7a5e0583a3d5b8d9b97ddc5246db7851a44806596ff298ee66
   - path: docs/automatic-mail-classification.md
-    sha256: a01b30b6e55c7f81b1d1f4d332b7833955a236b90ab3b577e97e494310d323a0
+    sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
+  - path: src/cli-email-brief.ts
+    sha256: 27e0097c16ecb2c393c1cdcc20cc8f3bf520fc479555f77de831388fc653c18c
+  - path: tests/unit/scheduled-email-brief.test.ts
+    sha256: c3ddcdb1435b994cc6fa4c5d60da3beeccaf593a0da5a8169a60b9f43d30e4dd
 ---
 
 # Typed classification and evidence policy
@@ -79,3 +83,5 @@ The manual [Drive brief](planner-handoff.md) now saves successful typed triage a
 The manual [Retro review](retro-feedback.md) now implements bounded finite task-kind and specific candidate/relation/excerpt choices under retro-review/v1. Unknown/contradictory/low-confidence choices remain uncertain. A provisional 0.85 threshold is uncalibrated and authorizes only source-linked review suggestions. Code preserves reusable/recurring work and broad goals; no task effects are connected. Full matching and calibrated automatic reconciliation remain planned.
 
 The optional scheduled --classify-pending path processes up to ten due current jobs before cached publication, independently of display membership. Exact decisions and owner exclusions reuse the existing save contract; failures defer one hour. A persistent $2 lifetime allowance reserves maximum request cost before inference and retains ambiguous charges. It creates no tasks and does not calibrate automatic capture. Activation requires the merged runtime and migration. See docs/automatic-mail-classification.md.
+
+Scheduled preprocessing now verifies managed storage readiness while holding publisher ownership before selecting jobs, reserving inference cost or saving decisions. Non-ready or unreadable storage prevents preprocessing; publication retains its independent readiness check. See src/cli-email-brief.ts and the scheduled composition regressions.

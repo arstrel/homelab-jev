@@ -54,7 +54,7 @@ x_jev_sources:
   - path: deploy/brief-refresh.md
     sha256: 37c9a450d9019298e9dad24dfb917cf120eb1ee6eff7f2e1e46400a8cc140980
   - path: docs/automatic-mail-classification.md
-    sha256: a01b30b6e55c7f81b1d1f4d332b7833955a236b90ab3b577e97e494310d323a0
+    sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
 ---
 
 # Drive snapshot and planner freshness

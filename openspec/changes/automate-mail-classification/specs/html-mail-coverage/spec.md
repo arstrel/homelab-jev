@@ -27,3 +27,7 @@ The reader SHALL retain plain-text preference when valid and use a complete HTML
 #### Scenario: Both alternatives incomplete
 - **WHEN** neither MIME alternative meets coverage requirements
 - **THEN** evidence remains partial and pending
+
+#### Scenario: Independently recoverable sibling alternatives
+- **WHEN** one alternative container has short plain text and complete HTML while a sibling has complete plain text and short HTML
+- **THEN** each container uses its own complete representation, retaining all required mixed sections without repeated external text reads or duplicated evidence-byte charges

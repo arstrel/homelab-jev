@@ -25,3 +25,8 @@ This pre-merge manual smoke reserved a durable private one-call maximum of $0.00
 ## Release acceptance
 
 Offline/isolated PostgreSQL verification and PR checks accompany the change. After merge, follow the coordinated [upgrade](../deploy/brief-refresh.md): prepare the immutable release, stop both jobs, back up the database, apply migration 0005 explicitly, upgrade both jobs and enable `--classify-pending`. Observe an actual recurring classification/publication and confirm independent retrieval freshness. This activation is not yet claimed by the evidence above.
+
+
+## Copilot review follow-up
+
+PR #23 fix loop 1/3 addresses two medium findings: verify managed schema readiness while holding publisher ownership before preprocessing can read work or spend, and recover MIME alternatives independently while preserving valid sibling representations. Added synthetic regressions cover non-ready/unavailable storage, mixed independently recoverable alternatives, and a valid external sibling fetched once with one final evidence-byte reservation. Earlier live verification remains historical; no additional live inference or provider mutation is needed for these corrections. Subsequent Copilot review and CI are required before reporting the revised PR ready.

@@ -27,3 +27,11 @@ The worker SHALL reserve conservative request cost durably before hosted inferen
 #### Scenario: Insufficient allowance
 - **WHEN** remaining allowance cannot cover a maximum request
 - **THEN** no new request starts and cached publication continues with an explicit classification gap
+
+### Requirement: Storage readiness before preprocessing effects
+
+The worker SHALL verify managed schema readiness while holding publisher ownership before selecting preprocessing work, reserving inference cost or completing jobs. Missing, conflicting, newer or unavailable storage SHALL prevent preprocessing effects.
+
+#### Scenario: Storage is incompatible or unavailable
+- **WHEN** storage readiness is not confirmed ready while publisher ownership is held
+- **THEN** no preprocessing request or write starts, and the existing publication path retains its own readiness checks

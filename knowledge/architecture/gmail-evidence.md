@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T17:01:28Z
+  at: 2026-10-25T17:34:46Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: implemented
 sources:
@@ -27,11 +27,13 @@ x_jev_sources:
   - path: src/adapters/gmail.ts
     sha256: 87224a07d772828108d8ce67b295a22a1656802327116f63a750c280bafca0ae
   - path: src/adapters/gmail-body.ts
-    sha256: fc9fbf3315c7bbc1c8feb9d6bb2ce9049ce71eaeeee6a9c8b1b5de61613b5a0d
+    sha256: 564b6c74ee666f0abfdf62ef13dd9b82d080df3594c2a53d835fa7e8485d7042
   - path: docs/gmail-preview.md
     sha256: 282e6eaa1fea787e4b31906bfd5590131a707e1d6edd820d37bc28274ef0609a
   - path: docs/automatic-mail-classification.md
-    sha256: a01b30b6e55c7f81b1d1f4d332b7833955a236b90ab3b577e97e494310d323a0
+    sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
+  - path: tests/adapters/gmail.test.ts
+    sha256: 451a0241d05e52ad39055b9d01bf38fb8fbb52db7629099132215c6179ee4c03
 ---
 
 # Bounded Gmail conversation evidence
@@ -53,3 +55,5 @@ The reader also exposes bounded profile/history operations for [manual sync](mai
 Gmail request starts now use one invocation-local queue with a 1.5-second minimum gap. Structured HTTP 429 or known HTTP 403 rate-limit reasons stop the reader as `rate-limited`; body normalization preserves the signal. Preview stops new selection after throttling while retaining already-started successful evidence. Waiting shares cancellation/deadline limits. Other clients/processes are outside this pacing scope.
 
 HTML conversion now has an independent 200-level DOM limit; MIME nesting stays at 20. Ordinary email table layouts previously hit the shared shallow depth bound and were retried indefinitely. Byte and child-node truncation limits remain enforced. Complete alternatives preserve mandatory mixed sections and encrypted gaps. The October 25 bounded live retry cleared all 101 pending retrievals and advanced actual evidence freshness; recurring rollout remains a merged-release step. See docs/automatic-mail-evidence.md for scope and counts.
+
+MIME recovery rejects only failed text leaves and reselects each alternative container independently, preserving already-valid plain siblings and required mixed sections. Successfully decoded parts are cached per message; retries do not reread external text or reserve evidence bytes twice. Mixed independently recoverable alternatives and exact byte-accounting regressions cover the PR review correction.

@@ -596,3 +596,64 @@ it("does not turn two incomplete MIME alternatives into complete coverage", asyn
     "partial",
   );
 });
+
+it("recovers independent alternatives while preserving valid plain siblings", async () => {
+  const short = (mime: string) => textPart("short", mime, { body: { size: 100, data: "eA" } });
+  const { mail } = setup(
+    single({
+      mimeType: "multipart/mixed",
+      parts: [
+        {
+          mimeType: "multipart/alternative",
+          parts: [short("text/plain"), textPart("<p>Recovered first section</p>", "text/html")],
+        },
+        {
+          mimeType: "multipart/alternative",
+          parts: [textPart("Valid plain sibling"), short("text/html")],
+        },
+        textPart("Required mixed section"),
+      ],
+    }),
+  );
+  const read = await mail.readThreadEvidence("t-boiler");
+  expect(read.evidence.coverage.messageBodies).toBe("complete");
+  expect(read.evidence.messages[0]?.body).toEqual({
+    status: "complete",
+    text: "Recovered first section\n\nValid plain sibling\n\nRequired mixed section",
+  });
+});
+it("does not reread valid external siblings or double-charge bytes during alternative recovery", async () => {
+  const expected = "Valid external sibling\n\nRecovered section";
+  const { mail } = setup(
+    single({
+      mimeType: "multipart/mixed",
+      parts: [
+        {
+          mimeType: "multipart/alternative",
+          parts: [
+            textPart("", "text/plain", { body: { size: 22, attachmentId: "valid-sibling" } }),
+            textPart("Invalid sibling HTML", "text/html", { body: { size: 100, data: "eA" } }),
+          ],
+        },
+        {
+          mimeType: "multipart/alternative",
+          parts: [
+            textPart("short", "text/plain", { body: { size: 100, data: "eA" } }),
+            textPart("<p>Recovered section</p>", "text/html"),
+          ],
+        },
+      ],
+    }),
+    { maxEvidenceBytes: 22 + Buffer.byteLength("<p>Recovered section</p>") },
+  );
+  const external = vi.fn(() =>
+    HttpResponse.json({
+      size: 22,
+      data: Buffer.from("Valid external sibling").toString("base64url"),
+    }),
+  );
+  server.use(http.get(`${root}/messages/m2/attachments/valid-sibling`, external));
+  const read = await mail.readThreadEvidence("t-boiler");
+  expect(read.evidence.messages[0]?.body).toEqual({ status: "complete", text: expected });
+  expect(external).toHaveBeenCalledOnce();
+});

@@ -1,5 +1,9 @@
 # Knowledge change log
 
+## 2026-10-25 Copilot PR review gate
+
+Recorded mandatory Copilot findings checks and a maximum of three fix/re-review loops per PR. Corrected readiness-before-preprocessing and independent MIME recovery in PR #23, with synthetic regressions. Updated relevant claims and source snapshots without changing review deadlines or adding human verification; re-review remains required.
+
 ## 2026-10-25 automatic mail preprocessing
 
 Prepared bounded pending-email classification with a durable lifetime allowance and repaired separate HTML layout depth bounds. Updated only relevant architecture claims and source snapshots, retaining review deadlines and draft status. Recurring activation remains a separate merged-release upgrade; do not mistake implementation/live diagnostics for timer acceptance.
