@@ -186,6 +186,32 @@ it("retains ambiguous inference charges and defers failed work", async () => {
     new Date("2026-10-11T13:00:00Z"),
   );
 });
+it.each(["inventory", "evidence"])(
+  "defers a failed post-inference %s recheck and stops the batch",
+  async (read) => {
+    const s = setup();
+    vi.mocked(s.session.select).mockResolvedValue([
+      s.record,
+      { ...s.record, sourceId: "next-source" },
+    ]);
+    if (read === "inventory")
+      s.remote.inventory
+        .mockResolvedValueOnce(structuredClone(s.inventory))
+        .mockRejectedValueOnce(new Error("provider unavailable"));
+    else vi.mocked(s.session.current).mockRejectedValueOnce(new Error("read unavailable"));
+    expect(await s.run()).toMatchObject({ failed: 1, created: 0, newRequests: 1 });
+    expect(s.judge).toHaveBeenCalledOnce();
+    expect(s.allowance.settleInference).toHaveBeenCalledOnce();
+    expect(s.session.record).toHaveBeenCalledWith(
+      s.record,
+      "failed",
+      new Date("2026-10-11T13:00:00Z"),
+      expect.any(Object),
+    );
+    expect(s.remote.create).not.toHaveBeenCalled();
+    expect(s.session.reserve).not.toHaveBeenCalled();
+  },
+);
 it("does not create when source evidence or task inventory changes", async () => {
   const s = setup();
   s.remote.inventory.mockResolvedValueOnce(structuredClone(s.inventory)).mockResolvedValueOnce({
