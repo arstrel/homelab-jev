@@ -31,7 +31,7 @@ x_jev_sources:
   - path: docs/gmail-preview.md
     sha256: 282e6eaa1fea787e4b31906bfd5590131a707e1d6edd820d37bc28274ef0609a
   - path: docs/automatic-mail-classification.md
-    sha256: 0e645e05e062036b2469bcec859c12b2ba7b558b73afe012347a16b9682b19bc
+    sha256: 6ed7e95d4dfe5a520a837ad8c62aac969e6ff7674e8ed071a4de86ffee2de9ce
   - path: tests/adapters/gmail.test.ts
     sha256: 451a0241d05e52ad39055b9d01bf38fb8fbb52db7629099132215c6179ee4c03
 ---

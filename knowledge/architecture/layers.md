@@ -67,7 +67,7 @@ x_jev_sources:
   - path: src/application/review-retro.ts
     sha256: 18a777d202fc3f64612316601ad6b77df0767796c5626e36851b94524bfa4976
   - path: src/application/capture-mail.ts
-    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
+    sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
   - path: src/domain/automatic-capture.ts
     sha256: cdb0cc362537a78a7921c615d4bf10238bd512b70a818e7c110f63d9f74f5163
   - path: src/adapters/postgres/automatic-capture.ts

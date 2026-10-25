@@ -24,6 +24,6 @@ Ordinary HTML email layouts were incorrectly rejected by the shared 20-level MIM
 
 ## Activation
 
-Use the [deployment procedure](../deploy/brief-refresh.md). Feature code is reviewable before activation; install only a merged immutable release. Stop both existing jobs before applying the additive migration because older releases reject a newer migration journal. Update the collector and publisher to the same migration-aware release, enable the publisher flag, then resume both. Keep the allowance row through rollback; disable inference by removing only `--classify-pending` while retaining the compatible release. Check recurring logs and independent source freshness after activation.
+Use the [deployment procedure](../deploy/brief-refresh.md). Feature code is reviewable before activation; install only a merged immutable release. Stop both existing jobs before applying the additive migration because older releases reject a newer migration journal. Update the collector and publisher to the same migration-aware release, enable the publisher flag, then resume both. Keep the allowance row through rollback; disable inference by removing `--classify-pending` and also `--capture-tasks` if enabled, while retaining `--max-new 0`, no `--retro-review` and the compatible release. Check recurring logs and independent source freshness after activation.
 
 See [verification evidence](automatic-mail-evidence.md) for the cleared 101-thread retrieval backlog and one successful bounded live classification.

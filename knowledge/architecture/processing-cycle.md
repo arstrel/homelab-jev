@@ -32,15 +32,15 @@ x_jev_sources:
   - path: src/application/classify-pending-mail.ts
     sha256: 6724c301287e07d370fc003942d529ab720b4a6774bac54cbac76f92eea02d71
   - path: deploy/brief-refresh.md
-    sha256: 94128809110944b597666a5b17c25a39195a9cc8c4c5e7b6389000cc89c97507
+    sha256: 11683cc53fce5817189291ddc34e7d0c4e03f0c09d56f68ead4f5bf07486a46e
   - path: src/cli-email-brief.ts
     sha256: ebfa4658d425f12aeaeef605cadc7b08e4cd6712bff06ddcd654c2c6128ec38d
   - path: src/application/capture-mail.ts
-    sha256: b79eda80ed329bfabab6783c4d0f212282f36d56bb367025127fb2af52db93f6
+    sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
   - path: docs/automatic-capture-evidence.md
     sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
   - path: docs/automatic-todoist-capture.md
-    sha256: 8b231fe4d9887c93c92d96acf48e44265440bdababbf7fb783e8b23aed761cc6
+    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
 ---
 
 # Five-minute processing cycle
