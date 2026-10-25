@@ -11,7 +11,7 @@ JEV_CAPTURE_SINCE=2026-10-25T18:00:00.000Z
 TODOIST_RETRO_PROJECT_ID=your-existing-retro-project-id
 ```
 
-Choose the actual intended start time during activation, rather than copying the example. `JEV_CAPTURE_SINCE` must be a canonical ISO UTC timestamp, not in the future. Messages before it are excluded even when collected later. Then add `--capture-tasks` to the publisher arguments, preserving `--classify-pending --max-new 0` and no `--retro-review`:
+Choose the actual intended start time during initial activation, rather than copying the example. Preserve this boundary on ordinary release upgrades so pending post-activation work is not dropped. `JEV_CAPTURE_SINCE` must be a canonical ISO UTC timestamp, not in the future. Messages before it are excluded even when collected later. Then add `--capture-tasks` to the publisher arguments, preserving `--classify-pending --max-new 0` and no `--retro-review`:
 
 ```sh
 npm run brief:publish -- --max-new 0 --classify-pending --capture-tasks
@@ -35,4 +35,4 @@ Terminal outcomes are saved per exact evidence version in the classification led
 
 The completed/deleted guarantee covers mapped obligations, plus known exact references and recent completed candidates visible to this bounded read. One task per conversation remains the existing identity rule: general multiple obligations per thread and arbitrary cross-thread reconciliation remain future work. Waiting labels, inferred resolution/completion, due-date extraction and field-edit synchronization are also outside this slice. Current Todoist state always takes precedence over historical capture annotations.
 
-Offline and disposable PostgreSQL tests cover admission, matching, owner edits, completed/deleted mappings, ambiguity and display. A bounded live shadow check used two real conversations, returned no automatic candidate and made zero Todoist writes. See [verification](automatic-capture-evidence.md); activation of this new capture stage awaits its own merged release.
+Offline and disposable PostgreSQL tests cover admission, matching, owner edits, completed/deleted mappings, ambiguity and display. A bounded live shadow check used two real conversations, returned no automatic candidate and made zero Todoist writes. See [verification](automatic-capture-evidence.md); the merged pilot was activated on October 25 and a genuine timer cycle was verified. No post-boundary sources were available then, so real task-creation acceptance remains outstanding.

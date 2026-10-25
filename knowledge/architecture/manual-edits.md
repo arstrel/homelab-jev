@@ -29,7 +29,7 @@ x_jev_sources:
   - path: src/adapters/postgres/automatic-capture.ts
     sha256: 3656d23083bbbff8243784295bf21be29568679ad212c08d6201a341925f3b42
   - path: docs/automatic-todoist-capture.md
-    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
+    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
 
 # Preserve manual task changes

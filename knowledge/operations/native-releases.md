@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T19:01:38Z
+  at: 2026-10-25T19:30:09Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -37,11 +37,11 @@ x_jev_sources:
   - path: docs/mail-worker-evidence.md
     sha256: e7c1c9a9dcb0b8d7bc10c289ac6a28960a5255b113343279c620b70943cb76ca
   - path: docs/automatic-capture-evidence.md
-    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
+    sha256: 9087226c6d39f2948e756021225c5c373ae09f3ad59f510e6fc9b87066240a3f
   - path: deploy/brief-refresh.md
     sha256: 11683cc53fce5817189291ddc34e7d0c4e03f0c09d56f68ead4f5bf07486a46e
   - path: docs/automatic-todoist-capture.md
-    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
+    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
 
 # Native Node releases and scheduling
@@ -58,6 +58,6 @@ A separate publisher runs the merged brief command every five minutes; the Octob
 
 On October 21 Pacific, merged collector release ae4477994fa7558717e451c31d2f01a0c2f6f349 was activated. Two automatic invocations added 35 complete versions/jobs, and an overlapping manual invocation skipped with no provider work. The recorded snapshot retained 488 retrievals and null evidence freshness; full catch-up/no-change acceptance remains open. This is timestamped operational evidence, not a continuing health guarantee. The separate cached-only publisher preserves the collector configuration and schedules no hosted inference. See the repository runbook deploy/brief-refresh.md and evidence docs/scheduled-brief-evidence.md.
 
-On October 25, both jobs were upgraded to merged release 7f7cda11d08c85673a5744ea1c2c0a37bfffe7c1 after a private validated backup and explicit migration 0005. Genuine subsequent timer reports confirmed ten classifications, publication and zero current retrieval gaps; independent owned-file readback passed. This is timestamped acceptance, not a continuing health guarantee. The proposed capture flag is not installed. Enable it only from its merged reviewed immutable release with an explicit source-time boundary; removing the flag disables new task effects while retaining ledger history. See docs/automatic-capture-evidence.md and the repository runbook deploy/brief-refresh.md.
+On October 25, both jobs were upgraded to merged release 7f7cda11d08c85673a5744ea1c2c0a37bfffe7c1 after a private validated backup and explicit migration 0005. Genuine subsequent timer reports confirmed ten classifications, publication and zero current retrieval gaps; independent owned-file readback passed. This is timestamped acceptance, not a continuing health guarantee. The capture flag was enabled on the publisher-only merged PR #25 release at 19:21 UTC on October 25, with a fresh source-time boundary and verified Retro identity. Two invocations, including the timer run, passed capture/publication checks with zero new sources and zero task effects; collector configuration and migration history were unchanged. Enable it only from its merged reviewed immutable release with an explicit source-time boundary; removing the flag disables new task effects while retaining ledger history. See docs/automatic-capture-evidence.md and the repository runbook deploy/brief-refresh.md.
 
 To disable all unattended inference while preserving cached publication, remove both --classify-pending and --capture-tasks if present, retaining --max-new 0 and no --retro-review. Removing capture alone leaves automatic classification enabled.

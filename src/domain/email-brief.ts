@@ -153,7 +153,7 @@ export function renderEmailBrief(doc: BriefDocument) {
     }.`,
     `- Unreplayed history gap: ${s.recovery?.historyGap ? "yes" : "no recorded gap"}.`,
     `- Source observation captured: ${doc.until}. Generation time does not advance source freshness.`,
-    "- Todoist and Retro context: see the sections below. Calendar context: not included. No tasks were created or completed.",
+    `- Todoist and Retro context: see the sections below. Calendar context: not included. ${doc.captureRun ? "Capture outcomes are reported below; existing tasks are not edited or completed." : "No tasks were created or completed."}`,
     "",
     "Read source conversations before acting. Sections are typed triage over this sample, not a complete obligation inventory.",
     "",

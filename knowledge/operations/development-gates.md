@@ -47,7 +47,7 @@ x_jev_sources:
   - path: tests/unit/mail-worker.test.ts
     sha256: 0518c100be01d18dbf638dd3875a0ee6d05f350ef2972648484b7a9bca15f0a5
   - path: tests/unit/email-brief.test.ts
-    sha256: b9b85318a576b847119590d19c34c85315d8bef921b64e392727fa4cb7cd9fe6
+    sha256: 86a5bd6f2c7264825ec3e9b7786371a9bda360baec0925b729509558d144c777
   - path: tests/adapters/drive-brief.test.ts
     sha256: 237288c05bf0e8138f88e7819a0f58fac03ac0945eccfbe8aa0929abe93de7d8
   - path: tests/integration/email-brief.test.ts

@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-25T18:27:08Z
+  at: 2026-10-25T19:30:09Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -38,9 +38,9 @@ x_jev_sources:
   - path: src/application/capture-mail.ts
     sha256: 37b80c3e58e80baa801d2856a746e614e971700e537092fa05bd15f9fdc7ce7b
   - path: docs/automatic-capture-evidence.md
-    sha256: 17c810b586d5b1769b6864d879f2185bb5ce2aa1db12f6712a3fc310cd69be3e
+    sha256: 9087226c6d39f2948e756021225c5c373ae09f3ad59f510e6fc9b87066240a3f
   - path: docs/automatic-todoist-capture.md
-    sha256: 01545f82255a2befa87b4ee4c86302485f4f92c7c720ce33578e56865cfef2dd
+    sha256: 8d54de7da56aef47f136f8eb9bc43331a691d155cd1b5f2e404d36bc944de0a3
 ---
 
 # Five-minute processing cycle
@@ -57,4 +57,4 @@ Manual [incremental synchronization](mail-sync.md) implements collection with ex
 
 The automatic classification upgrade adds an opt-in pending-mail stage to the separate publisher. It processes at most ten due current jobs, uses a durable lifetime allowance and then refreshes cached publication with live source context. General reconciliation remains planned. The merged template was activated after a coordinated release/migration upgrade, as recorded below. See docs/automatic-mail-classification.md.
 
-On October 25, merged PR #23 was activated for both native jobs after backup and migration 0005. A genuine recurring run classified ten conversations and published the owned artifact; collection reported discovery caught up and zero retrieval gaps at that observation. This does not imply complete classification or Retro coverage. The new opt-in capture stage is implemented for review but is not active: it follows classification inside publisher ownership, shares the manual writer lock and lifetime inference allowance, and stops after one successful task creation. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.
+On October 25, merged PR #23 was activated for both native jobs after backup and migration 0005. A genuine recurring run classified ten conversations and published the owned artifact; collection reported discovery caught up and zero retrieval gaps at that observation. This does not imply complete classification or Retro coverage. The bounded capture pilot was activated at 19:21 UTC on October 25 and its real timer/publication wiring passed with no post-boundary sources selected: it follows classification inside publisher ownership, shares the manual writer lock and lifetime inference allowance, and stops after one successful task creation. See docs/automatic-capture-evidence.md and docs/automatic-todoist-capture.md.
