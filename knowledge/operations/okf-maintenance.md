@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: "2026-10-11T02:21:58Z"
+  at: "2026-10-25T20:01:54Z"
 stale_after: "2026-11-10T02:21:58Z"
 x_jev_delivery: implemented
 sources:
@@ -21,7 +21,7 @@ sources:
     title: Google OKF v0.2 specification
 x_jev_sources:
   - path: docs/okf-adoption.md
-    sha256: e5c53d6876959308fc830a9c9dd7c4ce5254562cd94a01c9a68d1c2fca72b4fd
+    sha256: 5f176e0e73ec5f9a2fb3a29ba311590a79e142d121d54f061f196a8e0533e881
   - path: scripts/okf.ts
     sha256: 525c8880983c124e38e27a5be56c4a1d5d7926e92c59c858e939d8a4bd87f947
   - path: AGENTS.md
@@ -37,5 +37,7 @@ Every concept currently starts `draft` and `unverified`. `generated` records aut
 `x_jev_delivery` and `x_jev_sources` are Jev extensions. Source digests warn when the working tree differs from a reviewed snapshot. Inspect changes, update relevant prose and provenance, then update digests; do not blindly regenerate hashes to silence warnings. Update meaningful-change timestamps when the concept changes. Source changes and expired review deadlines warn but do not make an otherwise valid OKF bundle nonconformant.
 
 Run `npm run okf:check`, `npm run okf:build`, or `npm run okf:visualize`. `npm run check` includes structural and local publication checks. Graph nodes are concepts; indexes/logs are navigation. Relationships are standard Markdown links and prose, not an invented typed-edge extension. Do not label existing deterministic functions as attested computations without an executor, receipts and actual attester.
+
+The [hosted graph](https://arstrel.github.io/homelab-jev/) publishes the public bundle through GitHub Pages after merges to `main`. PRs build the same self-contained viewer without deploying it. The first publication needs the workflow merged and GitHub Actions selected as the Pages source. The deployment artifact contains only the generated HTML; hosting adds no human verification and retains source-drift warnings. Local commands remain available for unmerged changes.
 
 See [secret boundaries](secret-handling.md), [development gates](development-gates.md), and [delivery boundary](/product/delivery-boundary.md).
