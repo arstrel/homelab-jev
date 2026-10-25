@@ -13,6 +13,6 @@
 - [Typed classification and evidence policy](classification-policy.md): Preview bounded typed judgments; evaluated matching, routing and capture remain planned. (mixed).
 - [Uncertainty remains visible](uncertainty.md): Prefer explicit review states to invented precision or silent loss. (planned).
 - [Retro interpretation and reusable inventory](retro-feedback.md): Use daily feedback without consuming broad goals or recurring activity options. (mixed).
-- [Drive snapshot and planner freshness](planner-handoff.md): Cached-only scheduled publication is active; actual timer-triggered consumer acceptance remains pending. (mixed).
+- [Drive snapshot and planner freshness](planner-handoff.md): Cached-only publication and the isolated timer-triggered handoff are verified, including canonical JSON repair/readback. (mixed).
 
 [Bundle index](/index.md)

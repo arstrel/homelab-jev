@@ -9,7 +9,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T16:22:06.014Z
+  at: 2026-10-25T15:00:34.395Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -83,4 +83,4 @@ The manual brief now includes current read-only Todoist context by project, exis
 
 The manual brief now includes recent Retro task/comment context and optional typed review, sharing its existing artifact and inference allowance. Completed feedback is read, not interpreted as automatic task closure. This narrows the remaining Retro work to full reconciliation, calibrated evaluation and actual scheduled planner use; it does not complete those parent requirements.
 
-The separate cached-only publisher now refreshes the owned Drive artifact every five minutes with zero Jev calls, and both existing daily prompts have an additive freshness/fallback handoff. This does not enable automatic classification or reconciliation. Scheduler tests verified exact generation retrieval and source fallback; the planner reported an unresolved canonical-plan save limitation. Actual next-timer consumer acceptance remains pending. See [planner handoff](/architecture/planner-handoff.md).
+The separate cached-only publisher now refreshes the owned Drive artifact every five minutes with zero Jev calls, and both existing daily prompts have an additive freshness/fallback handoff. This does not enable automatic classification or reconciliation. October 23 daily runs verified exact generation retrieval, live-source authority and saved canonical artifacts. The owner-approved October 25 digest JSON repair and full readback close the isolated handoff slice; broader rollout requirements remain open. See [planner handoff](/architecture/planner-handoff.md).

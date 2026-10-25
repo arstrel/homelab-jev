@@ -10,7 +10,7 @@ tags:
 status: draft
 generated:
   by: codex/gpt-6
-  at: 2026-10-22T16:14:17.896Z
+  at: 2026-10-25T15:00:34.395Z
 stale_after: 2026-11-10T02:21:58Z
 x_jev_delivery: mixed
 sources:
@@ -63,7 +63,7 @@ Reserve a Drive-generated file ID durably before creation. Every explicit retry 
 
 ## Scheduled handoff and remaining acceptance
 
-A separate cached-only LaunchAgent refreshes the existing owned file every five minutes. Both existing daily prompts receive the versioned freshness/fallback handoff after exact-file/live-source probes and private backups. Actual clock-triggered consumer acceptance remains pending until observed. Preserve Daily Life Plan, Daily Inbox Digest and user retrospectives. Generation time never advances source freshness.
+A separate cached-only LaunchAgent refreshes the existing owned file every five minutes. Both existing daily prompts receive the versioned freshness/fallback handoff after exact-file/live-source probes and private backups. October 23 scheduled retrieval is observed; the owner-approved October 25 canonical JSON repair and exact readback complete this isolated handoff acceptance. Preserve Daily Life Plan, Daily Inbox Digest and user retrospectives. Generation time never advances source freshness.
 
 The installed prompt appendix uses a 15-minute publication cutoff and checks source freshness independently. Actual scheduled retrieval must select the latest generation and current Todoist inventory, disclose stale/unavailable input and follow an explicit fallback. Calendar blocks help choose actions; they do not authorize writes or prove completion. Verify retrieval before changing prompts. See [personal brief loop](/product/personal-brief-loop.md), [uncertainty](uncertainty.md), and [Retro](retro-feedback.md).
 
@@ -77,4 +77,4 @@ Recent read-only Retro feedback and optional typed review now appear in the same
 
 Approved live Retro verification confirmed the same private owned file, generation/content read-back and owner-only sharing. Ten records were reviewed against 43 current task titles; all remained uncertain and source coverage stayed explicitly incomplete. A zero-call source refresh preceded the final Retro-focused artifact, whose labelled verification scope deliberately omits new email selection/inference. This is publication evidence, not scheduled planner or semantic matching acceptance. See docs/retro-brief-evidence.md.
 
-The October 22 scheduled-handoff rollout activates cached-only five-minute publication and appends the same freshness/source-authority contract to the existing prompts after private backups. The email scheduler test retained actual generation provenance. The first planner test did not; a repeat with clarified reporting returned the current publisher generation, while retaining a null exact fetch time and direct-source fallback. The existing planner could not save its updated daily artifact through the connected Drive operation and reported that gap. Actual clock-triggered daily acceptance remains pending. The repository report docs/scheduled-brief-evidence.md distinguishes these surfaces.
+The October 22 scheduled-handoff rollout activates cached-only five-minute publication and appends the same freshness/source-authority contract to the existing prompts after private backups. The email scheduler test retained actual generation provenance. The first planner test did not; a repeat with clarified reporting returned the current publisher generation, while retaining a null exact fetch time and direct-source fallback. The existing planner could not save its updated daily artifact through the connected Drive operation and reported that gap. October 23 daily runs independently saved all three canonical artifacts and used matching publisher generations; the earlier planner save limitation did not recur in that run. The owner-approved October 25 repair removed only orphaned duplicate lines outside named fields; the complete canonical Run record now parses and the full document matched independent readback. This closes the isolated handoff acceptance while broader classification/reconciliation requirements remain open. The repository report docs/scheduled-brief-evidence.md distinguishes these surfaces.
